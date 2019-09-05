@@ -7,7 +7,7 @@ package defpackage.taskmanager
 import android.app.Activity
 import android.os.Bundle
 
-class MainActivity : Activity() {
+class BaseActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
