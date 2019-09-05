@@ -5,6 +5,8 @@
 package defpackage.taskmanager
 
 import android.app.Application
+import androidx.room.Room
+import com.rapid.removebg.data.local.AppDatabase
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -22,7 +24,9 @@ class MainApplication : Application(), KodeinAware {
 
         import(electricHeaterModule)
 
-        bind<Coffee>() with provider { Coffee(instance()) }
+        bind<Coffee>() with provider {
+            Room.databaseBuilder(context, AppDatabase::class.java, "app.db").build()
+        }
 
         // this is bound in the scope of an activity so any retrieval using the same activity will return the same Kettle instance
         bind<Kettle<Coffee>>() with scoped(WeakContextScope.of<Activity>()).singleton {
