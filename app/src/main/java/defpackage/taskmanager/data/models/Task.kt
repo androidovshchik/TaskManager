@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
+ */
+
 package defpackage.taskmanager.data.models
 
 import androidx.room.ColumnInfo
@@ -34,30 +38,22 @@ class Task : Serializable {
     @ColumnInfo(name = "[Т-Задержка]")
     var tDelay: Long? = null
 
-    @ColumnInfo(name = "[Т-Задержка]")
-    var tDelay: Long? = null
+    @ColumnInfo(name = "Сигнал")
+    lateinit var signal: Signal
+
+    @ColumnInfo(name = "[Интервал повторения]")
+    var iRepeat = INTERVAL_REPEAT
+
+    @ColumnInfo(name = "[Интервал откладывания]")
+    var iDelay = INTERVAL_DELAY
+
+    @ColumnInfo(name = "Статус")
+    var status = false
+
+    companion object {
+
+        const val INTERVAL_REPEAT = 10L
+
+        const val INTERVAL_DELAY = 300L
+    }
 }
-CREATE TABLE задачи (
-ID                      INTEGER NOT NULL
-PRIMARY KEY AUTOINCREMENT,
-Название                VARCHAR NOT NULL
-DEFAULT "",
-[Т-Время]               TIME,
-[Т-День]                INTEGER REFERENCES неделя (ID) ON DELETE SET NULL
-ON UPDATE CASCADE,
-[Т-Дата]                DATE,
-[Т-Задача]              INTEGER REFERENCES задачи (ID) ON DELETE SET NULL
-ON UPDATE CASCADE,
-[Т-Повторы]             INTEGER,
-[Т-Задержка]            INTEGER,
-Сигнал                  INTEGER NOT NULL
-DEFAULT (1)
-REFERENCES сигналы (ID) ON DELETE SET DEFAULT
-ON UPDATE CASCADE,
-[Интервал повторения]   INTEGER NOT NULL
-DEFAULT (10),
-[Интервал откладывания] INTEGER NOT NULL
-DEFAULT (300),
-Статус                  BOOLEAN NOT NULL
-DEFAULT (0)
-)
