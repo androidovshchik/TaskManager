@@ -15,7 +15,7 @@ enum class Day(val id: Long) {
     SATURDAY(6),
     SUNDAY(7);
 
-    fun toCalendarDay() = when (this) {
+    fun toCalendarDay(): Int = when (this) {
         MONDAY -> Calendar.MONDAY
         TUESDAY -> Calendar.TUESDAY
         WEDNESDAY -> Calendar.WEDNESDAY

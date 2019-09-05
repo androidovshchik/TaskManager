@@ -1,38 +1,28 @@
+/*
+ * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
+ */
+
 package defpackage.taskmanager.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.Json
 import java.io.Serializable
+import java.util.*
 
-@Entity(tableName = "payments")
+@Entity(tableName = "история")
 class Record : Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    var id: Long? = null
+    @ColumnInfo(name = "ID")
+    var id = 0L
 
-    @ColumnInfo(name = "account_uid")
-    var accountUid = ""
+    @ColumnInfo(name = "Задача")
+    var task = 0L
 
-    @field:Json(name = "product_id")
-    @ColumnInfo(name = "product_id")
-    var productId = ""
+    @ColumnInfo(name = "Статус")
+    var status: Boolean? = null
 
-    @field:Json(name = "purchase_token")
-    @ColumnInfo(name = "purchase_token")
-    var purchaseToken = ""
-
-    @ColumnInfo(name = "response_data")
-    var responseData = ""
-
-    @ColumnInfo(name = "signature")
-    var signature = ""
-
-    @ColumnInfo(name = "is_processed")
-    var isProcessed = false
-
-    override fun toString(): String {
-        return "Task(id=$id, accountUid='$accountUid', productId='$productId', purchaseToken='$purchaseToken', responseData='$responseData', signature='$signature', isProcessed=$isProcessed)"
-    }
+    @ColumnInfo(name = "Время")
+    var time: Date? = null
 }
