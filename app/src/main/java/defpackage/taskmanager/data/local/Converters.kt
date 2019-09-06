@@ -1,33 +1,66 @@
+/*
+ * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
+ */
+
 package defpackage.taskmanager.data.local
 
+import android.text.TextUtils
 import androidx.room.TypeConverter
-import defpackage.taskmanager.data.models.Day
+import defpackage.taskmanager.data.models.DayOfWeek
 import defpackage.taskmanager.data.models.Signal
-import java.text.ParseException
-import java.util.*
+import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 
 object Converters {
 
-    internal var df: DateFormat = SimpleDateFormat(Constants.TIME_STAMP_FORMAT)
+    private val dateRegex = Regex("c|d")
+
+    private val timeRegex = Regex("c|d")
+
+    private val datetimeRegex = Regex("c|d")
+
+    private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
 
     @TypeConverter
-    fun fromTimestamp(value: String?): Date? {
-        if (value != null) {
+    fun datetimeToDate(value: String?): Date? {
+        value?.trim()?.let {
             try {
-                return df.parse(value)
-            } catch (e: ParseException) {
-                e.printStackTrace()
+                val datetime = when {
+                    value.length in 1..2 && TextUtils.isDigitsOnly(value) -> String.format(
+                        Locale.US,
+                        "00:00:%02d",
+                        value.toInt()
+                    )
+                    else -> return null
+                }
+                return formatter.parse()
+            } catch (e: Exception) {
             }
-
-            return null
-        } else {
-            return null
         }
+        return null
     }
 
     @TypeConverter
-    fun fromId(value: Long?): Day? = Day.fromId(value)
+    fun toLocalTime(value: String?): LocalTime? {
+        value?.trim()?.let {
+            // todo check
+            return LocalTime.parse(value)
+        }
+        return null
+    }
 
     @TypeConverter
-    fun fromId(value: Long?): Signal? = Signal.fromId(value)
+    fun toLocalDate(value: String?): LocalDate? {
+        value?.trim()?.let {
+            // todo check
+            return LocalDate.parse(value)
+        }
+        return null
+    }
+
+    @TypeConverter
+    fun toDayOfWeek(value: Long?): DayOfWeek? = DayOfWeek.fromId(value)
+
+    @TypeConverter
+    fun toSignal(value: Long?): Signal? = Signal.fromId(value)
 }

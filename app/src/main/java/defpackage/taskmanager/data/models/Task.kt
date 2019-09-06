@@ -7,10 +7,9 @@ package defpackage.taskmanager.data.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import java.io.Serializable
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalTime
 
 @Entity(tableName = "задачи")
 class Task : Serializable {
