@@ -8,7 +8,7 @@ package defpackage.taskmanager.extensions
 
 import android.app.Activity
 
-fun Activity.requestPermissions(requestCode: Int, vararg permissions: String = allAppPermissions) {
+fun Activity.requestPermissions(requestCode: Int, vararg permissions: String) {
     if (isMarshmallowPlus()) {
         requestPermissions(permissions, requestCode)
     }

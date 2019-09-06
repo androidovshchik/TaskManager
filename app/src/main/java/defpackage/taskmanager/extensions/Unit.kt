@@ -6,24 +6,11 @@
 
 package defpackage.taskmanager.extensions
 
-import android.graphics.Bitmap
-import android.graphics.Rect
 import android.os.Build
 import android.os.Looper
-import java.io.File
 
-val sep: String
-    get() = File.separator
-
-val newLine: String
-    get() = System.getProperty("line.separator") ?: "\n"
-
-val isUiThread: Boolean
+val isUIThread: Boolean
     get() = Looper.myLooper() == Looper.getMainLooper()
-
-fun createRect(width: Int, height: Int = width): Rect = Rect(0, 0, width, height)
-
-fun createBitmap(width: Int, height: Int = width): Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
 fun isKitkat() = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
 

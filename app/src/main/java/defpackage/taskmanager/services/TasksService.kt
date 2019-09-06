@@ -5,15 +5,13 @@
 package defpackage.taskmanager.services
 
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.IBinder
+import kotlinx.coroutines.CoroutineScope
 
-class TasksService : Service() {
+class TasksService : Service(), CoroutineScope {
 
     private val tasksManager = TasksManager()
-
-    private val alarmReceiver = BroadcastReceiver
 
     private val binder = Binder()
 
@@ -27,7 +25,10 @@ class TasksService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        registerReceiver()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
     }
 
     @Suppress("unused")

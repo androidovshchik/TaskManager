@@ -21,39 +21,18 @@ import org.jetbrains.anko.*
 @PermissionResult
 fun Context.areGranted(vararg permissions: String): Boolean {
     for (permission in permissions) {
-        if (!isGranted(permission)) {
+        if (checkCallingOrSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
             return false
         }
     }
     return true
 }
 
-@PermissionResult
-fun Context.isGranted(permission: String): Boolean {
-    return checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
-}
-
-inline fun <reified T : Service> Context.isServiceRunning() = activityManager.isServiceRunning<T>()
-
-inline fun <reified T : Service> Context.restartService() {
-    if (isServiceRunning<T>()) {
-        stopService<T>()
-    }
-    startService<T>()
-}
-
-inline fun <reified T : Service> Context.restartForegroundService() {
-    if (isServiceRunning<T>()) {
-        stopService<T>()
-    }
-    startForegroundService<T>()
-}
-
-inline fun <reified T : Service> Context.startForegroundService() {
+inline fun <reified T : Service> Context.startForegroundService(vararg params: Pair<String, Any?>) {
     if (isOreoPlus()) {
-        startForegroundService(intentFor<T>())
+        startForegroundService(intentFor<T>(*params))
     } else {
-        startService<T>()
+        startService<T>(*params)
     }
 }
 

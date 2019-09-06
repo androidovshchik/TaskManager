@@ -4,7 +4,12 @@
 
 package defpackage.taskmanager.services
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
 import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.extensions.isOreoPlus
 
 class TasksManager {
 

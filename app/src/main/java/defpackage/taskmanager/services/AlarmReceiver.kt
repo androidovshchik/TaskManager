@@ -7,13 +7,11 @@ package defpackage.taskmanager.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import defpackage.taskmanager.extensions.startForegroundService
 
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        Intent myIntent = new Intent(context, SmsService.class)
-        myIntent.putExtra("msg", msgs)
-        context.startService(myIntent)
-        context.startForegroundService()
+        context.startForegroundService<TasksService>()
     }
 }
