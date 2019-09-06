@@ -14,19 +14,33 @@ object Converters {
 
     @TypeConverter
     fun toLocalTime(value: String?): LocalTime? {
+        // todo check
         value?.trim()?.let {
-            // todo check
             return LocalTime.parse(value)
         }
         return null
     }
 
     @TypeConverter
+    fun fromLocalTime(value: LocalTime?): String? {
+        // todo check
+        value?.toString()
+        return null
+    }
+
+    @TypeConverter
     fun toLocalDate(value: String?): LocalDate? {
+        // todo check
         value?.trim()?.let {
-            // todo check
             return LocalDate.parse(value)
         }
+        return null
+    }
+
+    @TypeConverter
+    fun fromLocalDate(value: LocalDate?): String? {
+        // todo check
+        value?.toString()
         return null
     }
 
@@ -34,5 +48,11 @@ object Converters {
     fun toDayOfWeek(value: Long?): DayOfWeek? = DayOfWeek.fromId(value)
 
     @TypeConverter
+    fun fromDayOfWeek(value: DayOfWeek?): Long? = value?.id
+
+    @TypeConverter
     fun toSignal(value: Long?): Signal? = Signal.fromId(value)
+
+    @TypeConverter
+    fun fromSignal(value: Signal?): Long? = value?.id
 }

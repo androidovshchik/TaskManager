@@ -28,5 +28,4 @@ class MainApplication : Application(), KodeinAware {
                 .build()
         }
     }
-
 }

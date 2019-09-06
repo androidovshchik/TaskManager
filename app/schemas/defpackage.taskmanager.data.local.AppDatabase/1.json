@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8169e8f047f3456a3ce7c3c8b77f1303",
+    "identityHash": "3e6fad8ef4c3e7511dfaa6819bf1a9a2",
     "entities": [
       {
-        "tableName": "задачи",
+        "tableName": "tasks",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Название` TEXT NOT NULL, `Т-Время` TEXT, `Т-День` INTEGER, `Т-Дата` TEXT, `Т-Задача` INTEGER, `Т-Повторы` INTEGER, `Т-Задержка` INTEGER, `Сигнал` INTEGER NOT NULL, `Интервал повторения` INTEGER NOT NULL, `Интервал откладывания` INTEGER NOT NULL, `Статус` INTEGER NOT NULL)",
         "fields": [
           {
@@ -91,7 +91,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "история",
+        "tableName": "history",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Задача` INTEGER NOT NULL, `Статус` INTEGER, `Время` TEXT)",
         "fields": [
           {
@@ -132,7 +132,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8169e8f047f3456a3ce7c3c8b77f1303')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e6fad8ef4c3e7511dfaa6819bf1a9a2')"
     ]
   }
 }
