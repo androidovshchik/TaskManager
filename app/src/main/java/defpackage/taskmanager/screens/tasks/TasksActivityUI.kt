@@ -6,6 +6,7 @@ package defpackage.taskmanager.screens.tasks
 
 import android.view.View
 import org.jetbrains.anko.*
+import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.sdk19.listeners.onClick
 
 class TasksActivityUI : AnkoComponent<TasksActivity> {
@@ -31,6 +32,26 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                         owner.onLoadTasksFromDbFile()
                     }
                 }.lparams()
+            }
+            recyclerView().lparams(width = matchParent, height = 0) {
+                weight = 1f
+            }
+            linearLayout {
+                lparams(width = matchParent)
+                button("Запуск обработки задач") {
+                    onClick {
+                        owner.onChooseDbFile()
+                    }
+                }.lparams(width = 0) {
+                    weight = 1f
+                }
+                button("Остановить все") {
+                    onClick {
+                        owner.onLoadTasksFromDbFile()
+                    }
+                }.lparams(width = 0) {
+                    weight = 1f
+                }
             }
         }
     }
