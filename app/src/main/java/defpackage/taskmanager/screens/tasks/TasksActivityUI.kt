@@ -33,7 +33,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     }
                 }.lparams()
             }
-            recyclerView().lparams(width = matchParent, height = 0) {
+            owner.recyclerView = recyclerView().lparams(width = matchParent, height = 0) {
                 weight = 1f
             }
             linearLayout {

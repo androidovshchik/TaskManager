@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".MainApplication"
@@ -28,8 +29,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <service
+            android:name=".services.TasksService"
+            android:enabled="true"
+            android:exported="false"/>
         <receiver
-            android:name=".services.TaskReceiver"
+            android:name=".services.AlarmReceiver"
             android:enabled="true">
         </receiver>
         <receiver

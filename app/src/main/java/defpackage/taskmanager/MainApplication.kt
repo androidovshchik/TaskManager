@@ -15,6 +15,7 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 
+@Suppress("unused")
 class MainApplication : Application(), KodeinAware {
 
     override val kodein by Kodein.lazy {
