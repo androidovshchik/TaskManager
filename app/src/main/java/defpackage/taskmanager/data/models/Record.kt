@@ -8,7 +8,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
-import java.util.*
 
 @Entity(tableName = "история")
 class Record : Serializable {
@@ -24,5 +23,5 @@ class Record : Serializable {
     var status: Boolean? = null
 
     @ColumnInfo(name = "Время")
-    var time: Date? = null
+    var time: String? = null
 }

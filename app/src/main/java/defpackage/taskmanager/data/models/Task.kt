@@ -8,7 +8,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
-import java.util.*
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Entity(tableName = "задачи")
 class Task : Serializable {
@@ -21,13 +23,13 @@ class Task : Serializable {
     lateinit var title: String
 
     @ColumnInfo(name = "[Т-Время]")
-    var tTime: Date? = null
+    var tTime: LocalTime? = null
 
     @ColumnInfo(name = "[Т-День]")
-    var tDay: Day? = null
+    var tDay: DayOfWeek? = null
 
     @ColumnInfo(name = "[Т-Дата]")
-    var tDate: Date? = null
+    var tDate: LocalDate? = null
 
     @ColumnInfo(name = "[Т-Задача]")
     var tTask: Long? = null
@@ -52,8 +54,8 @@ class Task : Serializable {
 
     companion object {
 
-        const val INTERVAL_REPEAT = 10L
+        private const val INTERVAL_REPEAT = 10L
 
-        const val INTERVAL_DELAY = 300L
+        private const val INTERVAL_DELAY = 300L
     }
 }
