@@ -8,6 +8,7 @@
     package="defpackage.taskmanager">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -35,6 +36,10 @@
             android:exported="false"/>
         <receiver
             android:name=".services.AlarmReceiver"
+            android:enabled="true">
+        </receiver>
+        <receiver
+            android:name=".services.ActionReceiver"
             android:enabled="true">
         </receiver>
         <receiver
