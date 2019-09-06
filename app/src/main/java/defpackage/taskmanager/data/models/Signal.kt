@@ -4,16 +4,36 @@
 
 package defpackage.taskmanager.data.models
 
-enum class Signal(val id: Long) {
-    SOUNDLESS(1),
-    VIBRATION(2),
-    SOUND(3),
-    DEFAULT(4);
+import android.annotation.TargetApi
+import android.app.Notification
+import android.app.NotificationChannel
+import android.os.Build
+import androidx.core.app.NotificationManagerCompat
+
+enum class Signal(val id: Long, private val description: String) {
+    SOUNDLESS(1, "Без звука"),
+    VIBRATION(2, "С вибрацией"),
+    SOUND(3, "Со звуком"),
+    SOUND_VIBRATION(4, "С вибрацией и звуком"),
+    DEFAULT(5, "По умолчанию");
+
+    @TargetApi(Build.VERSION_CODES.O)
+    fun buildChannel(): NotificationChannel {
+        return NotificationChannel(
+            name, description, if (this == SOUNDLESS) {
+                NotificationManagerCompat.IMPORTANCE_LOW
+            } else {
+                NotificationManagerCompat.IMPORTANCE_DEFAULT
+            }
+        ).also {
+            it.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        }
+    }
 
     companion object {
 
         @JvmStatic
-        private val map = values().associateBy(Signal::id)
+        val map = values().associateBy(Signal::id)
 
         @JvmStatic
         fun fromId(value: Long?): Signal? = value?.let { map[value] }
