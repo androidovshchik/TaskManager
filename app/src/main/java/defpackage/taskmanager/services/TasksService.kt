@@ -5,10 +5,15 @@
 package defpackage.taskmanager.services
 
 import android.app.Service
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.IBinder
 
 class TasksService : Service() {
+
+    private val tasksManager = TasksManager()
+
+    private val alarmReceiver = BroadcastReceiver
 
     private val binder = Binder()
 
@@ -22,15 +27,13 @@ class TasksService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+        registerReceiver()
     }
 
     @Suppress("unused")
     inner class Binder : android.os.Binder() {
 
-        val service: TasksService get() = this@TasksService
+        val service: TasksService
+            get() = this@TasksService
     }
 }
