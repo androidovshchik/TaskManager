@@ -16,6 +16,8 @@ class ActionReceiver : BroadcastReceiver() {
 
     companion object {
 
-        const val EXTRA_ICON = "icon"
+        const val EXTRA_TASK = "extra_task"
+
+        const val EXTRA_RESULT = "extra_result"
     }
 }

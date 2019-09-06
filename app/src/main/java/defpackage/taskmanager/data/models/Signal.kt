@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.pendingReceiverFor
+import defpackage.taskmanager.screens.task.TaskActivity
 import defpackage.taskmanager.services.ActionReceiver
 
 enum class Signal(val id: Long, private val description: String) {
@@ -40,22 +41,28 @@ enum class Signal(val id: Long, private val description: String) {
         return NotificationCompat.Builder(context, name)
             .setSmallIcon(R.drawable.ic_notifications_white_24dp)
             .setContentTitle(task.title)
-            .setContentIntent(context.pendingActivityFor<>())
+            .setContentIntent(
+                context.pendingActivityFor<TaskActivity>(
+                    TaskActivity.EXTRA_TASK to task.id
+                )
+            )
             .setOngoing(true)
-            .setWhen(record.time)
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", context.pendingReceiverFor<ActionReceiver>(
-                    ActionReceiver.EXTRA_ICON to R.drawable.ic_done_white_24dp
+                    ActionReceiver.EXTRA_TASK to task.id,
+                    ActionReceiver.EXTRA_RESULT to true
                 )
             )
             .addAction(
                 R.drawable.ic_schedule_white_24dp, "Отложить", context.pendingReceiverFor<ActionReceiver>(
-                    ActionReceiver.EXTRA_ICON to R.drawable.ic_schedule_white_24dp
+                    ActionReceiver.EXTRA_TASK to task.id,
+                    ActionReceiver.EXTRA_RESULT to null
                 )
             )
             .addAction(
                 R.drawable.ic_close_white_24dp, "Отменить", context.pendingReceiverFor<ActionReceiver>(
-                    ActionReceiver.EXTRA_ICON to R.drawable.ic_close_white_24dp
+                    ActionReceiver.EXTRA_TASK to task.id,
+                    ActionReceiver.EXTRA_RESULT to false
                 )
             )
             .also {
