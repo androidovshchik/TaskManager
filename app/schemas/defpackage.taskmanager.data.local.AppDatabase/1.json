@@ -1,0 +1,138 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "8169e8f047f3456a3ce7c3c8b77f1303",
+    "entities": [
+      {
+        "tableName": "задачи",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Название` TEXT NOT NULL, `Т-Время` TEXT, `Т-День` INTEGER, `Т-Дата` TEXT, `Т-Задача` INTEGER, `Т-Повторы` INTEGER, `Т-Задержка` INTEGER, `Сигнал` INTEGER NOT NULL, `Интервал повторения` INTEGER NOT NULL, `Интервал откладывания` INTEGER NOT NULL, `Статус` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "Название",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tTime",
+            "columnName": "Т-Время",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tDay",
+            "columnName": "Т-День",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tDate",
+            "columnName": "Т-Дата",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tTask",
+            "columnName": "Т-Задача",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tRepeat",
+            "columnName": "Т-Повторы",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tDelay",
+            "columnName": "Т-Задержка",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "signal",
+            "columnName": "Сигнал",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iRepeat",
+            "columnName": "Интервал повторения",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iDelay",
+            "columnName": "Интервал откладывания",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Статус",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "история",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Задача` INTEGER NOT NULL, `Статус` INTEGER, `Время` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "task",
+            "columnName": "Задача",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Статус",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "Время",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8169e8f047f3456a3ce7c3c8b77f1303')"
+    ]
+  }
+}

@@ -5,13 +5,21 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.os.Bundle
-import defpackage.taskmanager.R
 import defpackage.taskmanager.screens.base.BaseActivity
+import org.jetbrains.anko.setContentView
 
-class MainActivity : BaseActivity() {
+class TasksActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        TasksActivityUI().setContentView(this)
+    }
+
+    fun onChooseDbFile() {
+
+    }
+
+    fun onLoadTasksFromDbFile() {
+
     }
 }
