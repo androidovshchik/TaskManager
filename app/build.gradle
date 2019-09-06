@@ -8,6 +8,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    //noinspection GradleCompatible
     compileSdkVersion 28
     defaultConfig {
         minSdkVersion 19
@@ -50,7 +51,8 @@ dependencies {
     implementation "androidx.room:room-runtime:${Versions.room}"
     kapt "androidx.room:room-compiler:${Versions.room}"
     implementation "org.kodein.di:kodein-di-generic-jvm:${Versions.kodein}"
-    implementation "org.kodein.di:kodein-di-framework-android-x:${Versions.kodein}"
+    implementation "org.kodein.di:kodein-di-framework-android-core:${Versions.kodein}"
+    implementation 'net.danlew:android.joda:2.10.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

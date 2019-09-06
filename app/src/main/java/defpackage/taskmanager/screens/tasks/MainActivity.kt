@@ -4,11 +4,11 @@
 
 package defpackage.taskmanager.screens.tasks
 
-import android.app.Activity
 import android.os.Bundle
 import defpackage.taskmanager.R
+import defpackage.taskmanager.screens.base.BaseActivity
 
-class MainActivity : Activity() {
+class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

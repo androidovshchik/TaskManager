@@ -4,8 +4,6 @@
 
 package defpackage.taskmanager.data.models
 
-import java.util.*
-
 enum class DayOfWeek(val id: Long) {
     MONDAY(1),
     TUESDAY(2),
@@ -14,16 +12,6 @@ enum class DayOfWeek(val id: Long) {
     FRIDAY(5),
     SATURDAY(6),
     SUNDAY(7);
-
-    fun toCalendarDay(): Int = when (this) {
-        MONDAY -> Calendar.MONDAY
-        TUESDAY -> Calendar.TUESDAY
-        WEDNESDAY -> Calendar.WEDNESDAY
-        THURSDAY -> Calendar.THURSDAY
-        FRIDAY -> Calendar.FRIDAY
-        SATURDAY -> Calendar.SATURDAY
-        SUNDAY -> Calendar.SUNDAY
-    }
 
     companion object {
 
