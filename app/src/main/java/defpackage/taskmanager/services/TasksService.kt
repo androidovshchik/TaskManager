@@ -31,8 +31,6 @@ import org.jetbrains.anko.stopService
 
 class TasksService : Service(), CoroutineScope {
 
-    private val tasksManager = TasksManager()
-
     private val binder = Binder()
 
     private var job: Job? = null
@@ -116,6 +114,7 @@ class TasksService : Service(), CoroutineScope {
 
         /**
          * @param params might not be empty
+         * @return true if service is running
          */
         @JvmStatic
         fun launch(context: Context, vararg params: Pair<String, Any?>): Boolean = context.run {
@@ -134,19 +133,21 @@ class TasksService : Service(), CoroutineScope {
                     }
                 }
             } else {
-                if (activityManager.isRunning<TasksService>()) {
-                    stopService<TasksService>()
-                }
+                kill(context)
                 false
             }
         }
 
+        /**
+         * @return true if service is stopped
+         */
         @JvmStatic
         fun kill(context: Context): Boolean = context.run {
-            if (activityManager.isRunning<TasksService>()) {
-                return stopService<TasksService>()
+            return if (activityManager.isRunning<TasksService>()) {
+                stopService<TasksService>()
+            } else {
+                true
             }
-            false
         }
     }
 }

@@ -9,10 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.screens.BaseFragment
+import defpackage.taskmanager.services.TasksManager
 import org.jetbrains.anko.AnkoContext
+import org.kodein.di.generic.instance
 
 class TasksFragment : BaseFragment() {
+
+    val dbManager: DbManager by instance()
+
+    val tasksManager: TasksManager by instance()
 
     lateinit var rvTasks: RecyclerView
 

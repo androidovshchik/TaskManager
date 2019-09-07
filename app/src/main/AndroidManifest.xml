@@ -32,6 +32,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".screens.history.HistoryActivity"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
             android:name=".screens.task.TaskActivity"
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden">
