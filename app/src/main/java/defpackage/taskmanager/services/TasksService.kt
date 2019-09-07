@@ -6,7 +6,6 @@ package defpackage.taskmanager.services
 
 import android.annotation.SuppressLint
 import android.app.Service
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -15,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import defpackage.taskmanager.EXTRA_RESULT
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
+import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.data.models.Signal
 import defpackage.taskmanager.extensions.isRunning
 import defpackage.taskmanager.extensions.pendingActivityFor
@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.powerManager
 import org.jetbrains.anko.startService
+import org.jetbrains.anko.stopService
 
 class TasksService : Service(), CoroutineScope {
 
@@ -107,15 +108,26 @@ class TasksService : Service(), CoroutineScope {
     companion object {
 
         @JvmStatic
-        fun launch(context: Context, vararg params: Pair<String, Any?>): ComponentName? = context.run {
-            return if (!activityManager.isRunning<TasksService>()) {
-                try {
-                    startForegroundService<TasksService>(*params)
-                } catch (e: SecurityException) {
-                    null
+        fun launch(context: Context, vararg params: Pair<String, Any?>): Boolean = context.run {
+            return if (Preferences.enabledTasksService) {
+                if (activityManager.isRunning<TasksService>()) {
+                    if (params.isNotEmpty()) {
+                        startService<TasksService>(*params) != null
+                    } else {
+                        true
+                    }
+                } else {
+                    try {
+                        startForegroundService<TasksService>(*params) != null
+                    } catch (e: SecurityException) {
+                        false
+                    }
                 }
             } else {
-                startService<TasksService>(*params)
+                if (activityManager.isRunning<TasksService>()) {
+                    stopService<TasksService>()
+                }
+                false
             }
         }
     }
