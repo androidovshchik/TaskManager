@@ -7,15 +7,8 @@ package defpackage.taskmanager.data.models
 import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
-import android.content.Context
 import android.os.Build
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import defpackage.taskmanager.R
-import defpackage.taskmanager.extensions.pendingActivityFor
-import defpackage.taskmanager.extensions.pendingReceiverFor
-import defpackage.taskmanager.screens.task.TaskActivity
-import defpackage.taskmanager.services.ActionReceiver
 
 enum class Signal(val id: Long, private val description: String) {
     SOUNDLESS(1, "Без звука"),
@@ -35,42 +28,6 @@ enum class Signal(val id: Long, private val description: String) {
         ).also {
             it.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
-    }
-
-    fun buildNotification(context: Context, task: Task, record: Record): Notification {
-        return NotificationCompat.Builder(context, name)
-            .setSmallIcon(R.drawable.ic_notifications_white_24dp)
-            .setContentTitle(task.title)
-            .setContentIntent(
-                context.pendingActivityFor<TaskActivity>(
-                    TaskActivity.EXTRA_TASK to task.id
-                )
-            )
-            .setOngoing(true)
-            .addAction(
-                R.drawable.ic_done_white_24dp, "Выполнить", context.pendingReceiverFor<ActionReceiver>(
-                    ActionReceiver.EXTRA_TASK to task.id,
-                    ActionReceiver.EXTRA_RESULT to true
-                )
-            )
-            .addAction(
-                R.drawable.ic_schedule_white_24dp, "Отложить", context.pendingReceiverFor<ActionReceiver>(
-                    ActionReceiver.EXTRA_TASK to task.id,
-                    ActionReceiver.EXTRA_RESULT to null
-                )
-            )
-            .addAction(
-                R.drawable.ic_close_white_24dp, "Отменить", context.pendingReceiverFor<ActionReceiver>(
-                    ActionReceiver.EXTRA_TASK to task.id,
-                    ActionReceiver.EXTRA_RESULT to false
-                )
-            )
-            .also {
-                if (this == SOUNDLESS) {
-                    it.setSound(null)
-                }
-            }
-            .build()
     }
 
     companion object {
