@@ -2,7 +2,7 @@
  * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
  */
 
-package defpackage.taskmanager.services
+package defpackage.taskmanager.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,6 +10,7 @@ import android.content.Intent
 import defpackage.taskmanager.EXTRA_RESULT
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.data.models.Record
+import defpackage.taskmanager.services.TasksService
 
 class ActionReceiver : BroadcastReceiver() {
 

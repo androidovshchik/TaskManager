@@ -4,6 +4,6 @@
 
 package defpackage.taskmanager.screens.task
 
-import defpackage.taskmanager.screens.base.BaseActivity
+import defpackage.taskmanager.screens.BaseActivity
 
 class TaskActivity : BaseActivity()

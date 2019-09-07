@@ -2,7 +2,7 @@
  * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
  */
 
-package defpackage.taskmanager.screens.base
+package defpackage.taskmanager.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity

@@ -19,9 +19,6 @@ class TasksFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
 
-    val appContext: Context?
-        get() = activity?.applicationContext
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? =
         TasksFragmentUI().createView(AnkoContext.create(activity, this))
 

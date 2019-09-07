@@ -16,7 +16,7 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
     override fun createView(ui: AnkoContext<TasksFragment>): View = with(ui) {
         owner.recyclerView = recyclerView {
             lparams(width = matchParent, height = matchParent)
-            layoutManager = LinearLayoutManager(owner.appContext)
+            layoutManager = LinearLayoutManager(context)
         }
         owner.recyclerView
     }

@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.os.IBinder
 import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.requestPermissions
-import defpackage.taskmanager.screens.base.BaseActivity
+import defpackage.taskmanager.screens.BaseActivity
 import defpackage.taskmanager.services.TasksService
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.setContentView
@@ -21,12 +21,11 @@ class TasksActivity : BaseActivity() {
 
     private var tasksService: TasksService? = null
 
-    private lateinit var tasksFragment: TasksFragment
+    private val tasksFragment = TasksFragment()
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tasksFragment = TasksFragment()
         TasksActivityUI().setContentView(this)
         fragmentManager.beginTransaction()
             .add(TasksActivityUI.FRAME_LAYOUT_ID, tasksFragment)
@@ -48,6 +47,14 @@ class TasksActivity : BaseActivity() {
     }
 
     fun onLoadTasksFromDbFile() {
+
+    }
+
+    fun onLaunchService() {
+
+    }
+
+    fun onStopAllTasks() {
 
     }
 

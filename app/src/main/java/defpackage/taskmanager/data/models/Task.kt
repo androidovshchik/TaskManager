@@ -16,7 +16,7 @@ import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.pendingReceiverFor
 import defpackage.taskmanager.screens.task.TaskActivity
-import defpackage.taskmanager.services.ActionReceiver
+import defpackage.taskmanager.receivers.ActionReceiver
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import java.io.Serializable

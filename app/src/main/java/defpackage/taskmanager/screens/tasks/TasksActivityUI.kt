@@ -40,14 +40,14 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 lparams(width = matchParent)
                 button("Запуск обработки задач") {
                     onClick {
-                        owner.onChooseDbFile()
+                        owner.onLaunchService()
                     }
                 }.lparams(width = 0) {
                     weight = 1f
                 }
                 button("Остановить все") {
                     onClick {
-                        owner.onLoadTasksFromDbFile()
+                        owner.onStopAllTasks()
                     }
                 }.lparams(width = 0) {
                     weight = 1f

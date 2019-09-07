@@ -52,6 +52,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
     implementation "androidx.room:room-runtime:${Versions.room}"
     kapt "androidx.room:room-compiler:${Versions.room}"
+    implementation 'com.chibatching.kotpref:kotpref:2.9.1'
     implementation "org.kodein.di:kodein-di-generic-jvm:${Versions.kodein}"
     implementation "org.kodein.di:kodein-di-framework-android-core:${Versions.kodein}"
     implementation 'net.danlew:android.joda:2.10.2'

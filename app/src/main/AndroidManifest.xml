@@ -30,20 +30,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".screens.task.TaskActivity"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
         <service
             android:name=".services.TasksService"
             android:enabled="true"
             android:exported="false"/>
         <receiver
-            android:name=".services.AlarmReceiver"
+            android:name=".receivers.AlarmReceiver"
             android:enabled="true">
         </receiver>
         <receiver
-            android:name=".services.ActionReceiver"
+            android:name=".receivers.ActionReceiver"
             android:enabled="true">
         </receiver>
         <receiver
-            android:name=".services.RebootReceiver"
+            android:name=".receivers.RebootReceiver"
             android:enabled="true">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
