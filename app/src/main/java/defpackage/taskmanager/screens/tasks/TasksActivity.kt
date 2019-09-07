@@ -11,6 +11,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.TextView
+import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.requestPermissions
 import defpackage.taskmanager.screens.BaseActivity
@@ -42,6 +43,10 @@ class TasksActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
+        bindTasksService()
+    }
+
+    private fun bindTasksService() {
         if (TasksService.launch(applicationContext)) {
             bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
         }
@@ -56,18 +61,27 @@ class TasksActivity : BaseActivity() {
     }
 
     fun onLaunchTasksService() {
-
+        Preferences.enabledTasksService = true
+        if (TasksService.launch(applicationContext)) {
+            bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
+        }
     }
 
     fun onStopAllTasks() {
-
+        Preferences.enabledTasksService = false
+        unbindTasksService()
+        TasksService.kill(applicationContext)
     }
 
-    override fun onStop() {
+    private fun unbindTasksService() {
         if (tasksService != null) {
             unbindService(tasksConnection)
             tasksService = null
         }
+    }
+
+    override fun onStop() {
+        unbindTasksService()
         super.onStop()
     }
 

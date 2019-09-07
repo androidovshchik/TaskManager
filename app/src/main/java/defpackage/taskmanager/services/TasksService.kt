@@ -68,11 +68,19 @@ class TasksService : Service(), CoroutineScope {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        job?.cancel()
+        job?.let {
+            it.cancel()
+            job = null
+        }
+        executeJob()
+        return START_STICKY
+    }
+
+    fun executeJob() {
         job = launch {
             try {
                 acquireWakeLock()
-                intent?.let {
+                intent.let {
                     if (it.hasExtra(EXTRA_TASK) && it.hasExtra(EXTRA_RESULT)) {
 
                     }
@@ -81,7 +89,6 @@ class TasksService : Service(), CoroutineScope {
                 releaseWakeLock()
             }
         }
-        return START_STICKY
     }
 
     private fun releaseWakeLock() {
@@ -107,6 +114,9 @@ class TasksService : Service(), CoroutineScope {
 
     companion object {
 
+        /**
+         * @param params might not be empty
+         */
         @JvmStatic
         fun launch(context: Context, vararg params: Pair<String, Any?>): Boolean = context.run {
             return if (Preferences.enabledTasksService) {
@@ -129,6 +139,14 @@ class TasksService : Service(), CoroutineScope {
                 }
                 false
             }
+        }
+
+        @JvmStatic
+        fun kill(context: Context): Boolean = context.run {
+            if (activityManager.isRunning<TasksService>()) {
+                return stopService<TasksService>()
+            }
+            false
         }
     }
 }
