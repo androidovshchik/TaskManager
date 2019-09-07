@@ -7,6 +7,7 @@ package defpackage.taskmanager
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.chibatching.kotpref.Kotpref
 import defpackage.taskmanager.data.local.AppDatabase
 import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.data.models.Signal
@@ -41,6 +42,7 @@ class MainApplication : Application(), KodeinAware {
 
     override fun onCreate() {
         super.onCreate()
+        Kotpref.init(applicationContext)
         if (isOreoPlus()) {
             notificationManager.apply {
                 Signal.map.forEach { (_, u) ->

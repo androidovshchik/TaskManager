@@ -7,7 +7,6 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,7 @@ import org.jetbrains.anko.AnkoContext
 
 class TasksFragment : Fragment() {
 
-    lateinit var recyclerView: RecyclerView
+    lateinit var rvTasks: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? =
         TasksFragmentUI().createView(AnkoContext.create(activity, this))

@@ -53,6 +53,9 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     weight = 1f
                 }
             }
+            owner.tvStatus = textView {
+
+            }
         }
     }
 

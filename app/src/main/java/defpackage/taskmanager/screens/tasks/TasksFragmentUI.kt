@@ -14,10 +14,10 @@ import org.jetbrains.anko.recyclerview.v7.recyclerView
 class TasksFragmentUI : AnkoComponent<TasksFragment> {
 
     override fun createView(ui: AnkoContext<TasksFragment>): View = with(ui) {
-        owner.recyclerView = recyclerView {
+        owner.rvTasks = recyclerView {
             lparams(width = matchParent, height = matchParent)
             layoutManager = LinearLayoutManager(context)
         }
-        owner.recyclerView
+        owner.rvTasks
     }
 }

@@ -77,7 +77,7 @@ class TasksService : Service(), CoroutineScope {
     }
 
     override val coroutineContext: CoroutineContext
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = TODO("not implemented") //To change initializer of created properties use File | Preferences | File Templates.
 
     @Suppress("unused")
     inner class Binder : android.os.Binder() {

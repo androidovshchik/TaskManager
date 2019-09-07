@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.widget.TextView
 import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.requestPermissions
 import defpackage.taskmanager.screens.BaseActivity
@@ -18,6 +19,8 @@ import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.setContentView
 
 class TasksActivity : BaseActivity() {
+
+    lateinit var tvStatus: TextView
 
     private var tasksService: TasksService? = null
 
