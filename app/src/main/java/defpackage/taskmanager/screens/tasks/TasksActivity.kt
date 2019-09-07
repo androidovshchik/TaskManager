@@ -42,7 +42,7 @@ class TasksActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (TasksService.start(applicationContext) != null) {
+        if (TasksService.launch(applicationContext) != null) {
             bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
         }
     }
@@ -55,7 +55,7 @@ class TasksActivity : BaseActivity() {
 
     }
 
-    fun onLaunchService() {
+    fun onLaunchTasksService() {
 
     }
 

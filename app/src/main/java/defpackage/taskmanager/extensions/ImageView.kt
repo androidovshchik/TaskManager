@@ -7,6 +7,10 @@ package defpackage.taskmanager.extensions
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 
-fun ImageView.setImageXmlDrawable(@DrawableRes left: Int = 0) {
-    setImageDrawable()
+fun ImageView.setImageXmlDrawable(@DrawableRes id: Int = 0) {
+    if (isLollipopPlus()) {
+        setImageResource(id)
+    } else {
+        setImageDrawable(context.createXmlDrawable(id))
+    }
 }

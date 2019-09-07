@@ -15,7 +15,7 @@ import defpackage.taskmanager.services.TasksService
 class ActionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        TasksService.start(
+        TasksService.launch(
             context,
             EXTRA_TASK to intent.getLongExtra(EXTRA_TASK, 0L),
             EXTRA_RESULT to intent.getIntExtra(EXTRA_RESULT, Record.STATUS_NONE)

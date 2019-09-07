@@ -23,9 +23,11 @@ import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startService
 
-fun Context.createXmlDrawable(@DrawableRes drawable: Int) = if (drawable != 0) {
-    VectorDrawableCompat.create(resources, drawable, theme)
-} else null
+fun Context.createXmlDrawable(@DrawableRes id: Int): VectorDrawableCompat? {
+    return if (id != 0) {
+        VectorDrawableCompat.create(resources, id, theme)
+    } else null
+}
 
 @PermissionResult
 fun Context.areGranted(vararg permissions: String): Boolean {

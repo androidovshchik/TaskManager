@@ -12,6 +12,6 @@ import defpackage.taskmanager.services.TasksService
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        TasksService.start(context)
+        TasksService.launch(context)
     }
 }

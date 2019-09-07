@@ -21,16 +21,20 @@ import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.startForegroundService
 import defpackage.taskmanager.screens.tasks.TasksActivity
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.powerManager
 import org.jetbrains.anko.startService
-import kotlin.coroutines.CoroutineContext
 
 class TasksService : Service(), CoroutineScope {
 
     private val tasksManager = TasksManager()
 
     private val binder = Binder()
+
+    private var job: Job? = null
 
     private var wakeLock: PowerManager.WakeLock? = null
 
@@ -55,29 +59,43 @@ class TasksService : Service(), CoroutineScope {
     }
 
     @SuppressLint("WakelockTimeout")
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    private fun acquireWakeLock() {
         if (wakeLock == null) {
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "asdasd:asdasd")
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$packageName:${javaClass.simpleName}")
             wakeLock?.acquire()
         }
-        intent?.let {
-            if (it.hasExtra(EXTRA_TASK) && it.hasExtra(EXTRA_RESULT)) {
+    }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        job?.cancel()
+        job = launch {
+            try {
+                acquireWakeLock()
+                intent?.let {
+                    if (it.hasExtra(EXTRA_TASK) && it.hasExtra(EXTRA_RESULT)) {
+
+                    }
+                }
+            } finally {
+                releaseWakeLock()
             }
         }
         return START_STICKY
     }
 
-    override fun onDestroy() {
+    private fun releaseWakeLock() {
         wakeLock?.let {
             it.release()
             wakeLock = null
         }
+    }
+
+    override fun onDestroy() {
+        releaseWakeLock()
         super.onDestroy()
     }
 
-    override val coroutineContext: CoroutineContext
-        get() = TODO("not implemented") //To change initializer of created properties use File | Preferences | File Templates.
+    override val coroutineContext = Dispatchers.Main
 
     @Suppress("unused")
     inner class Binder : android.os.Binder() {
@@ -89,7 +107,7 @@ class TasksService : Service(), CoroutineScope {
     companion object {
 
         @JvmStatic
-        fun start(context: Context, vararg params: Pair<String, Any?>): ComponentName? = context.run {
+        fun launch(context: Context, vararg params: Pair<String, Any?>): ComponentName? = context.run {
             return if (!activityManager.isRunning<TasksService>()) {
                 try {
                     startForegroundService<TasksService>(*params)

@@ -48,7 +48,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 gravity = Gravity.CENTER_VERTICAL
                 button("Запуск обработки задач") {
                     onClick {
-                        owner.onLaunchService()
+                        owner.onLaunchTasksService()
                     }
                 }.lparams(width = 0) {
                     weight = 1f
