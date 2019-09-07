@@ -7,13 +7,26 @@
 package defpackage.taskmanager.screens
 
 import android.app.Fragment
+import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.KodeinTrigger
 import org.kodein.di.android.kodein
+import timber.log.Timber
 
-open class BaseFragment : Fragment(), KodeinAware {
+open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
 
     override val kodeinTrigger = KodeinTrigger()
+
+    val fragmentJob = SupervisorJob()
+
+    override fun onDestroyView() {
+        fragmentJob.cancelChildren()
+        super.onDestroyView()
+    }
+
+    override val coroutineContext = Dispatchers.Main + fragmentJob + CoroutineExceptionHandler { _, e ->
+        Timber.e(e)
+    }
 }

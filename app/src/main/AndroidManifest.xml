@@ -24,6 +24,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".screens.tasks.TasksActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -32,6 +33,7 @@
         </activity>
         <activity
             android:name=".screens.task.TaskActivity"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <service
