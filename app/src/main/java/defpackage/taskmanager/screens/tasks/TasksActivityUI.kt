@@ -5,6 +5,7 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk19.listeners.onClick
@@ -17,6 +18,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             padding = dip(8)
             linearLayout {
                 lparams(width = matchParent)
+                gravity = Gravity.CENTER_VERTICAL
                 editText {
 
                 }.lparams(width = 0) {
@@ -43,6 +45,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             }
             linearLayout {
                 lparams(width = matchParent)
+                gravity = Gravity.CENTER_VERTICAL
                 button("Запуск обработки задач") {
                     onClick {
                         owner.onLaunchService()

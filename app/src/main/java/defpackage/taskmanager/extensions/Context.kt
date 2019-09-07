@@ -16,10 +16,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.SystemClock
+import androidx.annotation.DrawableRes
 import androidx.core.content.PermissionChecker.PermissionResult
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startService
+
+fun Context.createXmlDrawable(@DrawableRes drawable: Int) = if (drawable != 0) {
+    VectorDrawableCompat.create(resources, drawable, theme)
+} else null
 
 @PermissionResult
 fun Context.areGranted(vararg permissions: String): Boolean {

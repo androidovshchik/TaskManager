@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
+  -->
+
+<resources>
+    <item name="tasks_item_id" type="id"/>
+    <item name="tasks_item_title" type="id"/>
+    <item name="tasks_item_info" type="id"/>
+    <item name="tasks_item_complete" type="id"/>
+    <item name="tasks_item_defer" type="id"/>
+    <item name="tasks_item_cancel" type="id"/>
+    <item name="tasks_item_edit" type="id"/>
+    <item name="tasks_item_delete" type="id"/>
+    <item name="tasks_item_history" type="id"/>
+</resources>

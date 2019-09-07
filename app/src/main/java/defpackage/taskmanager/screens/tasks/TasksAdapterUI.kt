@@ -5,31 +5,58 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import defpackage.taskmanager.R
 import org.jetbrains.anko.*
 
 class TasksAdapterUI : AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>): View = with(ui) {
         verticalLayout {
-            lparams(matchParent, wrapContent)
+            lparams(matchParent)
             padding = dip(8)
-
-            textView {
-                id = tvTitleId
-                layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
-                text = "Sherlock"
-                textSize = 16f // <- it is sp, no worries
-                textColor = Color.BLACK
+            linearLayout {
+                lparams(matchParent, wrapContent)
+                gravity = Gravity.CENTER_VERTICAL
+                textView {
+                    id = R.id.tasks_item_id
+                    textSize = 15f
+                    textColor = Color.BLACK
+                }.lparams()
+                textView {
+                    id = R.id.tasks_item_id
+                    textSize = 15f
+                    textColor = Color.BLACK
+                }.lparams()
+                imageButton {
+                    id = R.id.tasks_item_id
+                }.lparams()
+                imageButton {
+                    id = R.id.tasks_item_id
+                }.lparams()
             }
-
-            textView {
-                id = tvYearId
-                layoutParams = LinearLayout.LayoutParams(matchParent, wrapContent)
-                text = "2009"
-                textSize = 14f
+            linearLayout {
+                lparams(matchParent, wrapContent)
+                gravity = Gravity.CENTER_VERTICAL
+                textView {
+                    id = R.id.tasks_item_id
+                    textSize = 15f
+                    textColor = Color.BLACK
+                }.lparams()
+                imageButton {
+                    id = R.id.tasks_item_id
+                }.lparams()
+                imageButton {
+                    id = R.id.tasks_item_id
+                }.lparams()
+                imageButton {
+                    id = R.id.tasks_item_id
+                }.lparams()
+                imageButton {
+                    id = R.id.tasks_item_id
+                }.lparams()
             }
         }
     }
