@@ -4,6 +4,7 @@
 
 package defpackage.taskmanager.screens.tasks
 
+import android.graphics.Color
 import android.view.View
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk19.listeners.onClick
@@ -32,6 +33,10 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     }
                 }.lparams()
             }
+            owner.tvInfo = textView {
+                textSize = 15f
+                textColor = Color.BLACK
+            }.lparams(width = matchParent)
             frameLayout().lparams(width = matchParent, height = 0) {
                 id = FRAME_LAYOUT_ID
                 weight = 1f
@@ -54,8 +59,9 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 }
             }
             owner.tvStatus = textView {
-
-            }
+                textSize = 15f
+                textColor = Color.BLACK
+            }.lparams(width = matchParent)
         }
     }
 

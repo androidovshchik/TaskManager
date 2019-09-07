@@ -18,10 +18,12 @@ class TasksFragment : Fragment() {
 
     lateinit var rvTasks: RecyclerView
 
+    private val adapter = TasksAdapter()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? =
         TasksFragmentUI().createView(AnkoContext.create(activity, this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        rvTasks.adapter = adapter
     }
 }

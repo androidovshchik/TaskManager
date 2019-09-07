@@ -20,6 +20,8 @@ import org.jetbrains.anko.setContentView
 
 class TasksActivity : BaseActivity() {
 
+    lateinit var tvInfo: TextView
+
     lateinit var tvStatus: TextView
 
     private var tasksService: TasksService? = null
