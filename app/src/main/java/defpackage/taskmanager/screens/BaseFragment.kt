@@ -7,11 +7,11 @@
 package defpackage.taskmanager.screens
 
 import android.app.Fragment
+import com.elvishew.xlog.XLog
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.KodeinTrigger
 import org.kodein.di.android.kodein
-import timber.log.Timber
 
 open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
 
@@ -27,6 +27,6 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
     }
 
     override val coroutineContext = Dispatchers.Main + fragmentJob + CoroutineExceptionHandler { _, e ->
-        Timber.e(e)
+        XLog.e(e.localizedMessage, e)
     }
 }
