@@ -53,10 +53,10 @@ class Task : Serializable {
     lateinit var signal: Signal
 
     @ColumnInfo(name = "Интервал повторения")
-    var iRepeat = INTERVAL_REPEAT
+    var iRepeat = DEFAULT_REPEAT
 
     @ColumnInfo(name = "Интервал откладывания")
-    var iDelay = INTERVAL_DELAY
+    var iDelay = DEFAULT_DELAY
 
     @ColumnInfo(name = "Статус")
     var status = false
@@ -74,19 +74,19 @@ class Task : Serializable {
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", context.pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to true
+                    EXTRA_RESULT to Record.STATUS_DONE
                 )
             )
             .addAction(
                 R.drawable.ic_update_white_24dp, "Отложить", context.pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to null
+                    EXTRA_RESULT to Record.STATUS_DEFERRED
                 )
             )
             .addAction(
                 R.drawable.ic_close_white_24dp, "Отменить", context.pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to false
+                    EXTRA_RESULT to Record.STATUS_CANCELLED
                 )
             )
             .also {
@@ -99,8 +99,8 @@ class Task : Serializable {
 
     companion object {
 
-        private const val INTERVAL_REPEAT = 10L
+        private const val DEFAULT_REPEAT = 10L
 
-        private const val INTERVAL_DELAY = 300L
+        private const val DEFAULT_DELAY = 300L
     }
 }

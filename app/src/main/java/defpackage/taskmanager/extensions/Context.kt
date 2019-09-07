@@ -11,6 +11,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -30,8 +31,8 @@ fun Context.areGranted(vararg permissions: String): Boolean {
     return true
 }
 
-inline fun <reified T : Service> Context.startForegroundService(vararg params: Pair<String, Any?>) {
-    if (isOreoPlus()) {
+inline fun <reified T : Service> Context.startForegroundService(vararg params: Pair<String, Any?>): ComponentName? {
+    return if (isOreoPlus()) {
         startForegroundService(intentFor<T>(*params))
     } else {
         startService<T>(*params)

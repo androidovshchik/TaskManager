@@ -24,4 +24,15 @@ class Record : Serializable {
 
     @ColumnInfo(name = "Время")
     var time: String? = null
+
+    companion object {
+
+        const val STATUS_NONE = 0
+
+        const val STATUS_DONE = 10
+
+        const val STATUS_DEFERRED = 20
+
+        const val STATUS_CANCELLED = 30
+    }
 }
