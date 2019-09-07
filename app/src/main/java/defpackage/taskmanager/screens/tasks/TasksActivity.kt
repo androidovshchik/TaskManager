@@ -4,11 +4,14 @@
 
 package defpackage.taskmanager.screens.tasks
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import defpackage.taskmanager.extensions.areGranted
+import defpackage.taskmanager.extensions.requestPermissions
 import defpackage.taskmanager.screens.base.BaseActivity
 import defpackage.taskmanager.services.TasksService
 import org.jetbrains.anko.intentFor
@@ -28,6 +31,9 @@ class TasksActivity : BaseActivity() {
         fragmentManager.beginTransaction()
             .add(TasksActivityUI.FRAME_LAYOUT_ID, tasksFragment)
             .commit()
+        if (!areGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            requestPermissions(REQUEST_PERMISSIONS, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
     }
 
     override fun onStart() {
@@ -62,5 +68,10 @@ class TasksActivity : BaseActivity() {
         override fun onServiceDisconnected(name: ComponentName) {
             tasksService = null
         }
+    }
+
+    companion object {
+
+        const val REQUEST_PERMISSIONS = 100
     }
 }

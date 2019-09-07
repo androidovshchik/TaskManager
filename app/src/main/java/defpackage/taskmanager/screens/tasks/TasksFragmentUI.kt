@@ -5,17 +5,19 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 
-class TasksFragmentUI : AnkoComponent<TasksFragmentUI> {
+class TasksFragmentUI : AnkoComponent<TasksFragment> {
 
-    override fun createView(ui: AnkoContext<TasksFragmentUI>): View = with(ui) {
-        recyclerView {
+    override fun createView(ui: AnkoContext<TasksFragment>): View = with(ui) {
+        owner.recyclerView = recyclerView {
             lparams(width = matchParent, height = matchParent)
-            owner.recyclerView =
+            layoutManager = LinearLayoutManager(owner.appContext)
         }
+        owner.recyclerView
     }
 }

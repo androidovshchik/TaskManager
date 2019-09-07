@@ -8,7 +8,9 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import defpackage.taskmanager.data.local.AppDatabase
+import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.data.models.Signal
+import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.extensions.isOreoPlus
 import org.jetbrains.anko.notificationManager
 import org.kodein.di.Kodein
@@ -26,6 +28,10 @@ class MainApplication : Application(), KodeinAware {
         import(androidCoreModule(this@MainApplication))
 
         bind<Context>() with instance(applicationContext)
+
+        bind<List<Task>>() with singleton { arrayListOf<Task>() }
+
+        bind<List<Record>>() with singleton { arrayListOf<Record>() }
 
         bind<AppDatabase>() with singleton {
             Room.databaseBuilder(instance(), AppDatabase::class.java, "app.db")
