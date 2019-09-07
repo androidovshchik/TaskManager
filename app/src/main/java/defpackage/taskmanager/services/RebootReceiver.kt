@@ -13,5 +13,6 @@ class RebootReceiver : BroadcastReceiver() {
 
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context, intent: Intent) {
+        TasksService.start(context)
     }
 }

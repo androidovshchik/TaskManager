@@ -5,6 +5,7 @@
 package defpackage.taskmanager.services
 
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -40,8 +41,8 @@ class TasksService : Service(), CoroutineScope {
         super.onCreate()
         startForeground(
             0, NotificationCompat.Builder(applicationContext, Signal.SOUNDLESS.name)
-                .setSmallIcon(R.drawable.ic_notifications_white_24dp)
-                .setContentTitle("")
+                .setSmallIcon(R.drawable.ic_schedule_white_24dp)
+                .setContentTitle("Фоновой сервис")
                 .setContentIntent(pendingActivityFor<TasksActivity>())
                 .setOngoing(true)
                 .build()
@@ -69,16 +70,16 @@ class TasksService : Service(), CoroutineScope {
 
     companion object {
 
-        fun start(context: Context, vararg params: Pair<String, Any?>) {
-            context.run {
-                if (!activityManager.isRunning<TasksService>()) {
-                    try {
-                        startForegroundService<TasksService>(*params)
-                    } catch (e: SecurityException) {
-                    }
-                } else {
-                    context.startService<TasksService>(*params)
+        @JvmStatic
+        fun start(context: Context, vararg params: Pair<String, Any?>): ComponentName? = context.run {
+            return if (!activityManager.isRunning<TasksService>()) {
+                try {
+                    startForegroundService<TasksService>(*params)
+                } catch (e: SecurityException) {
+                    null
                 }
+            } else {
+                startService<TasksService>(*params)
             }
         }
     }

@@ -10,7 +10,6 @@ import androidx.room.Room
 import defpackage.taskmanager.data.local.AppDatabase
 import defpackage.taskmanager.data.models.Signal
 import defpackage.taskmanager.extensions.isOreoPlus
-import defpackage.taskmanager.services.TasksService
 import org.jetbrains.anko.notificationManager
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -43,6 +42,5 @@ class MainApplication : Application(), KodeinAware {
                 }
             }
         }
-        TasksService.start(applicationContext)
     }
 }
