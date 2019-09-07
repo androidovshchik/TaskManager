@@ -29,7 +29,7 @@ class Record : Serializable {
 
         const val STATUS_NONE = 0
 
-        const val STATUS_DONE = 10
+        const val STATUS_COMPLETED = 10
 
         const val STATUS_DEFERRED = 20
 

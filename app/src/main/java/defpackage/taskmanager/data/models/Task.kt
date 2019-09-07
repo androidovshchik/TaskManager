@@ -74,7 +74,7 @@ class Task : Serializable {
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", context.pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to Record.STATUS_DONE
+                    EXTRA_RESULT to Record.STATUS_COMPLETED
                 )
             )
             .addAction(
