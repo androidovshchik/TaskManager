@@ -9,7 +9,7 @@ package defpackage.taskmanager.extensions
 import android.os.Build
 import android.os.Looper
 
-val isUIThread: Boolean
+val isMainThread: Boolean
     get() = Looper.myLooper() == Looper.getMainLooper()
 
 fun isKitkat() = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT

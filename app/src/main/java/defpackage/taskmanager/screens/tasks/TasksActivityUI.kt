@@ -6,7 +6,6 @@ package defpackage.taskmanager.screens.tasks
 
 import android.view.View
 import org.jetbrains.anko.*
-import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.sdk19.listeners.onClick
 
 class TasksActivityUI : AnkoComponent<TasksActivity> {
@@ -33,7 +32,8 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     }
                 }.lparams()
             }
-            owner.recyclerView = recyclerView().lparams(width = matchParent, height = 0) {
+            frameLayout().lparams(width = matchParent, height = 0) {
+                id = FRAME_LAYOUT_ID
                 weight = 1f
             }
             linearLayout {
@@ -54,5 +54,11 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 }
             }
         }
+    }
+
+    companion object {
+
+        @JvmStatic
+        val FRAME_LAYOUT_ID = View.generateViewId()
     }
 }

@@ -4,11 +4,13 @@
 
 package defpackage.taskmanager.services
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import defpackage.taskmanager.EXTRA_RESULT
 import defpackage.taskmanager.EXTRA_TASK
@@ -20,6 +22,7 @@ import defpackage.taskmanager.extensions.startForegroundService
 import defpackage.taskmanager.screens.tasks.TasksActivity
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.anko.activityManager
+import org.jetbrains.anko.powerManager
 import org.jetbrains.anko.startService
 import kotlin.coroutines.CoroutineContext
 
@@ -28,6 +31,8 @@ class TasksService : Service(), CoroutineScope {
     private val tasksManager = TasksManager()
 
     private val binder = Binder()
+
+    private var wakeLock: PowerManager.WakeLock? = null
 
     override fun onBind(intent: Intent): IBinder? {
         return binder
@@ -49,13 +54,26 @@ class TasksService : Service(), CoroutineScope {
         )
     }
 
+    @SuppressLint("WakelockTimeout")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (wakeLock == null) {
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "asdasd:asdasd")
+            wakeLock?.acquire()
+        }
         intent?.let {
             if (it.hasExtra(EXTRA_TASK) && it.hasExtra(EXTRA_RESULT)) {
 
             }
         }
         return START_STICKY
+    }
+
+    override fun onDestroy() {
+        wakeLock?.let {
+            it.release()
+            wakeLock = null
+        }
+        super.onDestroy()
     }
 
     override val coroutineContext: CoroutineContext

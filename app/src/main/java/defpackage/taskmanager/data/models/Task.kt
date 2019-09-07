@@ -61,30 +61,30 @@ class Task : Serializable {
     @ColumnInfo(name = "Статус")
     var status = false
 
-    fun buildNotification(context: Context): Notification {
-        return NotificationCompat.Builder(context, signal.name)
+    fun buildNotification(context: Context): Notification = context.run {
+        return NotificationCompat.Builder(applicationContext, signal.name)
             .setSmallIcon(R.drawable.ic_notifications_white_24dp)
             .setContentTitle(title)
             .setContentIntent(
-                context.pendingActivityFor<TaskActivity>(
+                pendingActivityFor<TaskActivity>(
                     EXTRA_TASK to id
                 )
             )
             .setOngoing(true)
             .addAction(
-                R.drawable.ic_done_white_24dp, "Выполнить", context.pendingReceiverFor<ActionReceiver>(
+                R.drawable.ic_done_white_24dp, "Выполнить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
                     EXTRA_RESULT to Record.STATUS_COMPLETED
                 )
             )
             .addAction(
-                R.drawable.ic_update_white_24dp, "Отложить", context.pendingReceiverFor<ActionReceiver>(
+                R.drawable.ic_update_white_24dp, "Отложить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
                     EXTRA_RESULT to Record.STATUS_DEFERRED
                 )
             )
             .addAction(
-                R.drawable.ic_close_white_24dp, "Отменить", context.pendingReceiverFor<ActionReceiver>(
+                R.drawable.ic_close_white_24dp, "Отменить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
                     EXTRA_RESULT to Record.STATUS_CANCELLED
                 )
