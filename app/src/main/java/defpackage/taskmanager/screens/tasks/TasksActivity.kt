@@ -11,6 +11,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.TextView
+import defpackage.taskmanager.data.local.AppDatabase
 import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.requestPermissions
@@ -18,12 +19,15 @@ import defpackage.taskmanager.screens.BaseActivity
 import defpackage.taskmanager.services.TasksService
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.setContentView
+import org.kodein.di.generic.instance
 
 class TasksActivity : BaseActivity() {
 
     lateinit var tvInfo: TextView
 
     lateinit var tvStatus: TextView
+
+    val db: AppDatabase by instance()
 
     private var tasksService: TasksService? = null
 
@@ -62,9 +66,7 @@ class TasksActivity : BaseActivity() {
 
     fun onLaunchTasksService() {
         Preferences.enabledTasksService = true
-        if (TasksService.launch(applicationContext)) {
-            bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
-        }
+        bindTasksService()
     }
 
     fun onStopAllTasks() {

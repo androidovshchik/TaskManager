@@ -8,12 +8,15 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.MenuItem
 import org.kodein.di.KodeinAware
+import org.kodein.di.KodeinTrigger
 import org.kodein.di.android.kodein
 
 @SuppressLint("Registered")
 open class BaseActivity : Activity(), KodeinAware {
 
     override val kodein by kodein()
+
+    override val kodeinTrigger = KodeinTrigger()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

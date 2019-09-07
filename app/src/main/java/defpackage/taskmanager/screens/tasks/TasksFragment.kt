@@ -2,19 +2,17 @@
  * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
  */
 
-@file:Suppress("DEPRECATION")
-
 package defpackage.taskmanager.screens.tasks
 
-import android.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import defpackage.taskmanager.screens.BaseFragment
 import org.jetbrains.anko.AnkoContext
 
-class TasksFragment : Fragment() {
+class TasksFragment : BaseFragment() {
 
     lateinit var rvTasks: RecyclerView
 
