@@ -8,5 +8,5 @@ import com.chibatching.kotpref.KotprefModel
 
 object Preferences : KotprefModel() {
 
-    var enabledTasksService by booleanPref(false, "enableTasksService")
+    var enabledTasksService by booleanPref(false, "enabledTasksService")
 }
