@@ -33,8 +33,9 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     }
                 }.lparams()
             }
-            frameLayout().lparams(matchParent, 0) {
+            frameLayout {
                 id = FRAME_LAYOUT_ID
+            }.lparams(matchParent, 0) {
                 weight = 1f
             }
             linearLayout {

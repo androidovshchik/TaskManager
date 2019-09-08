@@ -42,7 +42,7 @@ class TasksService : BaseService() {
     override fun onCreate() {
         super.onCreate()
         startForeground(
-            0, NotificationCompat.Builder(applicationContext, Behavior.SOUNDLESS.name)
+            Int.MAX_VALUE, NotificationCompat.Builder(applicationContext, Behavior.SOUNDLESS.name)
                 .setSmallIcon(R.drawable.ic_schedule_white_24dp)
                 .setContentTitle("Фоновой сервис")
                 .setContentIntent(pendingActivityFor<TasksActivity>())
