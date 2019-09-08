@@ -6,10 +6,22 @@ package defpackage.taskmanager.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-@Entity(tableName = "History")
+@Entity(
+    tableName = "History",
+    foreignKeys = [
+        ForeignKey(
+            entity = Task::class,
+            parentColumns = ["ID"],
+            childColumns = ["Задача"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 class Record : Serializable {
 
     @PrimaryKey(autoGenerate = true)
