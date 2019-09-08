@@ -54,9 +54,9 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     @UiThread
-    fun importDb(preferences: Preferences, path: String) {
-        if (!SQLITE_REGEX.matches(path)) {
-            XLog.w("Невалидный путь: $path")
+    fun importDb(preferences: Preferences, newPath: String) {
+        if (!SQLITE_REGEX.matches(newPath)) {
+            XLog.w("Невалидный путь: $newPath")
             preferences.context.toast("Невалидный файл для импорта БД")
             return
         }
@@ -69,28 +69,31 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         GlobalScope.launch(Dispatchers.Main) {
             closeDb()
             val oldPath = preferences.pathToDb
-            val exported = if (doesExist && !TextUtils.isEmpty(oldPath)) {
+            val needExport = doesExist && !TextUtils.isEmpty(oldPath)
+            val exported = if (needExport) {
                 withContext(Dispatchers.IO) {
                     copyFile(dbFile, File(oldPath))
                 }
             } else true
             XLog.d("Экспорт сделан: $exported")
             val imported = withContext(Dispatchers.IO) {
-                copyFile(File(path), dbFile)
+                copyFile(File(newPath), dbFile)
             }
             XLog.d("Импорт сделан: $imported")
-            preferences.context.run {
+            preferences.apply {
                 if (exported) {
                     if (imported) {
-                        openDb(applicationContext)
-                        preferences.pathToDb = path
-                        toast("БД успешно импортирована")
+                        openDb(context)
+                        pathToDb = newPath
+                        context.toast("БД успешно импортирована")
                     } else {
-                        toast("Не удалось импортировать БД")
+                        context.toast("Не удалось импортировать БД")
                     }
-                    scanFile(path)
+                    if (needExport) {
+                        context.scanFile(oldPath.toString())
+                    }
                 } else {
-                    toast("Не удалось экспортировать БД")
+                    context.toast("Не удалось экспортировать БД")
                 }
             }
             io.value = false
