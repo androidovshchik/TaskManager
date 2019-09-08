@@ -9,6 +9,7 @@ package defpackage.taskmanager.data.local
 import android.content.Context
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.data.models.Record
@@ -22,7 +23,6 @@ import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.util.concurrent.atomic.AtomicBoolean
 
 class DbManager(context: Context) : TaskDao, RecordDao {
 
@@ -31,7 +31,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     /**
      * Indicates I/O operations during import/export
      */
-    private var io = AtomicBoolean(false)
+    val io = MutableLiveData(true)
 
     private val dbFile = context.getDatabasePath(DB_NAME)
 
@@ -45,60 +45,80 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
                 .build()
         }
+        io.value = false
     }
 
     @UiThread
     fun importDb(context: Context, path: String) {
-        io.set(true)
-        GlobalScope.launch {
-            withContext(Dispatchers.IO) {
+        io.value = true
+        GlobalScope.launch(Dispatchers.Main) {
+            val copied = withContext(Dispatchers.IO) {
                 copyFile(File(path), dbFile)
             }
-            io.set(false)
+            if (copied) {
+                openDb(context)
+            } else {
+                closeDb()
+                io.value = false
+            }
         }
     }
 
     override fun getAllTasks(): List<Task> {
-        return db?.taskDao()?.getAllTasks().orEmpty()
+        if (io.value == false) {
+            return db?.taskDao()?.getAllTasks().orEmpty()
+        }
+        return arrayListOf()
     }
 
     override fun getRecordsByTask(id: Long): List<Record> {
-        return db?.recordDao()?.getRecordsByTask(id).orEmpty()
+        if (io.value == false) {
+            return db?.recordDao()?.getRecordsByTask(id).orEmpty()
+        }
+        return arrayListOf()
     }
 
     @UiThread
     fun exportDb(context: Context, path: String?) {
         path?.let {
-            io.set(true)
+            io.value = true
             GlobalScope.launch(Dispatchers.Main) {
-                withContext(Dispatchers.IO) {
+                val copied = withContext(Dispatchers.IO) {
                     copyFile(dbFile, File(it))
                 }
                 context.run {
-                    scanFile(it)
-                    toast("БД экспортирована")
+                    if (copied) {
+                        scanFile(it)
+                        toast("БД экспортирована")
+                    } else {
+                        toast("Не удалось экспортировать")
+                    }
                 }
-                io.set(false)
+                io.value = false
             }
-        } ?: context.toast("Не выбрана БД")
+        } ?: run {
+            context.toast("Не выбрана БД")
+        }
     }
 
     @WorkerThread
-    private fun copyFile(src: File, dist: File) {
-        dist.parentFile.apply {
-            if (!exists()) {
-                mkdir()
+    private fun copyFile(src: File, dist: File): Boolean {
+        return try {
+            dist.parentFile.apply {
+                if (!exists()) {
+                    mkdir()
+                }
             }
-        }
-        try {
             FileInputStream(src).use { input ->
                 FileOutputStream(dist).use { output ->
                     input.copyTo(output)
                 }
             }
+            true
         } catch (e: Exception) {
             XLog.e(e.localizedMessage, e)
             dist.delete()
+            false
         }
     }
 
