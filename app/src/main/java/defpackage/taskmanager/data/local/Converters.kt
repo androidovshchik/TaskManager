@@ -5,8 +5,8 @@
 package defpackage.taskmanager.data.local
 
 import androidx.room.TypeConverter
+import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.data.models.DayOfWeek
-import defpackage.taskmanager.data.models.Signal
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 
@@ -43,8 +43,8 @@ object Converters {
     fun fromDayOfWeek(value: DayOfWeek?): Long? = value?.id
 
     @TypeConverter
-    fun toSignal(value: Long?): Signal? = Signal.fromId(value)
+    fun toBehavior(value: Long?): Behavior? = Behavior.fromId(value)
 
     @TypeConverter
-    fun fromSignal(value: Signal?): Long? = value?.id
+    fun fromBehavior(value: Behavior?): Long? = value?.id
 }

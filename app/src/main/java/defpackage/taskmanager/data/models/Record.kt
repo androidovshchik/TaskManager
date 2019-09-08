@@ -8,7 +8,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.io.Serializable
 
 @Entity(
     tableName = "History",
@@ -22,7 +21,7 @@ import java.io.Serializable
         )
     ]
 )
-class Record : Serializable {
+class Record {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID")

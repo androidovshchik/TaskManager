@@ -8,12 +8,16 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import defpackage.taskmanager.data.models.Record
+import defpackage.taskmanager.data.models.Signal
 import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.data.models.Week
 
 @Database(
     entities = [
         Task::class,
-        Record::class
+        Record::class,
+        Week::class,
+        Signal::class
     ],
     version = 1
 )

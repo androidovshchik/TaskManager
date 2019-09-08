@@ -54,7 +54,7 @@ class MainApplication : Application(), KodeinAware {
             .build()
         if (BuildConfig.DEBUG) {
             val documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-            val filePrinter = FilePrinter.Builder(File(documents, LOGS_FOLDER).path)
+            val filePrinter = FilePrinter.Builder(File(documents, "logs").path)
                 .fileNameGenerator(DateFileNameGenerator())
                 .backupStrategy(NeverBackupStrategy())
                 .build()

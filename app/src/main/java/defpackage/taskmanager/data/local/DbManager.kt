@@ -7,52 +7,50 @@
 package defpackage.taskmanager.data.local
 
 import android.content.Context
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
+import androidx.room.Room
 import defpackage.taskmanager.extensions.isLollipopPlus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.util.concurrent.atomic.AtomicBoolean
 
 class DbManager {
 
-    var db: BriteDatabase? = null
+    var db: AppDatabase? = null
 
-    fun openAssetsDb(context: Context, helper: H) {
+    var locked = AtomicBoolean(false)
+
+    suspend fun openDb(context: Context, path: String) {
         closeDb()
-        helper.openAssetsDb(context)
-        db = SqlBrite.Builder()
+        withContext(Dispatchers.IO) {
+
+        }
+        db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
             .build()
-            .wrapDatabaseHelper(
-                FrameworkSQLiteOpenHelperFactory()
-                    .create(
-                        SupportSQLiteOpenHelper.Configuration
-                            .builder(context)
-                            .name(helper.dbName)
-                            .callback(helper)
-                            .build()
-                    ), Schedulers.io()
-            )
     }
 
-    fun onExecSql(sql: String): Observable<Boolean> {
-        return Observable.create { emitter: ObservableEmitter<Boolean> ->
-            if (emitter.isDisposed) {
-                return@create
+    fun importDb(path: String) {
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+
             }
-            val transaction = db!!.newTransaction()
-            try {
-                db!!.execute(sql)
-                transaction.markSuccessful()
-            } finally {
-                transaction.end()
-            }
-            emitter.onNext(true)
-            emitter.onComplete()
-        }.subscribeOn(Schedulers.io())
+        }
     }
 
-    private fun copyDbFile() {
-        val file = context.getDatabasePath(dbName)
+    fun exportDb(path: String) {
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+
+            }
+        }
+    }
+
+    private fun copyDbFile(context: Context) = context.run {
+        val file = getDatabasePath(DB_NAME)
         if (!isLollipopPlus()) {
             val path = File("${applicationInfo.dataDir}/databases")
             if (!path.exists()) {
@@ -60,116 +58,26 @@ class DbManager {
             }
         }
         if (!file.exists()) {
-            val input = context.assets.open(name)
-            val output = FileOutputStream(this)
-            input.use { _ ->
-                output.use { _ ->
-                    input.copyTo(output)
-                }
-            }
         }
     }
 
-    fun onSelectTable(sql: String): Observable<Cursor> {
-        return Observable.create(ObservableOnSubscribe<Cursor> { emitter ->
-            if (emitter.isDisposed) {
-                return@ObservableOnSubscribe
+    private fun copyFile(src: File, dist: File) {
+        FileInputStream(src).use { input ->
+            FileOutputStream(dist).use { output ->
+                input.copyTo(output)
             }
-            val cursor: Cursor?
-            val transaction = db!!.newTransaction()
-            try {
-                cursor = db!!.query(sql)
-                transaction.markSuccessful()
-            } finally {
-                transaction.end()
-            }
-            if (cursor != null) {
-                emitter.onNext(cursor)
-            }
-            emitter.onComplete()
-        }).subscribeOn(Schedulers.io())
-    }
-
-    fun onInsertRow(row: Row): Observable<Row> {
-        return Observable.create { emitter: ObservableEmitter<Row> ->
-            if (emitter.isDisposed) {
-                return@create
-            }
-            val transaction = db!!.newTransaction()
-            try {
-                row.rowId = insertRow(row)
-                transaction.markSuccessful()
-            } finally {
-                transaction.end()
-            }
-            emitter.onNext(row)
-            emitter.onComplete()
-        }.subscribeOn(Schedulers.io())
-    }
-
-    fun insertRow(row: Row): Long {
-        return db!!.insert(row.table, SQLiteDatabase.CONFLICT_REPLACE, row.toContentValues())
-    }
-
-    fun onUpdateRow(row: Row): Observable<Int> {
-        return Observable.create { emitter: ObservableEmitter<Int> ->
-            if (emitter.isDisposed) {
-                return@create
-            }
-            val result: Int
-            val transaction = db!!.newTransaction()
-            try {
-                result = updateRow(row)
-                transaction.markSuccessful()
-            } finally {
-                transaction.end()
-            }
-            emitter.onNext(result)
-            emitter.onComplete()
-        }.subscribeOn(Schedulers.io())
-    }
-
-    fun updateRow(row: Row): Int {
-        return db!!.update(
-            row.table, SQLiteDatabase.CONFLICT_IGNORE, row.toContentValues(),
-            "rowid=?", row.rowId.toString()
-        )
-    }
-
-    fun onDeleteRow(row: Row): Observable<Int> {
-        return Observable.create { emitter: ObservableEmitter<Int> ->
-            if (emitter.isDisposed) {
-                return@create
-            }
-            val result: Int
-            val transaction = db!!.newTransaction()
-            try {
-                result = deleteRow(row)
-                transaction.markSuccessful()
-            } finally {
-                transaction.end()
-            }
-            emitter.onNext(result)
-            emitter.onComplete()
-        }.subscribeOn(Schedulers.io())
-    }
-
-    fun deleteRow(row: Row): Int {
-        return db!!.delete(row.table, "rowid=?", row.rowId.toString())
-    }
-
-    fun clearTable(table: String): Int {
-        return db!!.delete(table, null, null)
-    }
-
-    fun isDbClosed(): Boolean {
-        return db == null
+        }
     }
 
     fun closeDb() {
-        if (!isDbClosed()) {
-            db!!.close()
+        db?.apply {
+            close()
             db = null
         }
+    }
+
+    companion object {
+
+        private const val DB_NAME = "app.db"
     }
 }
