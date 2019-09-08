@@ -15,7 +15,7 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import defpackage.taskmanager.data.local.DbManager
-import defpackage.taskmanager.data.models.Signal
+import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.extensions.isOreoPlus
 import defpackage.taskmanager.services.TasksManager
 import org.jetbrains.anko.notificationManager
@@ -41,7 +41,7 @@ class MainApplication : Application(), KodeinAware {
         Kotpref.init(applicationContext)
         if (isOreoPlus()) {
             notificationManager.apply {
-                Signal.map.forEach { (_, u) ->
+                Behavior.map.forEach { (_, u) ->
                     createNotificationChannel(u.buildChannel())
                 }
             }

@@ -8,13 +8,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "Signals")
-class Signal {
+@Entity(tableName = "Week")
+class Week {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID")
     var id = 0L
 
-    @ColumnInfo(name = "Тип")
-    lateinit var type: String
+    @ColumnInfo(name = "День")
+    lateinit var day: String
 }
