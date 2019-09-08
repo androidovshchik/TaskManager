@@ -6,9 +6,11 @@ package defpackage.taskmanager.data.models
 
 import android.app.Notification
 import android.content.Context
-import androidx.annotation.Keep
 import androidx.core.app.NotificationCompat
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import defpackage.taskmanager.EXTRA_RESULT
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
@@ -19,7 +21,6 @@ import defpackage.taskmanager.screens.task.TaskActivity
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 
-@Keep
 @Entity(
     tableName = "Tasks",
     foreignKeys = [
@@ -46,7 +47,7 @@ import org.joda.time.LocalTime
         )
     ]
 )
-class Task {
+open class Task {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID")
@@ -84,9 +85,6 @@ class Task {
 
     @ColumnInfo(name = "Статус")
     var status = false
-
-    @Embedded
-    var count = 0
 
     fun buildNotification(context: Context): Notification = context.run {
         return NotificationCompat.Builder(applicationContext, behavior.name)

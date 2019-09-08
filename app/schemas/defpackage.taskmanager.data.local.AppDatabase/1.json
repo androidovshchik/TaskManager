@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3e6fad8ef4c3e7511dfaa6819bf1a9a2",
+    "identityHash": "59d18945e8f3be800ec78215ca682be0",
     "entities": [
       {
-        "tableName": "tasks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Название` TEXT NOT NULL, `Т-Время` TEXT, `Т-День` INTEGER, `Т-Дата` TEXT, `Т-Задача` INTEGER, `Т-Повторы` INTEGER, `Т-Задержка` INTEGER, `Сигнал` INTEGER NOT NULL, `Интервал повторения` INTEGER NOT NULL, `Интервал откладывания` INTEGER NOT NULL, `Статус` INTEGER NOT NULL)",
+        "tableName": "Tasks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Название` TEXT NOT NULL, `Т-Время` TEXT, `Т-День` INTEGER, `Т-Дата` TEXT, `Т-Задача` INTEGER, `Т-Повторы` INTEGER, `Т-Задержка` INTEGER, `Сигнал` INTEGER NOT NULL, `Интервал повторения` INTEGER NOT NULL, `Интервал откладывания` INTEGER NOT NULL, `Статус` INTEGER NOT NULL, FOREIGN KEY(`Т-День`) REFERENCES `Week`(`ID`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`Т-Задача`) REFERENCES `Tasks`(`ID`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`Сигнал`) REFERENCES `Signals`(`ID`) ON UPDATE CASCADE ON DELETE SET DEFAULT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -57,7 +57,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "signal",
+            "fieldPath": "behavior",
             "columnName": "Сигнал",
             "affinity": "INTEGER",
             "notNull": true
@@ -88,11 +88,45 @@
           "autoGenerate": true
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "Week",
+            "onDelete": "SET NULL",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "Т-День"
+            ],
+            "referencedColumns": [
+              "ID"
+            ]
+          },
+          {
+            "table": "Tasks",
+            "onDelete": "SET NULL",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "Т-Задача"
+            ],
+            "referencedColumns": [
+              "ID"
+            ]
+          },
+          {
+            "table": "Signals",
+            "onDelete": "SET DEFAULT",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "Сигнал"
+            ],
+            "referencedColumns": [
+              "ID"
+            ]
+          }
+        ]
       },
       {
-        "tableName": "history",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Задача` INTEGER NOT NULL, `Статус` INTEGER, `Время` TEXT)",
+        "tableName": "History",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Задача` INTEGER NOT NULL, `Статус` INTEGER, `Время` TEXT, FOREIGN KEY(`Задача`) REFERENCES `Tasks`(`ID`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -126,13 +160,77 @@
           "autoGenerate": true
         },
         "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Tasks",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "Задача"
+            ],
+            "referencedColumns": [
+              "ID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Week",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `День` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "day",
+            "columnName": "День",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Signals",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Тип` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "ID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "Тип",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e6fad8ef4c3e7511dfaa6819bf1a9a2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59d18945e8f3be800ec78215ca682be0')"
     ]
   }
 }

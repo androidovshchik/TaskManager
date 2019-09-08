@@ -14,7 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.data.models.Record
-import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.data.models.TaskCount
 import defpackage.taskmanager.extensions.scanFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -100,7 +100,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         }
     }
 
-    override fun getAllTasks(): List<Task> {
+    override fun getAllTasks(): List<TaskCount> {
         if (isOpened) {
             if (io.value == false) {
                 return db?.taskDao()?.getAllTasks().orEmpty()
