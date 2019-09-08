@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.screens.BaseFragment
@@ -29,6 +30,16 @@ class TasksFragment : BaseFragment() {
         TasksFragmentUI().createView(AnkoContext.create(activity, this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        dbManager.io.observeForever(dbObserver)
         rvTasks.adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        dbManager.io.removeObserver(dbObserver)
+        super.onDestroyView()
+    }
+
+    private val dbObserver = Observer<Boolean> {
+
     }
 }

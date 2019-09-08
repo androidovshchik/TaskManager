@@ -6,11 +6,20 @@
 
 package defpackage.taskmanager.extensions
 
+import android.net.Uri
 import android.os.Build
 import android.os.Looper
 
 val isMainThread: Boolean
     get() = Looper.myLooper() == Looper.getMainLooper()
+
+internal fun isExternalStorageDocument(uri: Uri) = "com.android.externalstorage.documents" == uri.authority
+
+internal fun isDownloadsDocument(uri: Uri) = "com.android.providers.downloads.documents" == uri.authority
+
+internal fun isMediaDocument(uri: Uri) = "com.android.providers.media.documents" == uri.authority
+
+internal fun isGooglePhotosUri(uri: Uri) = "com.google.android.apps.photos.content" == uri.authority
 
 fun isKitkat() = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
 

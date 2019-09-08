@@ -6,19 +6,23 @@
 
 package defpackage.taskmanager.extensions
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.os.SystemClock
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.WorkerThread
 import androidx.core.content.PermissionChecker.PermissionResult
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import defpackage.taskmanager.receivers.ToastReceiver
@@ -102,4 +106,65 @@ fun Context.scanFile(path: String) {
         data = path.toFileUri()
     })
     MediaScannerConnection.scanFile(applicationContext, arrayOf(path), null, null)
+}
+
+@WorkerThread
+@Suppress("unused")
+@Throws(IllegalArgumentException::class)
+fun Context.getRealPath(uri: Uri): String? {
+    return when {
+        Build.VERSION.SDK_INT < 19 -> getDataColumn(uri)
+        else -> getRealPathFromURIKitkatPlus(uri)
+    }
+}
+
+@SuppressLint("NewApi")
+@Throws(IllegalArgumentException::class)
+private fun Context.getRealPathFromURIKitkatPlus(uri: Uri): String? {
+    if (DocumentsContract.isDocumentUri(this, uri)) {
+        if (isExternalStorageDocument(uri)) {
+            val docId = DocumentsContract.getDocumentId(uri)
+            val split = docId.split(":")
+            if ("primary".equals(split[0], true)) {
+                return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+            }
+        } else if (isDownloadsDocument(uri)) {
+            val id = DocumentsContract.getDocumentId(uri)
+            val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), id.toLong())
+            return getDataColumn(contentUri)
+        } else if (isMediaDocument(uri)) {
+            val docId = DocumentsContract.getDocumentId(uri)
+            val split = docId.split(":")
+            val contentUri = when (split[0].toLowerCase()) {
+                "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                else -> return null
+            }
+            return getDataColumn(contentUri, "_id=?", arrayOf(split[1]))
+        }
+    } else if ("content".equals(uri.scheme, true)) {
+        return if (isGooglePhotosUri(uri)) {
+            uri.lastPathSegment
+        } else {
+            getDataColumn(uri)
+        }
+    } else if ("file".equals(uri.scheme, true)) {
+        return uri.path
+    }
+    return null
+}
+
+@Throws(IllegalArgumentException::class)
+private fun Context.getDataColumn(uri: Uri, selection: String? = null, selectionArgs: Array<String>? = null): String? {
+    contentResolver?.query(
+        uri, arrayOf(
+            "_data"
+        ), selection, selectionArgs, null
+    )?.use {
+        if (it.moveToFirst()) {
+            return it.getString(it.getColumnIndexOrThrow("_data"))
+        }
+    }
+    return null
 }
