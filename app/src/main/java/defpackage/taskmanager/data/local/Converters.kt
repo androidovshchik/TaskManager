@@ -10,6 +10,7 @@ import defpackage.taskmanager.data.models.DayOfWeek
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 
+@Suppress("unused")
 object Converters {
 
     private const val ISO8601 = "yyyy-MM-dd HH:mm:ss"

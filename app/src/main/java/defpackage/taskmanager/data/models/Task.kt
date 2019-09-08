@@ -6,10 +6,9 @@ package defpackage.taskmanager.data.models
 
 import android.app.Notification
 import android.content.Context
+import androidx.annotation.Keep
 import androidx.core.app.NotificationCompat
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import defpackage.taskmanager.EXTRA_RESULT
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
@@ -19,17 +18,42 @@ import defpackage.taskmanager.receivers.ActionReceiver
 import defpackage.taskmanager.screens.task.TaskActivity
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
-import java.io.Serializable
 
-@Entity(tableName = "Tasks")
-class Task : Serializable {
+@Keep
+@Entity(
+    tableName = "Tasks",
+    foreignKeys = [
+        ForeignKey(
+            entity = Week::class,
+            parentColumns = ["ID"],
+            childColumns = ["Т-День"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
+            entity = Task::class,
+            parentColumns = ["ID"],
+            childColumns = ["Т-Задача"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
+            entity = Signal::class,
+            parentColumns = ["ID"],
+            childColumns = ["Сигнал"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.SET_DEFAULT
+        )
+    ]
+)
+class Task {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID")
     var id = 0L
 
     @ColumnInfo(name = "Название")
-    lateinit var title: String
+    var title = ""
 
     @ColumnInfo(name = "Т-Время")
     var tTime: LocalTime? = null
@@ -50,7 +74,7 @@ class Task : Serializable {
     var tDelay: Long? = null
 
     @ColumnInfo(name = "Сигнал")
-    lateinit var signal: Signal
+    var behavior = Behavior.SOUNDLESS
 
     @ColumnInfo(name = "Интервал повторения")
     var iRepeat = DEFAULT_REPEAT
@@ -61,8 +85,11 @@ class Task : Serializable {
     @ColumnInfo(name = "Статус")
     var status = false
 
+    @Embedded
+    var count = 0
+
     fun buildNotification(context: Context): Notification = context.run {
-        return NotificationCompat.Builder(applicationContext, signal.name)
+        return NotificationCompat.Builder(applicationContext, behavior.name)
             .setSmallIcon(R.drawable.ic_notifications_white_24dp)
             .setContentTitle(title)
             .setContentIntent(
@@ -90,7 +117,7 @@ class Task : Serializable {
                 )
             )
             .also {
-                if (signal == Signal.SOUNDLESS) {
+                if (behavior == Behavior.SOUNDLESS) {
                     it.setSound(null)
                 }
             }
