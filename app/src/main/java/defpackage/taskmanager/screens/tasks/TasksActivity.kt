@@ -4,7 +4,6 @@
 
 package defpackage.taskmanager.screens.tasks
 
-import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -12,12 +11,12 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.widget.TextView
-import androidx.lifecycle.Observer
+import defpackage.taskmanager.DANGER_PERMISSIONS
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.extensions.areGranted
+import defpackage.taskmanager.extensions.getRealPath
 import defpackage.taskmanager.extensions.requestPermissions
-import defpackage.taskmanager.extensions.toFileUri
 import defpackage.taskmanager.screens.BaseActivity
 import defpackage.taskmanager.services.TasksManager
 import defpackage.taskmanager.services.TasksService
@@ -51,9 +50,8 @@ class TasksActivity : BaseActivity() {
         fragmentManager.beginTransaction()
             .add(TasksActivityUI.FRAME_LAYOUT_ID, tasksFragment)
             .commit()
-        dbManager.io.observeForever(dbObserver)
-        if (!areGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            requestPermissions(REQUEST_PERMISSIONS, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (!areGranted(*DANGER_PERMISSIONS)) {
+            requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
         }
     }
 
@@ -69,9 +67,9 @@ class TasksActivity : BaseActivity() {
     }
 
     fun onChooseDbFile() {
-        startActivityForResult(Intent(Intent.ACTION_GET_CONTENT).apply {
+        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "application/*"
-        }.withChooser(applicationContext), 5000)
+        }, "Выберите приложение"), REQUEST_CHOOSE_FILE)
     }
 
     fun onLoadTasksFromDbFile() {
@@ -117,20 +115,15 @@ class TasksActivity : BaseActivity() {
                     getRealPath(uri)
                 } ?: uri.path
                 Timber.d("local file path: $path")
-                GlideApp.with(applicationContext)
-                    .load(path?.toFileUri())
-                    .into(background)
             }
         }
     }
 
-    override fun onDestroy() {
-        dbManager.io.removeObserver(dbObserver)
-        super.onDestroy()
-    }
-
-    private val dbObserver = Observer<Boolean> {
-
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (!areGranted(*DANGER_PERMISSIONS)) {
+            finish()
+        }
     }
 
     private val tasksConnection = object : ServiceConnection {
@@ -147,5 +140,7 @@ class TasksActivity : BaseActivity() {
     companion object {
 
         const val REQUEST_PERMISSIONS = 100
+
+        const val REQUEST_CHOOSE_FILE = 200
     }
 }

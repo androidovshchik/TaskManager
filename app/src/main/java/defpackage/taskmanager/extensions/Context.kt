@@ -15,7 +15,6 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.os.SystemClock
 import android.provider.DocumentsContract
@@ -109,61 +108,63 @@ fun Context.scanFile(path: String) {
 }
 
 @WorkerThread
-@Suppress("unused")
 @Throws(IllegalArgumentException::class)
 fun Context.getRealPath(uri: Uri): String? {
     return when {
-        Build.VERSION.SDK_INT < 19 -> getDataColumn(uri)
-        else -> getRealPathFromURIKitkatPlus(uri)
+        !isKitkatPlus() -> getDataColumn(uri)
+        else -> getRealPathKitkatPlus(uri)
     }
 }
 
 @SuppressLint("NewApi")
 @Throws(IllegalArgumentException::class)
-private fun Context.getRealPathFromURIKitkatPlus(uri: Uri): String? {
-    if (DocumentsContract.isDocumentUri(this, uri)) {
-        if (isExternalStorageDocument(uri)) {
-            val docId = DocumentsContract.getDocumentId(uri)
-            val split = docId.split(":")
-            if ("primary".equals(split[0], true)) {
-                return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+private fun Context.getRealPathKitkatPlus(uri: Uri): String? {
+    when {
+        DocumentsContract.isDocumentUri(this, uri) -> when {
+            isExternalStorageDocument(uri) -> {
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":")
+                if ("primary".equals(split[0], true)) {
+                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
+                }
             }
-        } else if (isDownloadsDocument(uri)) {
-            val id = DocumentsContract.getDocumentId(uri)
-            val contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), id.toLong())
-            return getDataColumn(contentUri)
-        } else if (isMediaDocument(uri)) {
-            val docId = DocumentsContract.getDocumentId(uri)
-            val split = docId.split(":")
-            val contentUri = when (split[0].toLowerCase()) {
-                "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                else -> return null
+            isDownloadsDocument(uri) -> {
+                val id = DocumentsContract.getDocumentId(uri)
+                val contentUri =
+                    ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), id.toLong())
+                return getDataColumn(contentUri)
             }
-            return getDataColumn(contentUri, "_id=?", arrayOf(split[1]))
+            isMediaDocument(uri) -> {
+                val docId = DocumentsContract.getDocumentId(uri)
+                val split = docId.split(":")
+                val contentUri = when (split[0].toLowerCase()) {
+                    "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    else -> return null
+                }
+                return getDataColumn(contentUri, "_id=?", arrayOf(split[1]))
+            }
         }
-    } else if ("content".equals(uri.scheme, true)) {
-        return if (isGooglePhotosUri(uri)) {
-            uri.lastPathSegment
-        } else {
-            getDataColumn(uri)
+        "content".equals(uri.scheme, true) -> return when {
+            isGooglePhotosUri(uri) -> uri.lastPathSegment
+            else -> getDataColumn(uri)
         }
-    } else if ("file".equals(uri.scheme, true)) {
-        return uri.path
+        "file".equals(uri.scheme, true) -> return uri.path
     }
     return null
 }
 
 @Throws(IllegalArgumentException::class)
 private fun Context.getDataColumn(uri: Uri, selection: String? = null, selectionArgs: Array<String>? = null): String? {
+    val dataColumn = "_data"
     contentResolver?.query(
         uri, arrayOf(
-            "_data"
+            dataColumn
         ), selection, selectionArgs, null
     )?.use {
         if (it.moveToFirst()) {
-            return it.getString(it.getColumnIndexOrThrow("_data"))
+            return it.getString(it.getColumnIndexOrThrow(dataColumn))
         }
     }
     return null
