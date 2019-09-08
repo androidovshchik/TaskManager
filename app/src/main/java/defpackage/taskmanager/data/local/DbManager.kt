@@ -69,17 +69,17 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         GlobalScope.launch(Dispatchers.Main) {
             closeDb()
             val oldPath = preferences.pathToDb
-            val needExport = doesExist && !TextUtils.isEmpty(oldPath)
-            val exported = if (needExport) {
+            val hasExport = doesExist && !TextUtils.isEmpty(oldPath)
+            val exported = if (hasExport) {
                 withContext(Dispatchers.IO) {
                     copyFile(dbFile, File(oldPath))
                 }
             } else true
-            XLog.d("Экспорт сделан: $exported")
+            XLog.d("Экспорт сделан $exported по пути $oldPath")
             val imported = withContext(Dispatchers.IO) {
                 copyFile(File(newPath), dbFile)
             }
-            XLog.d("Импорт сделан: $imported")
+            XLog.d("Импорт сделан $imported по пути $newPath")
             preferences.apply {
                 if (exported) {
                     if (imported) {
@@ -89,7 +89,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
                     } else {
                         context.toast("Не удалось импортировать БД")
                     }
-                    if (needExport) {
+                    if (hasExport) {
                         context.scanFile(oldPath.toString())
                     }
                 } else {
