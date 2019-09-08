@@ -7,6 +7,7 @@
 package defpackage.taskmanager.data.local
 
 import android.content.Context
+import android.text.TextUtils
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
@@ -50,6 +51,12 @@ class DbManager(context: Context) : TaskDao, RecordDao {
 
     @UiThread
     fun importDb(context: Context, path: String) {
+        val failedImport = "Не удалось импортировать БД"
+        if (io.value == true) {
+            XLog.w("Экспорт БД во время I/O операций")
+            context.toast(failedImport)
+            return
+        }
         io.value = true
         GlobalScope.launch(Dispatchers.Main) {
             val copied = withContext(Dispatchers.IO) {
@@ -65,39 +72,63 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     override fun getAllTasks(): List<Task> {
-        if (io.value == false) {
-            return db?.taskDao()?.getAllTasks().orEmpty()
+        if (db?.isOpen == true) {
+            if (io.value == false) {
+                return db?.taskDao()?.getAllTasks().orEmpty()
+            } else {
+                XLog.w("Работа с БД во время I/O операций")
+            }
+        } else {
+            XLog.w("Работа с закрытой БД")
         }
         return arrayListOf()
     }
 
     override fun getRecordsByTask(id: Long): List<Record> {
-        if (io.value == false) {
-            return db?.recordDao()?.getRecordsByTask(id).orEmpty()
+        if (db?.isOpen == true) {
+            if (io.value == false) {
+                return db?.recordDao()?.getRecordsByTask(id).orEmpty()
+            } else {
+                XLog.w("Работа с БД во время I/O операций")
+            }
+        } else {
+            XLog.w("Работа с закрытой БД")
         }
         return arrayListOf()
     }
 
     @UiThread
     fun exportDb(context: Context, path: String?) {
-        path?.let {
-            io.value = true
-            GlobalScope.launch(Dispatchers.Main) {
-                val copied = withContext(Dispatchers.IO) {
-                    copyFile(dbFile, File(it))
-                }
-                context.run {
-                    if (copied) {
-                        scanFile(it)
-                        toast("БД экспортирована")
-                    } else {
-                        toast("Не удалось экспортировать")
-                    }
-                }
-                io.value = false
-            }
-        } ?: run {
+        if (TextUtils.isEmpty(path)) {
+            XLog.w("Пустой путь для экспорта БД")
             context.toast("Не выбрана БД")
+            return
+        }
+        val failedExport = "Не удалось экспортировать БД"
+        if (db?.isOpen != true) {
+            XLog.w("Экспорт закрытой БД")
+            context.toast(failedExport)
+            return
+        }
+        if (io.value == true) {
+            XLog.w("Экспорт БД во время I/O операций")
+            context.toast(failedExport)
+            return
+        }
+        io.value = true
+        GlobalScope.launch(Dispatchers.Main) {
+            val copied = withContext(Dispatchers.IO) {
+                copyFile(dbFile, File(it))
+            }
+            context.run {
+                if (copied) {
+                    scanFile(it)
+                    toast("БД успешно экспортирована")
+                } else {
+                    toast(failedExport)
+                }
+            }
+            io.value = false
         }
     }
 
