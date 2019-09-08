@@ -19,7 +19,6 @@ import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.getRealPath
 import defpackage.taskmanager.extensions.requestPermissions
 import defpackage.taskmanager.screens.BaseActivity
-import defpackage.taskmanager.services.TasksManager
 import defpackage.taskmanager.services.TasksService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,11 +33,7 @@ class TasksActivity : BaseActivity() {
 
     val dbManager: DbManager by instance()
 
-    val tasksManager: TasksManager by instance()
-
     lateinit var etDbPath: EditText
-
-    lateinit var tvInfo: TextView
 
     lateinit var tvStatus: TextView
 

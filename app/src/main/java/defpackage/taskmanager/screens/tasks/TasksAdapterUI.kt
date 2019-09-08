@@ -31,7 +31,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                     textSize = 15f
                     textColor = Color.BLACK
                 }.lparams()
-                view().lparams(width = 0) {
+                view().lparams(0) {
                     weight = 1f
                 }
                 imageButton {
@@ -50,7 +50,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                     id = R.id.tasks_item_id
                     textSize = 15f
                     textColor = Color.BLACK
-                }.lparams(width = 0) {
+                }.lparams(0) {
                     weight = 1f
                 }
                 imageButton {

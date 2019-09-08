@@ -14,12 +14,12 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
 
     override fun createView(ui: AnkoContext<TasksActivity>): View = with(ui) {
         verticalLayout {
-            lparams(width = matchParent, height = matchParent)
+            lparams(matchParent, matchParent)
             padding = dip(8)
             linearLayout {
-                lparams(width = matchParent)
+                lparams(matchParent)
                 gravity = Gravity.CENTER_VERTICAL
-                owner.etDbPath = editText().lparams(width = 0) {
+                owner.etDbPath = editText().lparams(0) {
                     weight = 1f
                 }
                 button("Обзор") {
@@ -33,36 +33,32 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     }
                 }.lparams()
             }
-            owner.tvInfo = textView {
-                textSize = 15f
-                textColor = Color.BLACK
-            }.lparams(width = matchParent)
-            frameLayout().lparams(width = matchParent, height = 0) {
+            frameLayout().lparams(matchParent, 0) {
                 id = FRAME_LAYOUT_ID
                 weight = 1f
             }
             linearLayout {
-                lparams(width = matchParent)
+                lparams(matchParent)
                 gravity = Gravity.CENTER_VERTICAL
                 button("Запуск обработки задач") {
                     onClick {
                         owner.onLaunchTasksService()
                     }
-                }.lparams(width = 0) {
+                }.lparams(0) {
                     weight = 1f
                 }
                 button("Остановить все") {
                     onClick {
                         owner.onStopAllTasks()
                     }
-                }.lparams(width = 0) {
+                }.lparams(0) {
                     weight = 1f
                 }
             }
             owner.tvStatus = textView {
                 textSize = 15f
                 textColor = Color.BLACK
-            }.lparams(width = matchParent)
+            }.lparams(matchParent)
         }
     }
 
