@@ -69,13 +69,15 @@ class TasksActivity : BaseActivity() {
     }
 
     fun onChooseDbFile() {
-        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "application/*"
-        }, "Выберите приложение"), REQUEST_CHOOSE_FILE)
+        if (areGranted(*DANGER_PERMISSIONS)) {
+            startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).apply {
+                type = "application/*"
+            }, "Выберите приложение"), REQUEST_CHOOSE_FILE)
+        }
     }
 
     fun onLoadTasksFromDbFile() {
-        dbManager.importDb(applicationContext, etDbPath.text.toString().trim())
+        dbManager.importDb(preferences, etDbPath.text.toString().trim())
     }
 
     fun onLaunchTasksService() {
@@ -99,7 +101,6 @@ class TasksActivity : BaseActivity() {
 
     override fun onStop() {
         unbindTasksService()
-        preferences.pathToDb = etDbPath.text.toString()
         super.onStop()
     }
 
@@ -114,7 +115,6 @@ class TasksActivity : BaseActivity() {
                 val path = withContext(Dispatchers.IO) {
                     getRealPath(uri) ?: uri.path ?: ""
                 }
-                preferences.pathToDb = path
                 etDbPath.setText(path)
             }
         }

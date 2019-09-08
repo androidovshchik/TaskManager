@@ -13,7 +13,6 @@ class TasksManager {
     fun setTasks() {
         tasks.apply {
             clear()
-            addAll()
         }
     }
 

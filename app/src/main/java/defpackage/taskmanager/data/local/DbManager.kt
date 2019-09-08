@@ -15,12 +15,10 @@ import androidx.room.Room
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.data.models.Task
-import defpackage.taskmanager.extensions.scanFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -40,19 +38,37 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         openDb(context)
     }
 
-    val isOpen: Boolean
+    val doesExist: Boolean
+        get() = dbFile.exists()
+
+    val isOpened: Boolean
         get() = db?.isOpen == true
 
     private fun openDb(context: Context) {
         closeDb()
-        if (dbFile.exists()) {
+        if (doesExist) {
             db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
                 .build()
         }
     }
 
     @UiThread
-    fun importDb(context: Context, path: String) {
+    fun importDb(preferences: Preferences, path: String?) = path?.let {
+        if (SQLITE_REGEX.matches(path.toString())) {
+
+        }
+        preferences.pathToDb = etDbPath.text.toString()
+        if (TextUtils.isEmpty(path.trim())) {
+            XLog.w("Не задан путь для импорта БД")
+            context.toast("Не выбрана БД")
+            return
+        }
+        if (SQLITE_REGEX.matches(path)) {
+            preferences.pathToDb = path
+            etDbPath.setText(path)
+        } else {
+            toast("Выберите файл со sqlite БД")
+        }
         if (io.value == true) {
             XLog.w("Импорт БД во время I/O операций")
             context.toast("Подождите...")
@@ -64,6 +80,14 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             val copied = withContext(Dispatchers.IO) {
                 copyFile(File(path), dbFile)
             }
+            if (!dbFile.exists()) {
+                val message = "Не существует файла с БД"
+                XLog.w(message)
+                return
+            }
+            val copied = withContext(Dispatchers.IO) {
+                copyFile(dbFile, File(path))
+            }
             context.run {
                 if (copied) {
                     openDb(context)
@@ -71,13 +95,14 @@ class DbManager(context: Context) : TaskDao, RecordDao {
                 } else {
                     toast("Не удалось импортировать БД")
                 }
+                scanFile(path)
             }
             io.value = false
         }
     }
 
     override fun getAllTasks(): List<Task> {
-        if (isOpen) {
+        if (isOpened) {
             if (io.value == false) {
                 return db?.taskDao()?.getAllTasks().orEmpty()
             } else {
@@ -88,7 +113,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     override fun getRecordsByTask(id: Long): List<Record> {
-        if (isOpen) {
+        if (isOpened) {
             if (io.value == false) {
                 return db?.recordDao()?.getRecordsByTask(id).orEmpty()
             } else {
@@ -96,41 +121,6 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             }
         }
         return arrayListOf()
-    }
-
-    @UiThread
-    fun exportDb(context: Context, path: String?) {
-        if (TextUtils.isEmpty(path?.trim())) {
-            XLog.w("Пустой путь для экспорта БД")
-            context.toast("Не выбрана БД")
-            return
-        }
-        if (!dbFile.exists()) {
-            val message = "Не существует файла с БД"
-            XLog.w(message)
-            context.toast(message)
-            return
-        }
-        if (io.value == true) {
-            XLog.w("Экспорт БД во время I/O операций")
-            context.toast("Подождите...")
-            return
-        }
-        io.value = true
-        GlobalScope.launch(Dispatchers.Main) {
-            val copied = withContext(Dispatchers.IO) {
-                copyFile(dbFile, File(path))
-            }
-            context.run {
-                if (copied) {
-                    scanFile(path!!)
-                    toast("БД успешно экспортирована")
-                } else {
-                    toast("Не удалось экспортировать БД")
-                }
-            }
-            io.value = false
-        }
     }
 
     @WorkerThread
@@ -164,5 +154,8 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     companion object {
 
         private const val DB_NAME = "app.db"
+
+        @JvmStatic
+        private val SQLITE_REGEX = ".+\\.(db|sdb|sqlite|db3|s3db|sqlite3|sl3)$".toRegex()
     }
 }
