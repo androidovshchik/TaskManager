@@ -5,31 +5,25 @@
 package defpackage.taskmanager.services
 
 import android.annotation.SuppressLint
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
-import defpackage.taskmanager.EXTRA_RESULT
-import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.local.Preferences
-import defpackage.taskmanager.data.models.Signal
+import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.extensions.isRunning
 import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.startForegroundService
 import defpackage.taskmanager.screens.tasks.TasksActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.powerManager
 import org.jetbrains.anko.startService
 import org.jetbrains.anko.stopService
 
-class TasksService : Service(), CoroutineScope {
+class TasksService : BaseService() {
 
     private val binder = Binder()
 
@@ -48,7 +42,7 @@ class TasksService : Service(), CoroutineScope {
     override fun onCreate() {
         super.onCreate()
         startForeground(
-            0, NotificationCompat.Builder(applicationContext, Signal.SOUNDLESS.name)
+            0, NotificationCompat.Builder(applicationContext, Behavior.SOUNDLESS.name)
                 .setSmallIcon(R.drawable.ic_schedule_white_24dp)
                 .setContentTitle("Фоновой сервис")
                 .setContentIntent(pendingActivityFor<TasksActivity>())
@@ -60,21 +54,23 @@ class TasksService : Service(), CoroutineScope {
     @SuppressLint("WakelockTimeout")
     private fun acquireWakeLock() {
         if (wakeLock == null) {
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$packageName:${javaClass.simpleName}")
-            wakeLock?.acquire()
+            wakeLock =
+                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$packageName:${javaClass.simpleName}").apply {
+                    acquire()
+                }
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        job?.let {
+        /*job?.let {
             it.cancel()
             job = null
         }
-        executeJob()
+        executeJob()*/
         return START_STICKY
     }
 
-    fun executeJob() {
+    /*fun executeJob() {
         job = launch {
             try {
                 acquireWakeLock()
@@ -87,7 +83,7 @@ class TasksService : Service(), CoroutineScope {
                 releaseWakeLock()
             }
         }
-    }
+    }*/
 
     private fun releaseWakeLock() {
         wakeLock?.let {
@@ -100,8 +96,6 @@ class TasksService : Service(), CoroutineScope {
         releaseWakeLock()
         super.onDestroy()
     }
-
-    override val coroutineContext = Dispatchers.Main
 
     @Suppress("unused")
     inner class Binder : android.os.Binder() {
@@ -117,24 +111,23 @@ class TasksService : Service(), CoroutineScope {
          * @return true if service is running
          */
         @JvmStatic
-        fun launch(context: Context, vararg params: Pair<String, Any?>): Boolean = context.run {
-            return if (Preferences.enabledTasksService) {
-                if (activityManager.isRunning<TasksService>()) {
+        fun launch(preferences: Preferences, vararg params: Pair<String, Any?>): Boolean = preferences.run {
+            return if (enableTasksService) {
+                if (context.activityManager.isRunning<TasksService>()) {
                     if (params.isNotEmpty()) {
-                        startService<TasksService>(*params) != null
+                        context.startService<TasksService>(*params) != null
                     } else {
                         true
                     }
                 } else {
                     try {
-                        startForegroundService<TasksService>(*params) != null
+                        context.startForegroundService<TasksService>(*params) != null
                     } catch (e: SecurityException) {
                         false
                     }
                 }
             } else {
-                kill(context)
-                false
+                !kill(context)
             }
         }
 
