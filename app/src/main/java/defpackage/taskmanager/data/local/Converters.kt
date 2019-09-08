@@ -12,37 +12,29 @@ import org.joda.time.LocalTime
 
 object Converters {
 
-    @TypeConverter
-    fun toLocalTime(value: String?): LocalTime? {
-        // todo check
-        value?.trim()?.let {
-            return LocalTime.parse(value)
-        }
-        return null
-    }
-
-    @TypeConverter
-    fun fromLocalTime(value: LocalTime?): String? {
-        // todo check
-        value?.toString()
-        return null
-    }
+    private const val ISO8601 = "yyyy-MM-dd HH:mm:ss"
 
     @TypeConverter
     fun toLocalDate(value: String?): LocalDate? {
         // todo check
-        value?.trim()?.let {
+        return value?.trim()?.let {
             return LocalDate.parse(value)
         }
-        return null
     }
 
     @TypeConverter
-    fun fromLocalDate(value: LocalDate?): String? {
+    fun fromLocalDate(value: LocalDate?): String? = value?.toString(ISO8601.split(" ")[0])
+
+    @TypeConverter
+    fun toLocalTime(value: String?): LocalTime? {
         // todo check
-        value?.toString()
-        return null
+        return value?.trim()?.let {
+            return LocalTime.parse(value)
+        }
     }
+
+    @TypeConverter
+    fun fromLocalTime(value: LocalTime?): String? = value?.toString(ISO8601.split(" ")[1])
 
     @TypeConverter
     fun toDayOfWeek(value: Long?): DayOfWeek? = DayOfWeek.fromId(value)

@@ -5,6 +5,12 @@
 package defpackage.taskmanager.data.local
 
 import androidx.room.Dao
+import androidx.room.Query
+import defpackage.taskmanager.data.models.Task
 
 @Dao
-interface TaskDao
+interface TaskDao {
+
+    @Query("SELECT Tasks.*, COUNT(History.ID) as count FROM Tasks LEFT JOIN History ON Tasks.ID = History.`Задача`")
+    fun getAllTasks(): List<Task>
+}

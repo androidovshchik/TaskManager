@@ -5,6 +5,12 @@
 package defpackage.taskmanager.data.local
 
 import androidx.room.Dao
+import androidx.room.Query
+import defpackage.taskmanager.data.models.Record
 
 @Dao
-interface RecordDao
+interface RecordDao {
+
+    @Query("SELECT * FROM History WHERE `Задача` = :id")
+    fun getRecordsByTask(id: Long): List<Record>
+}
