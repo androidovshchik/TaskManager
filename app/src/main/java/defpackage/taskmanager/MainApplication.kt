@@ -6,7 +6,6 @@ package defpackage.taskmanager
 
 import android.app.Application
 import android.os.Environment
-import com.chibatching.kotpref.Kotpref
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
 import com.elvishew.xlog.XLog
@@ -15,6 +14,7 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import defpackage.taskmanager.data.local.DbManager
+import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.extensions.isOreoPlus
 import defpackage.taskmanager.services.TasksManager
@@ -31,6 +31,8 @@ class MainApplication : Application(), KodeinAware {
 
     override val kodein by Kodein.lazy {
 
+        bind<Preferences>() with singleton { Preferences(applicationContext) }
+
         bind<DbManager>() with singleton { DbManager(applicationContext) }
 
         bind<TasksManager>() with singleton { TasksManager() }
@@ -41,8 +43,6 @@ class MainApplication : Application(), KodeinAware {
     override fun onCreate() {
         super.onCreate()
         initLogger()
-        Kotpref.init(applicationContext)
-        // should be after preferences init
         kodeinTrigger.trigger()
         if (isOreoPlus()) {
             notificationManager.apply {

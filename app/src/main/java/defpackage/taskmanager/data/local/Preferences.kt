@@ -4,9 +4,10 @@
 
 package defpackage.taskmanager.data.local
 
+import android.content.Context
 import com.chibatching.kotpref.KotprefModel
 
-object Preferences : KotprefModel() {
+class Preferences(context: Context) : KotprefModel(context) {
 
     override val kotprefName: String = "preferences"
 

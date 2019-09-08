@@ -15,10 +15,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaScannerConnection
 import android.os.SystemClock
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.core.content.PermissionChecker.PermissionResult
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import defpackage.taskmanager.receivers.ToastReceiver
 import org.jetbrains.anko.alarmManager
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startService
@@ -28,6 +31,16 @@ fun Context.createXmlDrawable(@DrawableRes id: Int): VectorDrawableCompat? {
         VectorDrawableCompat.create(resources, id, theme)
     } else null
 }
+
+fun Context.bgToast(message: String) = sendBroadcast(intentFor<ToastReceiver>().apply {
+    putExtra(ToastReceiver.EXTRA_MESSAGE, message)
+    putExtra(ToastReceiver.EXTRA_DURATION, Toast.LENGTH_SHORT)
+})
+
+fun Context.longBgToast(message: String) = sendBroadcast(intentFor<ToastReceiver>().apply {
+    putExtra(ToastReceiver.EXTRA_MESSAGE, message)
+    putExtra(ToastReceiver.EXTRA_DURATION, Toast.LENGTH_LONG)
+})
 
 @PermissionResult
 fun Context.areGranted(vararg permissions: String): Boolean {
@@ -82,4 +95,11 @@ inline fun <reified T : BroadcastReceiver> Context.createAlarm(interval: Int) {
 
 inline fun <reified T : BroadcastReceiver> Context.cancelAlarm() {
     alarmManager.cancel(pendingReceiverFor<T>())
+}
+
+fun Context.scanFile(path: String) {
+    sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).apply {
+        data = path.toFileUri()
+    })
+    MediaScannerConnection.scanFile(applicationContext, arrayOf(path), null, null)
 }

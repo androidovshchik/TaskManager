@@ -51,6 +51,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-recyclerview-v7:${Versions.anko}"
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation "androidx.lifecycle:lifecycle-livedata:${Versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
     implementation "androidx.room:room-runtime:${Versions.room}"
     kapt "androidx.room:room-compiler:${Versions.room}"
     implementation 'com.chibatching.kotpref:kotpref:2.9.1'
