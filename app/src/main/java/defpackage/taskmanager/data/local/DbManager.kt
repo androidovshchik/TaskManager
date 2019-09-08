@@ -7,7 +7,10 @@
 package defpackage.taskmanager.data.local
 
 import android.content.Context
+import androidx.annotation.UiThread
 import androidx.room.Room
+import defpackage.taskmanager.data.models.Record
+import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.extensions.isLollipopPlus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -18,46 +21,57 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.concurrent.atomic.AtomicBoolean
 
-class DbManager {
+class DbManager(context: Context) : TaskDao, RecordDao {
 
-    var db: AppDatabase? = null
+    private var db: AppDatabase? = null
 
-    var locked = AtomicBoolean(false)
+    private var locked = AtomicBoolean(false)
 
-    suspend fun openDb(context: Context, path: String) {
-        closeDb()
-        withContext(Dispatchers.IO) {
-
-        }
-        db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
-            .build()
+    init {
+        openDb(context)
     }
 
-    fun importDb(path: String) {
+    fun openDb(context: Context) {
+        Preferences.pathToDb?.let {
+            closeDb()
+            db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
+                .build()
+        }
+        if (Preferences.pathToDb) {
+
+        }
+    }
+
+    @UiThread
+    fun importDb(context: Context, path: String) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-
+                val file = getDatabasePath(DB_NAME)
+                if (!isLollipopPlus()) {
+                    val path = File("${applicationInfo.dataDir}/databases")
+                    if (!path.exists()) {
+                        path.mkdir()
+                    }
+                }
+                copyFile()
             }
         }
     }
 
-    fun exportDb(path: String) {
+    override fun getAllTasks(): List<Task> {
+        return db?.taskDao()?.getAllTasks().orEmpty()
+    }
+
+    override fun getRecordsByTask(id: Long): List<Record> {
+        return db?.recordDao()?.getRecordsByTask(id).orEmpty()
+    }
+
+    @UiThread
+    fun exportDb(context: Context) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-
+                copyFile()
             }
-        }
-    }
-
-    private fun copyDbFile(context: Context) = context.run {
-        val file = getDatabasePath(DB_NAME)
-        if (!isLollipopPlus()) {
-            val path = File("${applicationInfo.dataDir}/databases")
-            if (!path.exists()) {
-                path.mkdir()
-            }
-        }
-        if (!file.exists()) {
         }
     }
 

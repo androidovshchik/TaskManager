@@ -21,6 +21,7 @@ import defpackage.taskmanager.services.TasksManager
 import org.jetbrains.anko.notificationManager
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
+import org.kodein.di.KodeinTrigger
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
 import java.io.File
@@ -28,17 +29,21 @@ import java.io.File
 @Suppress("unused")
 class MainApplication : Application(), KodeinAware {
 
-    override val kodein = Kodein {
+    override val kodein by Kodein.lazy {
 
-        bind<DbManager>() with singleton { DbManager() }
+        bind<DbManager>() with singleton { DbManager(applicationContext) }
 
         bind<TasksManager>() with singleton { TasksManager() }
     }
+
+    override val kodeinTrigger = KodeinTrigger()
 
     override fun onCreate() {
         super.onCreate()
         initLogger()
         Kotpref.init(applicationContext)
+        // should be after preferences init
+        kodeinTrigger.trigger()
         if (isOreoPlus()) {
             notificationManager.apply {
                 Behavior.map.forEach { (_, u) ->

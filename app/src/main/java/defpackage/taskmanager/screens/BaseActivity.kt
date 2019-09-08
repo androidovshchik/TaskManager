@@ -10,15 +10,12 @@ import android.view.MenuItem
 import com.elvishew.xlog.XLog
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
-import org.kodein.di.KodeinTrigger
 import org.kodein.di.android.kodein
 
 @SuppressLint("Registered")
 open class BaseActivity : Activity(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
-
-    override val kodeinTrigger = KodeinTrigger()
 
     val activityJob = SupervisorJob()
 

@@ -8,5 +8,9 @@ import com.chibatching.kotpref.KotprefModel
 
 object Preferences : KotprefModel() {
 
-    var enabledTasksService by booleanPref(false, "enabledTasksService")
+    override val kotprefName: String = "preferences"
+
+    var pathToDb by nullableStringPref(null, "pathToDb")
+
+    var enableTasksService by booleanPref(false, "enableTasksService")
 }

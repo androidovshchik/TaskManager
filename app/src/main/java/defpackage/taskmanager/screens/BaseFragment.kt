@@ -10,14 +10,11 @@ import android.app.Fragment
 import com.elvishew.xlog.XLog
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
-import org.kodein.di.KodeinTrigger
 import org.kodein.di.android.kodein
 
 open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
-
-    override val kodeinTrigger = KodeinTrigger()
 
     val fragmentJob = SupervisorJob()
 
