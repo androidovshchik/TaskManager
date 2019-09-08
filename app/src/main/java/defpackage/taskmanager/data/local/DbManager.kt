@@ -15,10 +15,12 @@ import androidx.room.Room
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.extensions.scanFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -45,7 +47,6 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         get() = db?.isOpen == true
 
     private fun openDb(context: Context) {
-        closeDb()
         if (doesExist) {
             db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
                 .build()
@@ -53,49 +54,44 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     @UiThread
-    fun importDb(preferences: Preferences, path: String?) = path?.let {
-        if (SQLITE_REGEX.matches(path.toString())) {
-
-        }
-        preferences.pathToDb = etDbPath.text.toString()
-        if (TextUtils.isEmpty(path.trim())) {
-            XLog.w("Не задан путь для импорта БД")
-            context.toast("Не выбрана БД")
+    fun importDb(preferences: Preferences, path: String) {
+        if (!SQLITE_REGEX.matches(path)) {
+            XLog.w("Невалидный путь: $path")
+            preferences.context.toast("Невалидный файл для импорта БД")
             return
-        }
-        if (SQLITE_REGEX.matches(path)) {
-            preferences.pathToDb = path
-            etDbPath.setText(path)
-        } else {
-            toast("Выберите файл со sqlite БД")
         }
         if (io.value == true) {
             XLog.w("Импорт БД во время I/O операций")
-            context.toast("Подождите...")
+            preferences.context.toast("Подождите...")
             return
         }
         io.value = true
         GlobalScope.launch(Dispatchers.Main) {
             closeDb()
-            val copied = withContext(Dispatchers.IO) {
+            val oldPath = preferences.pathToDb
+            val exported = if (doesExist && !TextUtils.isEmpty(oldPath)) {
+                withContext(Dispatchers.IO) {
+                    copyFile(dbFile, File(oldPath))
+                }
+            } else true
+            XLog.d("Экспорт сделан: $exported")
+            val imported = withContext(Dispatchers.IO) {
                 copyFile(File(path), dbFile)
             }
-            if (!dbFile.exists()) {
-                val message = "Не существует файла с БД"
-                XLog.w(message)
-                return
-            }
-            val copied = withContext(Dispatchers.IO) {
-                copyFile(dbFile, File(path))
-            }
-            context.run {
-                if (copied) {
-                    openDb(context)
-                    toast("БД успешно импортирована")
+            XLog.d("Импорт сделан: $imported")
+            preferences.context.run {
+                if (exported) {
+                    if (imported) {
+                        openDb(applicationContext)
+                        preferences.pathToDb = path
+                        toast("БД успешно импортирована")
+                    } else {
+                        toast("Не удалось импортировать БД")
+                    }
+                    scanFile(path)
                 } else {
-                    toast("Не удалось импортировать БД")
+                    toast("Не удалось экспортировать БД")
                 }
-                scanFile(path)
             }
             io.value = false
         }

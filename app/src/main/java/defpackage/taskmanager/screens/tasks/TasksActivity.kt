@@ -48,9 +48,7 @@ class TasksActivity : BaseActivity() {
         fragmentManager.beginTransaction()
             .add(TasksActivityUI.FRAME_LAYOUT_ID, tasksFragment)
             .commit()
-        preferences.pathToDb?.let {
-            etDbPath.setText(it)
-        }
+        etDbPath.setText(preferences.pathToDb ?: "")
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
         }
@@ -77,7 +75,9 @@ class TasksActivity : BaseActivity() {
     }
 
     fun onLoadTasksFromDbFile() {
-        dbManager.importDb(preferences, etDbPath.text.toString().trim())
+        if (areGranted(*DANGER_PERMISSIONS)) {
+            dbManager.importDb(preferences, etDbPath.text.toString().trim())
+        }
     }
 
     fun onLaunchTasksService() {
