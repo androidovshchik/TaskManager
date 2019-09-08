@@ -27,18 +27,21 @@ import java.io.FileOutputStream
 
 class DbManager(context: Context) : TaskDao, RecordDao {
 
-    private var db: AppDatabase? = null
-
     /**
      * Indicates I/O operations during import/export
      */
     val io = MutableLiveData(true)
+
+    private var db: AppDatabase? = null
 
     private val dbFile = context.getDatabasePath(DB_NAME)
 
     init {
         openDb(context)
     }
+
+    val isOpen: Boolean
+        get() = db?.isOpen == true
 
     fun openDb(context: Context) {
         if (dbFile.exists()) {
@@ -53,7 +56,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     fun importDb(context: Context, path: String) {
         val failedImport = "Не удалось импортировать БД"
         if (io.value == true) {
-            XLog.w("Экспорт БД во время I/O операций")
+            XLog.w("Импорт БД во время I/O операций")
             context.toast(failedImport)
             return
         }
@@ -62,17 +65,21 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             val copied = withContext(Dispatchers.IO) {
                 copyFile(File(path), dbFile)
             }
-            if (copied) {
-                openDb(context)
-            } else {
-                closeDb()
-                io.value = false
+            context.run {
+                if (copied) {
+                    openDb(context)
+                    toast("БД успешно импортирована")
+                } else {
+                    closeDb()
+                    toast("Требуется перезапуск приложения")
+                    io.value = false
+                }
             }
         }
     }
 
     override fun getAllTasks(): List<Task> {
-        if (db?.isOpen == true) {
+        if (isOpen) {
             if (io.value == false) {
                 return db?.taskDao()?.getAllTasks().orEmpty()
             } else {
@@ -85,7 +92,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     override fun getRecordsByTask(id: Long): List<Record> {
-        if (db?.isOpen == true) {
+        if (isOpen) {
             if (io.value == false) {
                 return db?.recordDao()?.getRecordsByTask(id).orEmpty()
             } else {
@@ -99,17 +106,18 @@ class DbManager(context: Context) : TaskDao, RecordDao {
 
     @UiThread
     fun exportDb(context: Context, path: String?) {
-        if (TextUtils.isEmpty(path)) {
+        if (TextUtils.isEmpty(path?.trim())) {
             XLog.w("Пустой путь для экспорта БД")
             context.toast("Не выбрана БД")
             return
         }
-        val failedExport = "Не удалось экспортировать БД"
-        if (db?.isOpen != true) {
-            XLog.w("Экспорт закрытой БД")
-            context.toast(failedExport)
+        if (!dbFile.exists()) {
+            val message = "Не существует локальной копии БД"
+            XLog.w(message)
+            context.toast(message)
             return
         }
+        val failedExport = "Не удалось экспортировать БД"
         if (io.value == true) {
             XLog.w("Экспорт БД во время I/O операций")
             context.toast(failedExport)
@@ -118,11 +126,11 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         io.value = true
         GlobalScope.launch(Dispatchers.Main) {
             val copied = withContext(Dispatchers.IO) {
-                copyFile(dbFile, File(it))
+                copyFile(dbFile, File(path))
             }
             context.run {
                 if (copied) {
-                    scanFile(it)
+                    scanFile(path!!)
                     toast("БД успешно экспортирована")
                 } else {
                     toast(failedExport)
