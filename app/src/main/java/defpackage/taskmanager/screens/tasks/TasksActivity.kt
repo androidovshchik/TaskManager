@@ -10,7 +10,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.widget.EditText
 import android.widget.TextView
+import com.elvishew.xlog.XLog
 import defpackage.taskmanager.DANGER_PERMISSIONS
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.local.Preferences
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.setContentView
+import org.jetbrains.anko.toast
 import org.kodein.di.generic.instance
 
 class TasksActivity : BaseActivity() {
@@ -34,6 +37,8 @@ class TasksActivity : BaseActivity() {
     val dbManager: DbManager by instance()
 
     val tasksManager: TasksManager by instance()
+
+    lateinit var etDbPath: EditText
 
     lateinit var tvInfo: TextView
 
@@ -53,6 +58,9 @@ class TasksActivity : BaseActivity() {
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
         }
+        preferences.pathToDb?.let {
+            etDbPath.setText(it)
+        }
     }
 
     override fun onStart() {
@@ -63,6 +71,7 @@ class TasksActivity : BaseActivity() {
     private fun bindTasksService() {
         if (TasksService.launch(applicationContext)) {
             bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
+            tvStatus.text = "Статус: работает"
         }
     }
 
@@ -77,18 +86,15 @@ class TasksActivity : BaseActivity() {
     }
 
     fun onLaunchTasksService() {
-        Preferences.enableTasksService = true
+        preferences.enableTasksService = true
         bindTasksService()
     }
 
     fun onStopAllTasks() {
-        Preferences.enableTasksService = false
+        preferences.enableTasksService = false
         unbindTasksService()
         TasksService.kill(applicationContext)
-    }
-
-    override fun onChanged(t: Boolean) {
-
+        tvStatus.text = "Статус: не работает"
     }
 
     private fun unbindTasksService() {
@@ -105,16 +111,22 @@ class TasksActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 5000) {
+        if (requestCode == REQUEST_CHOOSE_FILE) {
             if (resultCode != RESULT_OK) {
                 return
             }
             val uri = data?.data ?: return
             launch {
                 val path = withContext(Dispatchers.IO) {
-                    getRealPath(uri)
-                } ?: uri.path
-                Timber.d("local file path: $path")
+                    getRealPath(uri) ?: uri.path ?: ""
+                }
+                XLog.d("Chosen file path: $path")
+                if (SQLITE_REGEX.matches(path)) {
+                    preferences.pathToDb = path
+                    etDbPath.setText(path)
+                } else {
+                    toast("Выберите файл со sqlite БД")
+                }
             }
         }
     }
@@ -139,8 +151,11 @@ class TasksActivity : BaseActivity() {
 
     companion object {
 
-        const val REQUEST_PERMISSIONS = 100
+        private const val REQUEST_PERMISSIONS = 100
 
-        const val REQUEST_CHOOSE_FILE = 200
+        private const val REQUEST_CHOOSE_FILE = 200
+
+        @JvmStatic
+        private val SQLITE_REGEX = ".+\\.(db|sdb|sqlite|db3|s3db|sqlite3|sl3)$".toRegex()
     }
 }

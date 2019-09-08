@@ -8,10 +8,6 @@ package defpackage.taskmanager.extensions
 
 import android.net.Uri
 import android.os.Build
-import android.os.Looper
-
-val isMainThread: Boolean
-    get() = Looper.myLooper() == Looper.getMainLooper()
 
 internal fun isExternalStorageDocument(uri: Uri) = "com.android.externalstorage.documents" == uri.authority
 

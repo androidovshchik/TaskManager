@@ -19,7 +19,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             linearLayout {
                 lparams(width = matchParent)
                 gravity = Gravity.CENTER_VERTICAL
-                editText {
+                owner.etDbPath = editText {
 
                 }.lparams(width = 0) {
                     weight = 1f
