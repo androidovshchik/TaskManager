@@ -40,6 +40,12 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                         owner.onLoadTasksFromDbFile()
                     }
                 }.lparams()
+                imageButton {
+                    setImageXmlDrawable(R.drawable.ic_file_export)
+                    onClick {
+                        owner.onLoadTasksFromDbFile()
+                    }
+                }.lparams()
             }
             view {
                 background = ContextCompat.getDrawable(context, R.drawable.divider)

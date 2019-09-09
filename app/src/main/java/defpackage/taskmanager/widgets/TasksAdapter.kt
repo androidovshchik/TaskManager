@@ -18,19 +18,21 @@ import org.jetbrains.anko.AnkoContext
 class TasksAdapter(context: Context, items: ArrayList<Task>) : ArrayAdapter<Task>(context, 0, items) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
-        val user = getItem(position)
+        val view: View
         val viewHolder: ViewHolder
         if (convertView == null) {
-            convertView = TasksAdapterUI().createView(AnkoContext.create(parent.context, parent))
-            viewHolder = ViewHolder(convertView)
-            convertView.tag = viewHolder
+            view = TasksAdapterUI().createView(AnkoContext.create(parent.context, parent))
+            viewHolder = ViewHolder(view)
         } else {
+            view = convertView
             viewHolder = convertView.tag as ViewHolder
         }
-        viewHolder.name!!.setText(user!!.name)
-        viewHolder.home!!.setText(user.hometown)
-        return convertView
+        getItem(position)?.let {
+            viewHolder.apply {
+
+            }
+        }
+        return view
     }
 
     private class ViewHolder(itemView: View) {
@@ -54,5 +56,9 @@ class TasksAdapter(context: Context, items: ArrayList<Task>) : ArrayAdapter<Task
         val ibEdit: ImageButton = itemView.findViewById(R.id.tasks_item_edit)
 
         val ibDelete: ImageButton = itemView.findViewById(R.id.tasks_item_delete)
+
+        init {
+            itemView.tag = this
+        }
     }
 }
