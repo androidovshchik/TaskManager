@@ -73,7 +73,7 @@ class TasksActivity : BaseActivity() {
     fun onChooseDbFile() {
         if (areGranted(*DANGER_PERMISSIONS)) {
             startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "application/*"
+                type = "*/*"
             }, "Выберите приложение"), REQUEST_CHOOSE_FILE)
         }
     }

@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.View
 import androidx.core.content.ContextCompat
 import defpackage.taskmanager.R
+import defpackage.taskmanager.extensions.setImageXmlDrawable
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk19.listeners.onClick
 
@@ -20,22 +21,29 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             setPadding(0, dip(8), 0, dip(8))
             linearLayout {
                 lparams(matchParent)
-                setPadding(dip(8), 0, dip(8), 0)
+                setPadding(dip(8), 0, dip(8), dip(8))
                 gravity = Gravity.CENTER_VERTICAL
-                owner.etDbPath = editText().lparams(0) {
+                owner.etDbPath = editText {
+                    maxLines = 1
+                }.lparams(0) {
                     weight = 1f
                 }
-                button("Обзор") {
+                imageButton {
+                    setImageXmlDrawable(R.drawable.ic_folder_open)
                     onClick {
                         owner.onChooseDbFile()
                     }
                 }.lparams()
-                button("Загрузить задачи") {
+                imageButton {
+                    setImageXmlDrawable(R.drawable.ic_file_import)
                     onClick {
                         owner.onLoadTasksFromDbFile()
                     }
                 }.lparams()
             }
+            view {
+                background = ContextCompat.getDrawable(context, R.drawable.divider)
+            }.lparams(matchParent, dip(1))
             frameLayout {
                 id = FRAME_LAYOUT_ID
             }.lparams(matchParent, 0) {
@@ -46,28 +54,28 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             }.lparams(matchParent, dip(1))
             linearLayout {
                 lparams(matchParent)
-                setPadding(dip(8), 0, dip(8), 0)
+                setPadding(dip(8), dip(8), dip(8), 0)
                 gravity = Gravity.CENTER_VERTICAL
-                button("Запуск обработки задач") {
+                owner.tvStatus = textView {
+                    textSize = 15f
+                    textColor = Color.BLACK
+                    setPadding(dip(8), 0, dip(8), 0)
+                }.lparams(0) {
+                    weight = 1f
+                }
+                imageButton {
+                    setImageXmlDrawable(R.drawable.ic_play_arrow_black_24dp)
                     onClick {
                         owner.onLaunchTasksService()
                     }
-                }.lparams(0) {
-                    weight = 1f
-                }
-                button("Остановить все") {
+                }.lparams()
+                imageButton {
+                    setImageXmlDrawable(R.drawable.ic_stop_black_24dp)
                     onClick {
                         owner.onStopAllTasks()
                     }
-                }.lparams(0) {
-                    weight = 1f
-                }
+                }.lparams()
             }
-            owner.tvStatus = textView {
-                textSize = 15f
-                textColor = Color.BLACK
-                setPadding(dip(8), 0, dip(8), 0)
-            }.lparams(matchParent)
         }
     }
 

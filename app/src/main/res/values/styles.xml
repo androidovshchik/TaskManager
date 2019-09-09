@@ -2,12 +2,9 @@
   ~ Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:colorPrimary" tools:targetApi="lollipop">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark" tools:targetApi="lollipop">@color/colorPrimaryDark</item>
-        <item name="android:colorAccent" tools:targetApi="lollipop">@color/colorAccent</item>
+    <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar">
     </style>
 
 </resources>
