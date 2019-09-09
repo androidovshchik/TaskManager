@@ -61,7 +61,9 @@ class TasksActivity : BaseActivity() {
 
     private fun bindTasksService() {
         tvStatus.text = if (TasksService.launch(preferences)) {
-            bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
+            if (tasksService == null) {
+                bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
+            }
             "Статус: работает"
         } else {
             "Статус: не работает"

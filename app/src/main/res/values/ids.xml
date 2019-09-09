@@ -4,6 +4,7 @@
   -->
 
 <resources>
+    <item name="tasks_item_box" type="id"/>
     <item name="tasks_item_id" type="id"/>
     <item name="tasks_item_title" type="id"/>
     <item name="tasks_item_info" type="id"/>

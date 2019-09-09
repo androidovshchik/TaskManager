@@ -21,6 +21,9 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
             linearLayout {
                 lparams(matchParent)
                 gravity = Gravity.CENTER_VERTICAL
+                checkBox {
+                    id = R.id.tasks_item_box
+                }.lparams()
                 textView {
                     id = R.id.tasks_item_id
                     textSize = 15f

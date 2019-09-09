@@ -76,25 +76,25 @@ class DbManager(context: Context) : TaskDao, RecordDao {
                 }
             } else true
             XLog.d("Экспорт сделан $exported по пути $oldPath")
-            val imported = withContext(Dispatchers.IO) {
-                copyFile(File(newPath), dbFile)
-            }
-            XLog.d("Импорт сделан $imported по пути $newPath")
-            preferences.apply {
-                if (exported) {
-                    if (imported) {
+            if (exported) {
+                if (hasExport) {
+                    preferences.context.scanFile(oldPath.toString())
+                }
+                val imported = withContext(Dispatchers.IO) {
+                    copyFile(File(newPath), dbFile)
+                }
+                XLog.d("Импорт сделан $imported по пути $newPath")
+                if (imported) {
+                    preferences.apply {
                         openDb(context)
                         pathToDb = newPath
                         context.toast("БД успешно импортирована")
-                    } else {
-                        context.toast("Не удалось импортировать БД")
-                    }
-                    if (hasExport) {
-                        context.scanFile(oldPath.toString())
                     }
                 } else {
-                    context.toast("Не удалось экспортировать БД")
+                    preferences.context.toast("Не удалось импортировать БД")
                 }
+            } else {
+                preferences.context.toast("Не удалось экспортировать БД")
             }
             io.value = false
         }

@@ -6,6 +6,7 @@ package defpackage.taskmanager.screens.tasks
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,8 @@ class TasksAdapter : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
     override fun getItemCount() = items.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        val checkBox: CheckBox = itemView.findViewById(R.id.tasks_item_box)
 
         val tvId: TextView = itemView.findViewById(R.id.tasks_item_id)
 
