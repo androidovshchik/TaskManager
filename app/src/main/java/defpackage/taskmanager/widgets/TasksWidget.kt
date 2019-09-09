@@ -23,10 +23,10 @@ class TasksWidget : AppWidgetProvider() {
 
         @JvmStatic
         fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetID: Int) = context.run {
-            val view = RemoteViews(packageName, R.layout.widget_tasks).apply {
+            val views = RemoteViews(packageName, R.layout.widget_tasks).apply {
                 setRemoteAdapter(R.id.widget_list, intentFor<TasksWidgetService>())
             }
-            appWidgetManager.updateAppWidget(widgetID, view)
+            appWidgetManager.updateAppWidget(widgetID, views)
         }
     }
 }
