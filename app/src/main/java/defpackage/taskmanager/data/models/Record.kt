@@ -27,7 +27,7 @@ class Record {
     @ColumnInfo(name = "ID")
     var id = 0L
 
-    @ColumnInfo(name = "Задача")
+    @ColumnInfo(name = "Задача", index = true)
     var task = 0L
 
     @ColumnInfo(name = "Статус")

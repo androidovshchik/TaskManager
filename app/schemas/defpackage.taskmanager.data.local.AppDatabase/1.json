@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "59d18945e8f3be800ec78215ca682be0",
+    "identityHash": "9c65453754906779271487eab5930249",
     "entities": [
       {
         "tableName": "Tasks",
@@ -87,7 +87,32 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Tasks_Т-День",
+            "unique": false,
+            "columnNames": [
+              "Т-День"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Tasks_Т-День` ON `${TABLE_NAME}` (`Т-День`)"
+          },
+          {
+            "name": "index_Tasks_Т-Задача",
+            "unique": false,
+            "columnNames": [
+              "Т-Задача"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Tasks_Т-Задача` ON `${TABLE_NAME}` (`Т-Задача`)"
+          },
+          {
+            "name": "index_Tasks_Сигнал",
+            "unique": false,
+            "columnNames": [
+              "Сигнал"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Tasks_Сигнал` ON `${TABLE_NAME}` (`Сигнал`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Week",
@@ -159,7 +184,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_History_Задача",
+            "unique": false,
+            "columnNames": [
+              "Задача"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_History_Задача` ON `${TABLE_NAME}` (`Задача`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "Tasks",
@@ -230,7 +264,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '59d18945e8f3be800ec78215ca682be0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9c65453754906779271487eab5930249')"
     ]
   }
 }

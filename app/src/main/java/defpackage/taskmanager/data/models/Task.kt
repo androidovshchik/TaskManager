@@ -5,6 +5,7 @@
 package defpackage.taskmanager.data.models
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.room.ColumnInfo
@@ -14,6 +15,7 @@ import androidx.room.PrimaryKey
 import defpackage.taskmanager.EXTRA_RESULT
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
+import defpackage.taskmanager.extensions.isNougatPlus
 import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.pendingReceiverFor
 import defpackage.taskmanager.receivers.ActionReceiver
@@ -59,13 +61,13 @@ open class Task {
     @ColumnInfo(name = "Т-Время")
     var tTime: LocalTime? = null
 
-    @ColumnInfo(name = "Т-День")
+    @ColumnInfo(name = "Т-День", index = true)
     var tDay: DayOfWeek? = null
 
     @ColumnInfo(name = "Т-Дата")
     var tDate: LocalDate? = null
 
-    @ColumnInfo(name = "Т-Задача")
+    @ColumnInfo(name = "Т-Задача", index = true)
     var tTask: Long? = null
 
     @ColumnInfo(name = "Т-Повторы")
@@ -74,7 +76,7 @@ open class Task {
     @ColumnInfo(name = "Т-Задержка")
     var tDelay: Long? = null
 
-    @ColumnInfo(name = "Сигнал")
+    @ColumnInfo(name = "Сигнал", index = true)
     var behavior = Behavior.SOUNDLESS
 
     @ColumnInfo(name = "Интервал повторения")
@@ -86,6 +88,7 @@ open class Task {
     @ColumnInfo(name = "Статус")
     var status = false
 
+    @Suppress("DEPRECATION")
     fun buildNotification(context: Context): Notification = context.run {
         return NotificationCompat.Builder(applicationContext, behavior.name)
             .setSmallIcon(R.drawable.ic_notifications_white_24dp)
@@ -115,6 +118,11 @@ open class Task {
                 )
             )
             .also {
+                if (isNougatPlus()) {
+                    it.priority = NotificationManager.IMPORTANCE_HIGH
+                } else {
+                    it.priority = Notification.PRIORITY_MAX
+                }
                 if (behavior == Behavior.SOUNDLESS) {
                     it.setSound(null)
                 }
