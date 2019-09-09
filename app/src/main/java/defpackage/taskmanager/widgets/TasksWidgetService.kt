@@ -29,12 +29,10 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
     class Factory(private val context: Context, private val appWidgetId: Int) : RemoteViewsFactory {
 
         private var tasks: List<Task> = ArrayList()
-        private var color = 0
 
         override fun onDataSetChanged() {
             var list = context.getList(appWidgetId)
             list = TrelloAPIUtil.instance.getCards(list)
-            color = context.getCardForegroundColor()
 
             if (BoardList.ERROR != list.id) {
                 tasks = list.cards
@@ -45,15 +43,14 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
 
         override fun getViewAt(position: Int): RemoteViews {
             val item = tasks[position]
-            val views = RemoteViews(context.packageName, R.layout.item_task)
-            return views
+            return RemoteViews(context.packageName, R.layout.item_task).apply {
+
+            }
         }
 
-        override fun onCreate() {
-        }
+        override fun onCreate() {}
 
-        override fun onDestroy() {
-        }
+        override fun onDestroy() {}
 
         override fun getCount(): Int = tasks.size
 
