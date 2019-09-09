@@ -34,7 +34,7 @@ class TasksAdapter : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val checkBox: CheckBox = itemView.findViewById(R.id.tasks_item_box)
+        val cbEnable: CheckBox = itemView.findViewById(R.id.tasks_item_box)
 
         val tvId: TextView = itemView.findViewById(R.id.tasks_item_id)
 

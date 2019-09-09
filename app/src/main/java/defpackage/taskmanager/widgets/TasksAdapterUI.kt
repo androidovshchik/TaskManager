@@ -15,63 +15,29 @@ import org.jetbrains.anko.*
 class TasksAdapterUI : AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>): View = with(ui) {
-        verticalLayout {
+        linearLayout {
             lparams(matchParent)
             padding = dip(8)
-            linearLayout {
-                lparams(matchParent)
-                gravity = Gravity.CENTER_VERTICAL
-                imageView {
-                    id = R.id.tasks_item_box
-                }.lparams()
-                textView {
-                    id = R.id.tasks_item_id
-                    textSize = 15f
-                    textColor = Color.BLACK
-                }.lparams()
-                textView {
-                    id = R.id.tasks_item_title
-                    textSize = 15f
-                    textColor = Color.BLACK
-                }.lparams(0) {
-                    weight = 1f
-                }
-                imageButton {
-                    id = R.id.tasks_item_edit
-                    setImageXmlDrawable(R.drawable.ic_edit_black_24dp)
-                }.lparams()
-                imageButton {
-                    id = R.id.tasks_item_delete
-                    setImageXmlDrawable(R.drawable.ic_delete_black_24dp)
-                }.lparams()
+            gravity = Gravity.CENTER_VERTICAL
+            textView {
+                id = R.id.tasks_item_title
+                textSize = 15f
+                textColor = Color.BLACK
+            }.lparams(0) {
+                weight = 1f
             }
-            linearLayout {
-                lparams(matchParent)
-                gravity = Gravity.CENTER_VERTICAL
-                textView {
-                    id = R.id.tasks_item_info
-                    textSize = 15f
-                    textColor = Color.BLACK
-                }.lparams(0) {
-                    weight = 1f
-                }
-                imageButton {
-                    id = R.id.tasks_item_complete
-                    setImageXmlDrawable(R.drawable.ic_done_black_24dp)
-                }.lparams()
-                imageButton {
-                    id = R.id.tasks_item_defer
-                    setImageXmlDrawable(R.drawable.ic_update_black_24dp)
-                }.lparams()
-                imageButton {
-                    id = R.id.tasks_item_cancel
-                    setImageXmlDrawable(R.drawable.ic_close_black_24dp)
-                }.lparams()
-                imageButton {
-                    id = R.id.tasks_item_history
-                    setImageXmlDrawable(R.drawable.ic_info_black_24dp)
-                }.lparams()
-            }
+            imageButton {
+                id = R.id.tasks_item_complete
+                setImageXmlDrawable(R.drawable.ic_done_black_24dp)
+            }.lparams()
+            imageButton {
+                id = R.id.tasks_item_defer
+                setImageXmlDrawable(R.drawable.ic_update_black_24dp)
+            }.lparams()
+            imageButton {
+                id = R.id.tasks_item_cancel
+                setImageXmlDrawable(R.drawable.ic_close_black_24dp)
+            }.lparams()
         }
     }
 }
