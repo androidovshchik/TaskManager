@@ -9,6 +9,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
 import defpackage.taskmanager.R
+import org.jetbrains.anko.intentFor
 
 class TasksWidget : AppWidgetProvider() {
 
@@ -21,11 +22,11 @@ class TasksWidget : AppWidgetProvider() {
     companion object {
 
         @JvmStatic
-        fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetID: Int) {
-            val widgetView = RemoteViews(context.packageName, R.layout.widget_tasks).apply {
-
+        fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetID: Int) = context.run {
+            val view = RemoteViews(packageName, R.layout.widget_tasks).apply {
+                setRemoteAdapter(R.id.widget_list, intentFor<TasksWidgetService>())
             }
-            appWidgetManager.updateAppWidget(widgetID, widgetView)
+            appWidgetManager.updateAppWidget(widgetID, view)
         }
     }
 }

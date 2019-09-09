@@ -5,6 +5,7 @@
 package defpackage.taskmanager.widgets
 
 import android.graphics.Color
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,8 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                 id = R.id.tasks_item_title
                 textSize = 15f
                 textColor = Color.BLACK
+                maxLines = 1
+                ellipsize = TextUtils.TruncateAt.END
             }.lparams(0) {
                 weight = 1f
             }
