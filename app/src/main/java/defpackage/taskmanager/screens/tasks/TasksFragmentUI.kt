@@ -23,6 +23,9 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
                 textSize = 15f
                 textColor = Color.BLACK
             }.lparams(matchParent)
+            view {
+                background = ContextCompat.getDrawable(context, R.drawable.divider)
+            }.lparams(matchParent, dip(1))
             owner.swipeRefresh = swipeRefreshLayout {
                 owner.rvTasks = recyclerView {
                     layoutManager = LinearLayoutManager(context)

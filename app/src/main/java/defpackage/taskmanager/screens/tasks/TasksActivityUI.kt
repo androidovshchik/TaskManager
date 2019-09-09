@@ -7,6 +7,8 @@ package defpackage.taskmanager.screens.tasks
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
+import androidx.core.content.ContextCompat
+import defpackage.taskmanager.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk19.listeners.onClick
 
@@ -15,9 +17,10 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
     override fun createView(ui: AnkoContext<TasksActivity>): View = with(ui) {
         verticalLayout {
             lparams(matchParent, matchParent)
-            padding = dip(8)
+            setPadding(0, dip(8), 0, dip(8))
             linearLayout {
                 lparams(matchParent)
+                setPadding(dip(8), 0, dip(8), 0)
                 gravity = Gravity.CENTER_VERTICAL
                 owner.etDbPath = editText().lparams(0) {
                     weight = 1f
@@ -38,8 +41,12 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             }.lparams(matchParent, 0) {
                 weight = 1f
             }
+            view {
+                background = ContextCompat.getDrawable(context, R.drawable.divider)
+            }.lparams(matchParent, dip(1))
             linearLayout {
                 lparams(matchParent)
+                setPadding(dip(8), 0, dip(8), 0)
                 gravity = Gravity.CENTER_VERTICAL
                 button("Запуск обработки задач") {
                     onClick {
@@ -59,6 +66,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             owner.tvStatus = textView {
                 textSize = 15f
                 textColor = Color.BLACK
+                setPadding(dip(8), 0, dip(8), 0)
             }.lparams(matchParent)
         }
     }

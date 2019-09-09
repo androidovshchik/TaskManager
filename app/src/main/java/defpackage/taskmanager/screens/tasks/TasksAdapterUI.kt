@@ -30,7 +30,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                     textColor = Color.BLACK
                 }.lparams()
                 textView {
-                    id = R.id.tasks_item_id
+                    id = R.id.tasks_item_title
                     textSize = 15f
                     textColor = Color.BLACK
                 }.lparams()
@@ -50,7 +50,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                 lparams(matchParent)
                 gravity = Gravity.CENTER_VERTICAL
                 textView {
-                    id = R.id.tasks_item_id
+                    id = R.id.tasks_item_info
                     textSize = 15f
                     textColor = Color.BLACK
                 }.lparams(0) {
