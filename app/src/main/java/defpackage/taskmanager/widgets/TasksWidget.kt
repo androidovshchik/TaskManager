@@ -2,7 +2,7 @@
  * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
  */
 
-package defpackage.taskmanager.receivers
+package defpackage.taskmanager.widgets
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider

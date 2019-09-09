@@ -47,7 +47,7 @@
             android:enabled="true"
             android:exported="false"/>
         <receiver
-            android:name=".receivers.TasksWidget"
+            android:name=".widgets.TasksWidget"
             android:label="@string/app_name"
             android:icon="@mipmap/ic_launcher">
             <intent-filter>
