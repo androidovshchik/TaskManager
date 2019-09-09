@@ -4,8 +4,6 @@
 
 package defpackage.taskmanager.widgets
 
-import android.appwidget.AppWidgetManager
-import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -13,46 +11,52 @@ import defpackage.taskmanager.R
 import defpackage.taskmanager.data.models.Task
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
-import java.util.*
 
 class TasksWidgetService : RemoteViewsService(), KodeinAware {
 
     override val kodein by kodein()
 
-    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory = Factory(
-        this, intent.getIntExtra(
-            AppWidgetManager.EXTRA_APPWIDGET_ID,
-            AppWidgetManager.INVALID_APPWIDGET_ID
-        )
-    )
+    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory = Factory()
 
-    class Factory(private val context: Context, private val appWidgetId: Int) : RemoteViewsFactory {
+    inner class Factory : RemoteViewsFactory {
 
-        private var tasks: List<Task> = ArrayList()
+        private val tasks = arrayListOf<Task>()
 
-        override fun onDataSetChanged() {
-            var list = context.getList(appWidgetId)
-            list = TrelloAPIUtil.instance.getCards(list)
-
-            if (BoardList.ERROR != list.id) {
-                tasks = list.cards
-            } else {
-                color = color.dim()
-            }
+        override fun onCreate() {
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
+            tasks.add(Task())
         }
 
         override fun getViewAt(position: Int): RemoteViews {
             val item = tasks[position]
-            return RemoteViews(context.packageName, R.layout.item_task).apply {
-
+            return RemoteViews(packageName, R.layout.item_task).apply {
+                setTextViewText(R.id.tasks_item_info, "2000-01-01 00:0$position")
+                setTextViewText(R.id.tasks_item_title, "Задача $position. Длинное описание")
             }
         }
 
-        override fun onCreate() {}
-
-        override fun onDestroy() {}
-
-        override fun getCount(): Int = tasks.size
+        override fun onDataSetChanged() {}
 
         override fun getLoadingView(): RemoteViews? = null
 
@@ -60,6 +64,10 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
 
         override fun getItemId(position: Int): Long = position.toLong()
 
+        override fun getCount(): Int = tasks.size
+
         override fun hasStableIds() = true
+
+        override fun onDestroy() {}
     }
 }

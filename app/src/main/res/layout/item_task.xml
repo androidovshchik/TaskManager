@@ -3,8 +3,7 @@
   ~ Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,10 +12,26 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@id/tasks_item_title"
-        android:layout_width="0dp"
+        android:id="@id/tasks_item_info"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/tasks_item_complete"
+        android:layout_marginEnd="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        android:textColor="@android:color/black"
+        tools:text="TextTextTextTextTextTextTextTextTextTextTextTextText"/>
+
+    <TextView
+        android:id="@id/tasks_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/tasks_item_complete"
+        android:layout_below="@id/tasks_item_info"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="4dp"
         android:maxLines="1"
         android:ellipsize="end"
@@ -28,21 +43,24 @@
         android:id="@id/tasks_item_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_done_black_24dp"
-        tools:src="@drawable/ic_done_black_24dp"/>
+        android:layout_toStartOf="@id/tasks_item_defer"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_done_black_24dp"/>
 
     <ImageButton
         android:id="@id/tasks_item_defer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_update_black_24dp"
-        tools:src="@drawable/ic_update_black_24dp"/>
+        android:layout_toStartOf="@id/tasks_item_cancel"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_update_black_24dp"/>
 
     <ImageButton
         android:id="@id/tasks_item_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_close_black_24dp"
-        tools:src="@drawable/ic_close_black_24dp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_close_black_24dp"/>
 
-</LinearLayout>
+</RelativeLayout>

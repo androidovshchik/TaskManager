@@ -18,6 +18,7 @@ class TasksWidget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(id, RemoteViews(packageName, R.layout.widget_tasks).apply {
                 setRemoteAdapter(R.id.widget_list, intentFor<TasksWidgetService>())
             })
+            appWidgetManager.notifyAppWidgetViewDataChanged(id, R.id.widget_list)
         }
     }
 }
