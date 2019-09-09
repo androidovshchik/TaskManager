@@ -4,58 +4,55 @@
 
 package defpackage.taskmanager.widgets
 
+import android.content.Context
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import defpackage.taskmanager.R
 import defpackage.taskmanager.data.models.Task
+import org.jetbrains.anko.AnkoContext
 
-class AttractionsAdapter(items: ArrayList<Attraction>, ctx: Context) :
-    ArrayAdapter<Task>(ctx, R.layout.attraction_item, items) {
+class TasksAdapter(context: Context, items: ArrayList<Task>) : ArrayAdapter<Task>(context, 0, items) {
 
-    //view holder is used to prevent findViewById calls
-    private class AttractionItemViewHolder {
-        internal var image: ImageView? = null
-        internal var title: TextView? = null
-        internal var description: TextView? = null
-        internal var hours: TextView? = null
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        var convertView = convertView
+        val user = getItem(position)
+        val viewHolder: ViewHolder
+        if (convertView == null) {
+            convertView = TasksAdapterUI().createView(AnkoContext.create(parent.context, parent))
+            viewHolder = ViewHolder(convertView)
+            convertView.tag = viewHolder
+        } else {
+            viewHolder = convertView.tag as ViewHolder
+        }
+        viewHolder.name!!.setText(user!!.name)
+        viewHolder.home!!.setText(user.hometown)
+        return convertView
     }
 
-    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-        var view = view
+    private class ViewHolder(itemView: View) {
 
-        val viewHolder: AttractionItemViewHolder
+        val checkBox: ImageView = itemView.findViewById(R.id.tasks_item_box)
 
-        if (view == null) {
-            val inflater = LayoutInflater.from(context)
-            view = inflater.inflate(R.layout.attraction_item, viewGroup, false)
+        val tvId: TextView = itemView.findViewById(R.id.tasks_item_id)
 
-            viewHolder = AttractionItemViewHolder()
-            viewHolder.title = view!!.findViewById<View>(R.id.title) as TextView
-            viewHolder.description = view.findViewById<View>(R.id.description) as TextView
-            viewHolder.hours = view.findViewById<View>(R.id.hours) as TextView
-            //shows how to apply styles to views of item for specific items
-            if (i == 3)
-                viewHolder.hours!!.setTextColor(Color.DKGRAY)
-            viewHolder.image = view.findViewById<View>(R.id.image) as ImageView
-        } else {
-            //no need to call findViewById, can use existing ones from saved view holder
-            viewHolder = view.tag
-        }
+        val tvTitle: TextView = itemView.findViewById(R.id.tasks_item_title)
 
-        val attraction = getItem(i)
-        viewHolder.title!!.text = attraction!!.title
-        viewHolder.description!!.text = attraction.description
-        viewHolder.hours!!.text = attraction.hours
-        viewHolder.image!!.setImageResource(attraction.image)
+        val tvInfo: TextView = itemView.findViewById(R.id.tasks_item_info)
 
-        //shows how to handle events of views of items
-        viewHolder.image!!.setOnClickListener {
-            Toast.makeText(
-                context, "Clicked image of " + attraction.title,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        val ibComplete: ImageButton = itemView.findViewById(R.id.tasks_item_complete)
 
-        view.tag = viewHolder
+        val ibDefer: ImageButton = itemView.findViewById(R.id.tasks_item_defer)
 
-        return view
+        val ibCancel: ImageButton = itemView.findViewById(R.id.tasks_item_cancel)
+
+        val ibHistory: ImageButton = itemView.findViewById(R.id.tasks_item_history)
+
+        val ibEdit: ImageButton = itemView.findViewById(R.id.tasks_item_edit)
+
+        val ibDelete: ImageButton = itemView.findViewById(R.id.tasks_item_delete)
     }
 }
