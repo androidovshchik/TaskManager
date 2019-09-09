@@ -24,7 +24,7 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
             nestedScrollView {
                 layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
                 verticalLayout {
-                    lparams(matchParent, matchParent)
+                    lparams(matchParent)
                     owner.tvTasks = textView("Список задач") {
                         padding = dip(8)
                         textSize = 15f
@@ -41,9 +41,7 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
                                 setDrawable(it)
                             }
                         })
-                    }.lparams(matchParent, 0) {
-                        weight = 1f
-                    }
+                    }.lparams(matchParent)
                 }
             }
         }

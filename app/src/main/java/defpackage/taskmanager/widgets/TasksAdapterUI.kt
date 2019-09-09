@@ -2,7 +2,7 @@
  * Copyright (c) 2019. Vlad Kalyuzhnyu <vladkalyuzhnyu@gmail.com>
  */
 
-package defpackage.taskmanager.screens.tasks
+package defpackage.taskmanager.widgets
 
 import android.graphics.Color
 import android.view.Gravity
@@ -21,7 +21,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
             linearLayout {
                 lparams(matchParent)
                 gravity = Gravity.CENTER_VERTICAL
-                checkBox {
+                imageView {
                     id = R.id.tasks_item_box
                 }.lparams()
                 textView {
@@ -33,8 +33,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                     id = R.id.tasks_item_title
                     textSize = 15f
                     textColor = Color.BLACK
-                }.lparams()
-                view().lparams(0) {
+                }.lparams(0) {
                     weight = 1f
                 }
                 imageButton {
