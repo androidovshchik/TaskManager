@@ -70,7 +70,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                 }.lparams()
                 imageButton {
                     id = R.id.tasks_item_history
-                    setImageXmlDrawable(R.drawable.ic_description_black_24dp)
+                    setImageXmlDrawable(R.drawable.ic_info_black_24dp)
                 }.lparams()
             }
         }
