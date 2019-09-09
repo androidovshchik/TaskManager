@@ -5,13 +5,10 @@
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/widget_tasks"
+    android:minWidth="40dp"
     android:minHeight="110dp"
-    android:minWidth="250dp"
-    android:minResizeHeight="40dp"
-    android:minResizeWidth="110dp"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen|keyguard"
-    android:previewImage="@drawable/preview"
-    android:configure="com.github.oryanmat.trellowidget.activity.ConfigActivity">
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen"
+    android:previewImage="@mipmap/ic_launcher">
 </appwidget-provider>
