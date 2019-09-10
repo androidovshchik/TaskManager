@@ -52,7 +52,7 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
             val item = tasks[position]
             return RemoteViews(packageName, R.layout.item_task).apply {
                 setTextViewText(R.id.tasks_item_info, "2000-01-01 00:0$position")
-                setTextViewText(R.id.tasks_item_title, "Задача $position. Длинное описание")
+                setTextViewText(R.id.tasks_item_title, "TextTextTextTextTextTextTextTextTextTextTextTextText")
             }
         }
 
