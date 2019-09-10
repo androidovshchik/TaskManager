@@ -16,5 +16,5 @@ class Signal {
     var id = 0L
 
     @ColumnInfo(name = "Тип")
-    lateinit var type: String
+    var type = ""
 }

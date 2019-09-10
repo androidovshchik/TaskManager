@@ -14,9 +14,8 @@ class HistoryActivityUI : AnkoComponent<HistoryActivity> {
 
     override fun createView(ui: AnkoContext<HistoryActivity>): View = with(ui) {
         frameLayout {
-            id = FRAME_LAYOUT_ID
-        }.lparams(matchParent, 0) {
-            weight = 1f
+            lparams(matchParent, matchParent)
+            id = HISTORY_LAYOUT_ID
         }
     }
 

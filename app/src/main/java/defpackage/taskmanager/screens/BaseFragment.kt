@@ -7,6 +7,7 @@
 package defpackage.taskmanager.screens
 
 import android.app.Fragment
+import android.os.Bundle
 import com.elvishew.xlog.XLog
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
@@ -17,6 +18,9 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
     override val kodein by kodein()
 
     val fragmentJob = SupervisorJob()
+
+    protected val args: Bundle
+        get() = arguments ?: Bundle()
 
     override fun onDestroyView() {
         fragmentJob.cancelChildren()

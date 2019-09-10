@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import defpackage.taskmanager.EXTRA_ID
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.screens.BaseFragment
@@ -62,5 +63,16 @@ class HistoryFragment : BaseFragment() {
 
     private val dbObserver = Observer<Boolean> {
 
+    }
+
+    companion object {
+
+        fun newInstance(id: Long): HistoryFragment {
+            return HistoryFragment().apply {
+                arguments = Bundle().apply {
+                    putLong(EXTRA_ID, id)
+                }
+            }
+        }
     }
 }

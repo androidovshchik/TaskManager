@@ -15,3 +15,5 @@ const val EXTRA_TASK = "extra_task"
 const val EXTRA_RESULT = "extra_result"
 
 const val EXTRA_RECEIVER = "extra_receiver"
+
+const val EXTRA_ID = "extra_id"

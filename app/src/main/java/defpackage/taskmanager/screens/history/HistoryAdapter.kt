@@ -31,12 +31,6 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val tvId: TextView = itemView.findViewById(R.id.tasks_item_id)
-
-        val tvTitle: TextView = itemView.findViewById(R.id.tasks_item_title)
-
-        init {
-
-        }
+        val tvText: TextView = itemView.findViewById(R.id.history_item_text)
     }
 }

@@ -16,5 +16,5 @@ class Week {
     var id = 0L
 
     @ColumnInfo(name = "День")
-    lateinit var day: String
+    var day = ""
 }
