@@ -7,8 +7,8 @@ package defpackage.taskmanager.data.models
 import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.os.Build
-import androidx.core.app.NotificationManagerCompat
 
 enum class Behavior(val id: Long, private val description: String) {
     SOUNDLESS(1, "Без звука"),
@@ -19,13 +19,7 @@ enum class Behavior(val id: Long, private val description: String) {
 
     @TargetApi(Build.VERSION_CODES.O)
     fun buildChannel(): NotificationChannel {
-        return NotificationChannel(
-            name, description, if (this == SOUNDLESS) {
-                NotificationManagerCompat.IMPORTANCE_LOW
-            } else {
-                NotificationManagerCompat.IMPORTANCE_DEFAULT
-            }
-        ).also {
+        return NotificationChannel(name, description, NotificationManager.IMPORTANCE_DEFAULT).also {
             it.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
     }

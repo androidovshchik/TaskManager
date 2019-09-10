@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.EditText
 import android.widget.TextView
+import com.elvishew.xlog.XLog
 import defpackage.taskmanager.DANGER_PERMISSIONS
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.local.Preferences
@@ -46,11 +47,17 @@ class TasksActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         TasksActivityUI().setContentView(this)
         fragmentManager.beginTransaction()
-            .add(TasksActivityUI.FRAME_LAYOUT_ID, tasksFragment)
+            .add(TasksActivityUI.TASKS_LAYOUT_ID, tasksFragment)
             .commit()
         etDbPath.setText(preferences.pathToDb ?: "")
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
+        }
+        launch {
+            withContext(Dispatchers.IO) {
+                XLog.d(dbManager.isOpened)
+                XLog.d(dbManager.getTasks())
+            }
         }
     }
 

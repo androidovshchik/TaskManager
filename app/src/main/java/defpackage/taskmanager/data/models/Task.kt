@@ -99,6 +99,7 @@ open class Task {
                 )
             )
             .setOngoing(true)
+            .setSound(null)
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
@@ -122,9 +123,6 @@ open class Task {
                     it.priority = NotificationManager.IMPORTANCE_HIGH
                 } else {
                     it.priority = Notification.PRIORITY_MAX
-                }
-                if (behavior == Behavior.SOUNDLESS) {
-                    it.setSound(null)
                 }
             }
             .build()

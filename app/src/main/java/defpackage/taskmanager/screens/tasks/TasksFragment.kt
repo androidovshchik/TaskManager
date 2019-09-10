@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import defpackage.taskmanager.data.local.DbManager
+import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.screens.BaseFragment
 import org.jetbrains.anko.AnkoContext
 import org.kodein.di.generic.instance
@@ -34,6 +35,28 @@ class TasksFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dbManager.io.observeForever(dbObserver)
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
+        adapter.items.add(Task())
         rvTasks.adapter = adapter
     }
 

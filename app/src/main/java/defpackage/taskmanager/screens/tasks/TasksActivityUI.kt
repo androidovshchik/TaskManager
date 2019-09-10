@@ -51,7 +51,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 background = ContextCompat.getDrawable(context, R.drawable.divider)
             }.lparams(matchParent, dip(1))
             frameLayout {
-                id = FRAME_LAYOUT_ID
+                id = TASKS_LAYOUT_ID
             }.lparams(matchParent, 0) {
                 weight = 1f
             }
@@ -87,7 +87,6 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
 
     companion object {
 
-        @JvmStatic
-        val FRAME_LAYOUT_ID = View.generateViewId()
+        val TASKS_LAYOUT_ID = View.generateViewId()
     }
 }
