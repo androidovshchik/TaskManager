@@ -32,10 +32,8 @@ enum class Behavior(val id: Long, private val description: String) {
 
     companion object {
 
-        @JvmStatic
         val map = values().associateBy(Behavior::id)
 
-        @JvmStatic
         fun fromId(value: Long?): Behavior? = value?.let { map[value] }
     }
 }

@@ -21,7 +21,6 @@ class HistoryActivityUI : AnkoComponent<HistoryActivity> {
 
     companion object {
 
-        @JvmStatic
         val HISTORY_LAYOUT_ID = View.generateViewId()
     }
 }

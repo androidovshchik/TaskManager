@@ -15,10 +15,8 @@ enum class DayOfWeek(val id: Long) {
 
     companion object {
 
-        @JvmStatic
         private val map = values().associateBy(DayOfWeek::id)
 
-        @JvmStatic
         fun fromId(value: Long?): DayOfWeek? = value?.let { map[value] }
     }
 }
