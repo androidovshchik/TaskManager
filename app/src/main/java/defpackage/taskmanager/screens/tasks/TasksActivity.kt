@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.DANGER_PERMISSIONS
+import defpackage.taskmanager.EXTRA_ID
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.extensions.areGranted
@@ -154,5 +155,13 @@ class TasksActivity : BaseActivity() {
         private const val REQUEST_PERMISSIONS = 100
 
         private const val REQUEST_CHOOSE_FILE = 200
+
+        fun Context.launch(id: Long) {
+            startActivity(
+                intentFor<TasksActivity>(
+                    EXTRA_ID to id
+                )
+            )
+        }
     }
 }

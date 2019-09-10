@@ -30,6 +30,7 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
                         textSize = 15f
                         textColor = Color.BLACK
                     }.lparams(matchParent)
+                    button("Добавить").lparams(matchParent)
                     view {
                         background = ContextCompat.getDrawable(context, R.drawable.divider)
                     }.lparams(matchParent, dip(1))
