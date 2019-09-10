@@ -15,7 +15,7 @@ class HistoryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         HistoryActivityUI().setContentView(this)
         fragmentManager.beginTransaction()
-            .add(TasksActivityUI.FRAME_LAYOUT_ID, tasksFragment)
+            .add(HistoryActivityUI.HISTORY_LAYOUT_ID, tasksFragment)
             .commit()
     }
 }

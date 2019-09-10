@@ -8,12 +8,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import defpackage.taskmanager.data.local.DbManager
-import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.screens.BaseFragment
 import org.jetbrains.anko.AnkoContext
 import org.kodein.di.generic.instance
@@ -22,11 +21,9 @@ class HistoryFragment : BaseFragment() {
 
     val dbManager: DbManager by instance()
 
-    lateinit var tvTasks: TextView
-
     lateinit var swipeRefresh: SwipeRefreshLayout
 
-    lateinit var rvTasks: RecyclerView
+    lateinit var rvHistory: RecyclerView
 
     private val adapter = HistoryAdapter()
 
@@ -35,29 +32,27 @@ class HistoryFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dbManager.io.observeForever(dbObserver)
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        rvTasks.adapter = adapter
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        adapter.items.add(Record())
+        rvHistory.adapter = adapter
     }
 
     override fun onDestroyView() {

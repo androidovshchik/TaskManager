@@ -4,84 +4,19 @@
 
 package defpackage.taskmanager.screens.history
 
-import android.graphics.Color
-import android.view.Gravity
 import android.view.View
-import androidx.core.content.ContextCompat
-import defpackage.taskmanager.R
-import defpackage.taskmanager.extensions.setImageXmlDrawable
-import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk19.listeners.onClick
+import org.jetbrains.anko.AnkoComponent
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.frameLayout
+import org.jetbrains.anko.matchParent
 
 class HistoryActivityUI : AnkoComponent<HistoryActivity> {
 
     override fun createView(ui: AnkoContext<HistoryActivity>): View = with(ui) {
-        verticalLayout {
-            lparams(matchParent, matchParent)
-            setPadding(0, dip(8), 0, dip(8))
-            linearLayout {
-                lparams(matchParent)
-                setPadding(dip(8), 0, dip(8), dip(8))
-                gravity = Gravity.CENTER_VERTICAL
-                owner.etDbPath = editText {
-                    maxLines = 1
-                }.lparams(0) {
-                    weight = 1f
-                }
-                imageButton {
-                    setImageXmlDrawable(R.drawable.ic_folder_open)
-                    onClick {
-                        owner.onChooseDbFile()
-                    }
-                }.lparams()
-                imageButton {
-                    setImageXmlDrawable(R.drawable.ic_file_import)
-                    onClick {
-                        owner.onLoadTasksFromDbFile()
-                    }
-                }.lparams()
-                imageButton {
-                    setImageXmlDrawable(R.drawable.ic_file_export)
-                    onClick {
-                        owner.onLoadTasksFromDbFile()
-                    }
-                }.lparams()
-            }
-            view {
-                background = ContextCompat.getDrawable(context, R.drawable.divider)
-            }.lparams(matchParent, dip(1))
-            frameLayout {
-                id = FRAME_LAYOUT_ID
-            }.lparams(matchParent, 0) {
-                weight = 1f
-            }
-            view {
-                background = ContextCompat.getDrawable(context, R.drawable.divider)
-            }.lparams(matchParent, dip(1))
-            linearLayout {
-                lparams(matchParent)
-                setPadding(dip(8), dip(8), dip(8), 0)
-                gravity = Gravity.CENTER_VERTICAL
-                owner.tvStatus = textView {
-                    textSize = 15f
-                    textColor = Color.BLACK
-                    setPadding(dip(8), 0, dip(8), 0)
-                }.lparams(0) {
-                    weight = 1f
-                }
-                imageButton {
-                    setImageXmlDrawable(R.drawable.ic_play_arrow_black_24dp)
-                    onClick {
-                        owner.onLaunchTasksService()
-                    }
-                }.lparams()
-                imageButton {
-                    setImageXmlDrawable(R.drawable.ic_stop_black_24dp)
-                    onClick {
-                        owner.onStopAllTasks()
-                    }
-                }.lparams()
-            }
+        frameLayout {
+            id = FRAME_LAYOUT_ID
+        }.lparams(matchParent, 0) {
+            weight = 1f
         }
     }
 
