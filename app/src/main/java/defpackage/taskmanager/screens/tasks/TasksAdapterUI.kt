@@ -57,15 +57,15 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                 }
                 imageButton {
                     id = R.id.tasks_item_complete
-                    setImageXmlDrawable(R.drawable.ic_done_black_24dp)
+                    setImageResource(R.drawable.ic_done_black_24dp)
                 }.lparams()
                 imageButton {
                     id = R.id.tasks_item_defer
-                    setImageXmlDrawable(R.drawable.ic_update_black_24dp)
+                    setImageResource(R.drawable.ic_update_black_24dp)
                 }.lparams()
                 imageButton {
                     id = R.id.tasks_item_cancel
-                    setImageXmlDrawable(R.drawable.ic_close_black_24dp)
+                    setImageResource(R.drawable.ic_close_black_24dp)
                 }.lparams()
                 imageButton {
                     id = R.id.tasks_item_history

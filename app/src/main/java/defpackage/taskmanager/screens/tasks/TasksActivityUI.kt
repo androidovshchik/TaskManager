@@ -37,13 +37,13 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 imageButton {
                     setImageXmlDrawable(R.drawable.ic_file_import)
                     onClick {
-                        owner.onLoadTasksFromDbFile()
+                        owner.onLoadDbFile()
                     }
                 }.lparams()
                 imageButton {
                     setImageXmlDrawable(R.drawable.ic_file_export)
                     onClick {
-                        owner.onLoadTasksFromDbFile()
+                        owner.onSaveDbFile()
                     }
                 }.lparams()
             }
@@ -72,13 +72,13 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 imageButton {
                     setImageXmlDrawable(R.drawable.ic_play_arrow_black_24dp)
                     onClick {
-                        owner.onLaunchTasksService()
+                        owner.onLaunchTasks()
                     }
                 }.lparams()
                 imageButton {
                     setImageXmlDrawable(R.drawable.ic_stop_black_24dp)
                     onClick {
-                        owner.onStopAllTasks()
+                        owner.onKillTasks()
                     }
                 }.lparams()
             }

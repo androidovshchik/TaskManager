@@ -30,7 +30,7 @@ class HistoryActivity : BaseActivity() {
 
     companion object {
 
-        fun Context.launch(id: Long, title: String) {
+        fun launch(context: Context, id: Long, title: String) = context.run {
             startActivity(
                 intentFor<HistoryActivity>(
                     EXTRA_ID to id,

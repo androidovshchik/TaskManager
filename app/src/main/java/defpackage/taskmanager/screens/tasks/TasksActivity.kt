@@ -16,7 +16,6 @@ import com.elvishew.xlog.XLog
 import defpackage.taskmanager.DANGER_PERMISSIONS
 import defpackage.taskmanager.EXTRA_ID
 import defpackage.taskmanager.data.local.DbManager
-import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.getRealPath
 import defpackage.taskmanager.extensions.requestPermissions
@@ -30,8 +29,6 @@ import org.jetbrains.anko.setContentView
 import org.kodein.di.generic.instance
 
 class TasksActivity : BaseActivity() {
-
-    val preferences: Preferences by instance()
 
     val dbManager: DbManager by instance()
 
@@ -57,7 +54,7 @@ class TasksActivity : BaseActivity() {
         launch {
             withContext(Dispatchers.IO) {
                 XLog.d(dbManager.isOpened)
-                XLog.d(dbManager.getTasks())
+                XLog.d(dbManager.getAllTasks())
             }
         }
     }
@@ -86,18 +83,24 @@ class TasksActivity : BaseActivity() {
         }
     }
 
-    fun onLoadTasksFromDbFile() {
+    fun onLoadDbFile() {
         if (areGranted(*DANGER_PERMISSIONS)) {
             dbManager.importDb(preferences, etDbPath.text.toString().trim())
         }
     }
 
-    fun onLaunchTasksService() {
+    fun onSaveDbFile() {
+        if (areGranted(*DANGER_PERMISSIONS)) {
+            dbManager.exportDb(preferences)
+        }
+    }
+
+    fun onLaunchTasks() {
         preferences.enableTasksService = true
         bindTasksService()
     }
 
-    fun onStopAllTasks() {
+    fun onKillTasks() {
         preferences.enableTasksService = false
         unbindTasksService()
         TasksService.kill(applicationContext)
@@ -132,13 +135,6 @@ class TasksActivity : BaseActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (!areGranted(*DANGER_PERMISSIONS)) {
-            finish()
-        }
-    }
-
     private val tasksConnection = object : ServiceConnection {
 
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
@@ -156,7 +152,7 @@ class TasksActivity : BaseActivity() {
 
         private const val REQUEST_CHOOSE_FILE = 200
 
-        fun Context.launch(id: Long) {
+        fun launch(context: Context, id: Long) = context.run {
             startActivity(
                 intentFor<TasksActivity>(
                     EXTRA_ID to id

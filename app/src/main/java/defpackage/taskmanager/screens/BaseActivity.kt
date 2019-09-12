@@ -6,8 +6,10 @@ package defpackage.taskmanager.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Bundle
 import android.view.MenuItem
 import com.elvishew.xlog.XLog
+import defpackage.taskmanager.data.local.Preferences
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -17,7 +19,14 @@ open class BaseActivity : Activity(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
 
+    lateinit var preferences: Preferences
+
     val activityJob = SupervisorJob()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        preferences = Preferences(applicationContext)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

@@ -27,4 +27,9 @@ class TasksManager {
     fun recreateAlarms() {
 
     }
+
+    @Synchronized
+    fun getTasks() {
+
+    }
 }
