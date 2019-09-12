@@ -12,9 +12,11 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import defpackage.taskmanager.R
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.screens.BaseFragment
+import defpackage.taskmanager.screens.history.HistoryActivity
 import org.jetbrains.anko.AnkoContext
 import org.kodein.di.generic.instance
 
@@ -35,6 +37,15 @@ class TasksFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dbManager.io.observeForever(dbObserver)
+        adapter.setAdapterListener { _, item, param ->
+            when (param) {
+                R.id.tasks_item_history -> {
+                    appContext?.let {
+                        HistoryActivity.launch(it, item.id, item.title)
+                    }
+                }
+            }
+        }
         adapter.items.add(Task())
         adapter.items.add(Task())
         adapter.items.add(Task())

@@ -122,7 +122,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             .split("_")[0]
         val datetime = LocalDateTime.now()
             .toString(PATTERN_DATETIME)
-            .replace(" ", "-")
+            .replace(" ", "_")
         val hash = (0..999).random()
             .toString()
             .padStart(3, '0')

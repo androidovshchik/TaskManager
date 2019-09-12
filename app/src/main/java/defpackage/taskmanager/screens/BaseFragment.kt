@@ -7,6 +7,7 @@
 package defpackage.taskmanager.screens
 
 import android.app.Fragment
+import android.content.Context
 import android.os.Bundle
 import com.elvishew.xlog.XLog
 import kotlinx.coroutines.*
@@ -18,6 +19,9 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
     override val kodein by kodein()
 
     val fragmentJob = SupervisorJob()
+
+    protected val appContext: Context?
+        get() = activity?.applicationContext
 
     protected val args: Bundle
         get() = arguments ?: Bundle()

@@ -46,7 +46,7 @@ class TasksAdapter : BaseAdapter<Task>() {
 
         init {
             ibHistory.onClick {
-
+                listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_history)
             }
         }
 
