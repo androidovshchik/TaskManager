@@ -122,11 +122,11 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             .split("_")[0]
         val datetime = LocalDateTime.now()
             .toString(PATTERN_DATETIME)
-            .replace(" ", "_")
+            .replace(" ", "-")
         val hash = (0..999).random()
             .toString()
             .padStart(3, '0')
-        val exportPath = "${oldFile.parent ?: ""}/${oldName}_${datetime}_${hash}.${oldFile.extension}"
+        val exportPath = "${oldFile.parent ?: ""}/${oldName}_${datetime}.${hash}.${oldFile.extension}"
         val exported = withContext(Dispatchers.IO) {
             copyFile(dbFile, File(exportPath))
         }

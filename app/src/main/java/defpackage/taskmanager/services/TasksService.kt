@@ -5,11 +5,14 @@
 package defpackage.taskmanager.services
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.core.app.NotificationCompat
+import com.elvishew.xlog.XLog
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.data.models.Behavior
@@ -18,10 +21,9 @@ import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.startForegroundService
 import defpackage.taskmanager.screens.tasks.TasksActivity
 import kotlinx.coroutines.Job
-import org.jetbrains.anko.activityManager
-import org.jetbrains.anko.powerManager
-import org.jetbrains.anko.startService
-import org.jetbrains.anko.stopService
+import org.jetbrains.anko.*
+import org.joda.time.DateTimeZone
+import java.util.*
 
 class TasksService : BaseService() {
 
@@ -49,13 +51,16 @@ class TasksService : BaseService() {
                 .setOngoing(true)
                 .build()
         )
+        registerReceiver(receiver, IntentFilter().apply {
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        })
     }
 
     @SuppressLint("WakelockTimeout")
     private fun acquireWakeLock() {
         if (wakeLock == null) {
             wakeLock =
-                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$packageName:${javaClass.simpleName}").apply {
+                powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, javaClass.name).apply {
                     acquire()
                 }
         }
@@ -93,8 +98,22 @@ class TasksService : BaseService() {
     }
 
     override fun onDestroy() {
+        unregisterReceiver(receiver)
         releaseWakeLock()
         super.onDestroy()
+    }
+
+    private val receiver = object : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                val timeZone = intent.getStringExtra("time-zone")
+                DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()))
+                XLog.d("TIMEZONE_CHANGED received, changed default timezone to \"$timeZone\"")
+            } catch (e: Exception) {
+                XLog.e(e.localizedMessage, e)
+            }
+        }
     }
 
     @Suppress("unused")
@@ -110,7 +129,6 @@ class TasksService : BaseService() {
          * @param params might not be empty
          * @return true if service is running
          */
-        @JvmStatic
         fun launch(preferences: Preferences, vararg params: Pair<String, Any?>): Boolean = preferences.run {
             return if (enableTasksService) {
                 if (context.activityManager.isRunning<TasksService>()) {
@@ -134,8 +152,8 @@ class TasksService : BaseService() {
         /**
          * @return true if service is stopped
          */
-        @JvmStatic
         fun kill(context: Context): Boolean = context.run {
+            notificationManager.cancelAll()
             return if (activityManager.isRunning<TasksService>()) {
                 stopService<TasksService>()
             } else {
