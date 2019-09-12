@@ -13,6 +13,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.elvishew.xlog.XLog
+import defpackage.taskmanager.PATTERN_DATETIME
 import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.data.models.TaskCount
 import defpackage.taskmanager.extensions.scanFile
@@ -21,6 +22,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.toast
+import org.joda.time.LocalDateTime
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -50,6 +52,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         if (doesExist) {
             db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
                 .build()
+            XLog.d(isOpened)
         }
     }
 
@@ -114,12 +117,22 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         if (!doesExist || TextUtils.isEmpty(oldPath)) {
             return false
         }
+        val oldFile = File(oldPath)
+        val oldName = oldFile.nameWithoutExtension
+            .split("_")[0]
+        val datetime = LocalDateTime.now()
+            .toString(PATTERN_DATETIME)
+            .replace(" ", "_")
+        val hash = (0..999).random()
+            .toString()
+            .padStart(3, '0')
+        val exportPath = "${oldFile.parent ?: ""}/${oldName}_${datetime}_${hash}.${oldFile.extension}"
         val exported = withContext(Dispatchers.IO) {
-            copyFile(dbFile, File(oldPath))
+            copyFile(dbFile, File(exportPath))
         }
-        XLog.d("Экспорт сделан $exported по пути $oldPath")
+        XLog.d("Экспорт сделан $exported по пути $exportPath")
         if (exported) {
-            preferences.context.scanFile(oldPath.toString())
+            preferences.context.scanFile(exportPath)
         }
         return exported
     }
