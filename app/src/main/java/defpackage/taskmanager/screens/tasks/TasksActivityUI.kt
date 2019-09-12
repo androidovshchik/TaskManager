@@ -65,7 +65,6 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 owner.tvStatus = textView {
                     textSize = 15f
                     textColor = Color.BLACK
-                    setPadding(dip(8), 0, dip(8), 0)
                 }.lparams(0) {
                     weight = 1f
                 }

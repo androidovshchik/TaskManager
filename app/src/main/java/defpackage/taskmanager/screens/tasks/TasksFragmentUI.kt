@@ -5,6 +5,7 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.graphics.Color
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.nestedScrollView
+import defpackage.taskmanager.extensions.setImageXmlDrawable
 import defpackage.taskmanager.extensions.swipeRefreshLayout
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -25,12 +27,20 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
                 layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
                 verticalLayout {
                     lparams(matchParent)
-                    owner.tvTasks = textView("Список задач") {
+                    linearLayout {
+                        lparams(matchParent)
                         padding = dip(8)
-                        textSize = 15f
-                        textColor = Color.BLACK
-                    }.lparams(matchParent)
-                    button("Добавить").lparams(matchParent)
+                        gravity = Gravity.CENTER_VERTICAL
+                        owner.tvTasks = textView("Список задач") {
+                            textSize = 15f
+                            textColor = Color.BLACK
+                        }.lparams(0) {
+                            weight = 1f
+                        }
+                        imageButton {
+                            setImageXmlDrawable(R.drawable.ic_add_circle_black_24dp)
+                        }.lparams()
+                    }
                     view {
                         background = ContextCompat.getDrawable(context, R.drawable.divider)
                     }.lparams(matchParent, dip(1))

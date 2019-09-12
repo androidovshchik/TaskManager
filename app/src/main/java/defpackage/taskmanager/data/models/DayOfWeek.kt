@@ -4,6 +4,7 @@
 
 package defpackage.taskmanager.data.models
 
+@Suppress("unused")
 enum class DayOfWeek(val id: Long) {
     MONDAY(1),
     TUESDAY(2),

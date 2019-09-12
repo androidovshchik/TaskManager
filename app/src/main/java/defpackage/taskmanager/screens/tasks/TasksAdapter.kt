@@ -9,30 +9,20 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.screens.BaseAdapter
+import defpackage.taskmanager.screens.BaseViewHolder
 import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.sdk19.listeners.onClick
 
-class TasksAdapter : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
-
-    val items = arrayListOf<Task>()
+class TasksAdapter : BaseAdapter<Task>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(TasksAdapterUI().createView(AnkoContext.create(parent.context, parent)))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
-        holder.apply {
-            tvId.text = item.id.toString()
-            tvTitle.text = item.title
-        }
-    }
-
-    override fun getItemCount() = items.size
-
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : BaseViewHolder<Task>(itemView) {
 
         val cbEnable: CheckBox = itemView.findViewById(R.id.tasks_item_box)
 
@@ -55,7 +45,14 @@ class TasksAdapter : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
         val ibDelete: ImageButton = itemView.findViewById(R.id.tasks_item_delete)
 
         init {
+            ibHistory.onClick {
 
+            }
+        }
+
+        override fun onBindItem(position: Int, item: Task) {
+            tvId.text = item.id.toString()
+            tvTitle.text = item.title
         }
     }
 }

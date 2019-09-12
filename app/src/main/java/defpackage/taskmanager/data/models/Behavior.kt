@@ -10,6 +10,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 
+@Suppress("unused")
 enum class Behavior(val id: Long, private val description: String) {
     SOUNDLESS(1, "Без звука"),
     VIBRATION(2, "С вибрацией"),
