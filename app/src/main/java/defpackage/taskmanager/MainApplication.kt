@@ -14,11 +14,12 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import defpackage.taskmanager.data.local.DbManager
-import defpackage.taskmanager.data.local.Preferences
 import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.extensions.isOreoPlus
 import defpackage.taskmanager.services.TasksManager
+import net.danlew.android.joda.ResourceZoneInfoProvider
 import org.jetbrains.anko.notificationManager
+import org.joda.time.DateTimeZone
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.KodeinTrigger
@@ -31,8 +32,6 @@ class MainApplication : Application(), KodeinAware {
 
     override val kodein by Kodein.lazy {
 
-        bind<Preferences>() with singleton { Preferences(applicationContext) }
-
         bind<DbManager>() with singleton { DbManager(applicationContext) }
 
         bind<TasksManager>() with singleton { TasksManager() }
@@ -44,6 +43,7 @@ class MainApplication : Application(), KodeinAware {
         super.onCreate()
         initLogger()
         kodeinTrigger.trigger()
+        DateTimeZone.setProvider(ResourceZoneInfoProvider(applicationContext))
         if (isOreoPlus()) {
             notificationManager.apply {
                 Behavior.map.forEach { (_, u) ->

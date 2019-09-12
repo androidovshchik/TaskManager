@@ -68,18 +68,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         io.value = true
         GlobalScope.launch(Dispatchers.Main) {
             closeDb()
-            val oldPath = preferences.pathToDb
-            val hasExport = doesExist && !TextUtils.isEmpty(oldPath)
-            val exported = if (hasExport) {
-                withContext(Dispatchers.IO) {
-                    copyFile(dbFile, File(oldPath))
-                }
-            } else true
-            XLog.d("Экспорт сделан $exported по пути $oldPath")
-            if (exported) {
-                if (hasExport) {
-                    preferences.context.scanFile(oldPath.toString())
-                }
+            if (exportInternal(preferences)) {
                 val imported = withContext(Dispatchers.IO) {
                     copyFile(File(newPath), dbFile)
                 }
@@ -100,14 +89,49 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         }
     }
 
+    @UiThread
+    fun exportDb(preferences: Preferences) {
+        if (io.value == true) {
+            XLog.w("Экспорт БД во время I/O операций")
+            preferences.context.toast("Подождите...")
+            return
+        }
+        io.value = true
+        GlobalScope.launch(Dispatchers.Main) {
+            preferences.context.apply {
+                if (exportInternal(preferences)) {
+                    toast("БД успешно экспортирована")
+                } else {
+                    toast("Не удалось экспортировать БД")
+                }
+            }
+            io.value = false
+        }
+    }
+
+    private suspend fun exportInternal(preferences: Preferences): Boolean {
+        val oldPath = preferences.pathToDb
+        if (!doesExist || TextUtils.isEmpty(oldPath)) {
+            return false
+        }
+        val exported = withContext(Dispatchers.IO) {
+            copyFile(dbFile, File(oldPath))
+        }
+        XLog.d("Экспорт сделан $exported по пути $oldPath")
+        if (exported) {
+            preferences.context.scanFile(oldPath.toString())
+        }
+        return exported
+    }
+
     override fun getAllTasks(): List<TaskCount> {
-        if (isOpened) {
+        //if (isOpened) {
             if (io.value == false) {
                 return db?.taskDao()?.getAllTasks().orEmpty()
             } else {
                 XLog.w("Работа с БД во время I/O операций")
             }
-        }
+        //}
         return arrayListOf()
     }
 
@@ -154,7 +178,6 @@ class DbManager(context: Context) : TaskDao, RecordDao {
 
         private const val DB_NAME = "app.db"
 
-        @JvmStatic
         private val SQLITE_REGEX = ".+\\.(db|sdb|sqlite|db3|s3db|sqlite3|sl3)$".toRegex()
     }
 }
