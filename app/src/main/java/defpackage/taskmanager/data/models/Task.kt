@@ -88,6 +88,9 @@ open class Task {
     @ColumnInfo(name = "Статус")
     var status = false
 
+    @ColumnInfo(name = "_DEFER_TIME")
+    var deferTime: Long? = null
+
     @Suppress("DEPRECATION")
     fun buildNotification(context: Context): Notification = context.run {
         return NotificationCompat.Builder(applicationContext, behavior.name)
@@ -129,7 +132,7 @@ open class Task {
     }
 
     override fun toString(): String {
-        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status)"
+        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status, deferTime=$deferTime)"
     }
 
     companion object {
