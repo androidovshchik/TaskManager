@@ -61,34 +61,40 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     @UiThread
     fun importDb(preferences: Preferences, newPath: String) {
         if (!SQLITE_REGEX.matches(newPath)) {
-            XLog.w("Невалидный путь: $newPath")
-            preferences.context.toast("Невалидный файл для импорта БД")
+            if (!TextUtils.isEmpty(newPath)) {
+                XLog.w("Невалидный путь: $newPath")
+            }
+            preferences.context.toast("Недопустимый файл для импорта БД")
             return
         }
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
                 closeDb()
                 if (exportDbInternal(preferences)) {
-                    val imported = withContext(Dispatchers.IO) {
-                        copyFile(File(newPath), dbFile)
+                    if (importDbInternal(preferences, newPath)) {
+                        preferences.context.toast("БД успешно импортирована")
                     }
-                    XLog.d("Импорт сделан $imported по пути $newPath")
-                    if (imported) {
-                        preferences.apply {
-                            if (openDb(context)) {
-                                pathToDb = newPath
-                                context.toast("БД успешно импортирована")
-                            }
-                        }
-                    } else {
-                        preferences.context.toast("Не удалось импортировать БД")
-                    }
-                } else {
-                    preferences.context.toast("Не удалось экспортировать БД")
                 }
-                true
             }
         }
+    }
+
+    @UiThread
+    private suspend fun importDbInternal(preferences: Preferences, newPath: String): Boolean {
+        val imported = withContext(Dispatchers.IO) {
+            copyFile(File(newPath), dbFile)
+        }
+        XLog.d("Импорт сделан $imported по пути $newPath")
+        preferences.apply {
+            if (imported) {
+                if (openDb(context)) {
+                    pathToDb = newPath
+                }
+            } else {
+                context.toast("Не удалось импортировать БД")
+            }
+        }
+        return imported
     }
 
     @UiThread
@@ -134,6 +140,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         return exported
     }
 
+    @WorkerThread
     suspend fun getAllTasks(): List<TaskCount> {
         return io.withLock {
             getAllTasksInternal()
@@ -144,6 +151,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         return db?.taskDao()?.getAllTasksInternal().orEmpty()
     }
 
+    @WorkerThread
     suspend fun getRecordsByTask(id: Long): List<Record> {
         return io.withLock {
             getRecordsByTaskInternal(id)
