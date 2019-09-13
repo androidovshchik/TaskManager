@@ -112,10 +112,11 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         val oldFile = File(oldPath)
         val oldName = oldFile.nameWithoutExtension
             .split("_")[0]
-        val datetime = LocalDateTime.now()
-            .toString(PATTERN_DATETIME)
-            .replace(" ", "_")
-        val hash = (0..999).random()
+        val now = LocalDateTime.now()
+        val datetime = now.toString(PATTERN_DATETIME)
+            .replace(" ", ".")
+            .replace(":", ".")
+        val hash = now.millisOfSecond().get()
             .toString()
             .padStart(3, '0')
         val exportPath = "${oldFile.parent ?: ""}/${oldName}_${datetime}.${hash}.${oldFile.extension}"
@@ -123,7 +124,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             copyFile(dbFile, File(exportPath))
         }
         XLog.d("Экспорт сделан $exported по пути $exportPath")
-        preferences.context.run {
+        preferences.context.apply {
             if (exported) {
                 scanFile(exportPath)
             } else {

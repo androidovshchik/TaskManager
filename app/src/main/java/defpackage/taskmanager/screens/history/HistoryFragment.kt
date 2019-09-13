@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import defpackage.taskmanager.EXTRA_ID
@@ -32,7 +31,6 @@ class HistoryFragment : BaseFragment() {
         HistoryFragmentUI().createView(AnkoContext.create(activity, this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        dbManager.io.observeForever(dbObserver)
         adapter.items.add(Record())
         adapter.items.add(Record())
         adapter.items.add(Record())
@@ -54,15 +52,6 @@ class HistoryFragment : BaseFragment() {
         adapter.items.add(Record())
         adapter.items.add(Record())
         rvHistory.adapter = adapter
-    }
-
-    override fun onDestroyView() {
-        dbManager.io.removeObserver(dbObserver)
-        super.onDestroyView()
-    }
-
-    private val dbObserver = Observer<Boolean> {
-
     }
 
     companion object {
