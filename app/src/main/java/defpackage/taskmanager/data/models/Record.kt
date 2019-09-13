@@ -36,6 +36,10 @@ class Record {
     @ColumnInfo(name = "Время")
     var time: String? = null
 
+    override fun toString(): String {
+        return "Record(id=$id, task=$task, status=$status, time=$time)"
+    }
+
     companion object {
 
         const val STATUS_NONE = 0

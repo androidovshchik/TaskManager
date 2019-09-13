@@ -10,4 +10,8 @@ class TaskCount : Task() {
 
     @ColumnInfo(name = "Count")
     var count = 0
+
+    override fun toString(): String {
+        return "TaskCount(count=$count) ${super.toString()}"
+    }
 }

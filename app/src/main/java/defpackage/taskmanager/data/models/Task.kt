@@ -128,6 +128,10 @@ open class Task {
             .build()
     }
 
+    override fun toString(): String {
+        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status)"
+    }
+
     companion object {
 
         private const val DEFAULT_REPEAT = 10L
