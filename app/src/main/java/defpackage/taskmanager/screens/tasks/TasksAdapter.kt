@@ -5,6 +5,7 @@
 package defpackage.taskmanager.screens.tasks
 
 import android.annotation.SuppressLint
+import android.graphics.Paint
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -75,6 +76,13 @@ class TasksAdapter : BaseAdapter<Task>() {
             tvId.text = item.id.toString()
             tvTitle.text = item.title
             tvInfo.text = "Время: ${item.getPossibleTime()}"
+            if (item.isValid) {
+                tvTitle.paintFlags = tvTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                tvInfo.paintFlags = tvInfo.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            } else {
+                tvTitle.paintFlags = tvTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                tvInfo.paintFlags = tvInfo.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            }
         }
     }
 }
