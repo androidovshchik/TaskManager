@@ -23,6 +23,9 @@ class TasksFragmentUI : AnkoComponent<TasksFragment> {
     override fun createView(ui: AnkoContext<TasksFragment>): View = with(ui) {
         owner.swipeRefresh = swipeRefreshLayout {
             layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
+            setOnRefreshListener {
+                owner.onRefreshData()
+            }
             nestedScrollView {
                 layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
                 verticalLayout {

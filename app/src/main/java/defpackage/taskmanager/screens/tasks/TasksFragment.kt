@@ -11,11 +11,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.elvishew.xlog.XLog
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.local.DbManager
-import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.screens.BaseFragment
 import defpackage.taskmanager.screens.history.HistoryActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.AnkoContext
 import org.kodein.di.generic.instance
 
@@ -44,28 +48,17 @@ class TasksFragment : BaseFragment() {
                 }
             }
         }
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
-        adapter.items.add(Task())
         rvTasks.adapter = adapter
+        onRefreshData()
+    }
+
+    fun onRefreshData() {
+        fragmentJob.cancelChildren()
+        launch {
+            withContext(Dispatchers.IO) {
+                XLog.d(dbManager.getAllTasks())
+            }
+            adapter.notifyDataSetChanged()
+        }
     }
 }

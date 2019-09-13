@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.EditText
 import android.widget.TextView
-import com.elvishew.xlog.XLog
 import defpackage.taskmanager.DANGER_PERMISSIONS
 import defpackage.taskmanager.EXTRA_ID
 import defpackage.taskmanager.data.local.DbManager
@@ -51,11 +50,6 @@ class TasksActivity : BaseActivity() {
         etDbPath.setTextSelection(preferences.pathToDb ?: "")
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
-        }
-        launch {
-            withContext(Dispatchers.IO) {
-                XLog.d(dbManager.getAllTasks())
-            }
         }
     }
 

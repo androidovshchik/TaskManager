@@ -86,10 +86,8 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         }
         XLog.d("Импорт сделан $imported по пути $newPath")
         preferences.apply {
-            if (imported) {
-                if (openDb(context)) {
-                    pathToDb = newPath
-                }
+            if (imported && openDb(context)) {
+                pathToDb = newPath
             } else {
                 context.toast("Не удалось импортировать БД")
             }
