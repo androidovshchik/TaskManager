@@ -39,9 +39,18 @@ class TasksFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter.setAdapterListener { _, item, param ->
-            when (param) {
-                R.id.tasks_item_history -> {
-                    appContext?.let {
+            appContext?.let {
+                when (param) {
+                    R.id.tasks_item_complete -> {
+
+                    }
+                    R.id.tasks_item_defer -> {
+
+                    }
+                    R.id.tasks_item_cancel -> {
+
+                    }
+                    R.id.tasks_item_history -> {
                         HistoryActivity.launch(it, item.id, item.title)
                     }
                 }

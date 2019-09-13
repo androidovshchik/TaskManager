@@ -4,6 +4,7 @@
 
 package defpackage.taskmanager.screens.history
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -21,10 +22,11 @@ class HistoryAdapter : BaseAdapter<Record>() {
 
     inner class ViewHolder(itemView: View) : BaseViewHolder<Record>(itemView) {
 
-        val tvText: TextView = itemView.findViewById(R.id.history_item_text)
+        private val tvText: TextView = itemView.findViewById(R.id.history_item_text)
 
+        @SuppressLint("SetTextI18n")
         override fun onBindItem(position: Int, item: Record) {
-
+            tvText.text = "${item.time} — ${item.description}"
         }
     }
 }

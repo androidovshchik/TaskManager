@@ -36,6 +36,13 @@ class Record {
     @ColumnInfo(name = "Время")
     var time: String? = null
 
+    val description: String
+        get() = when (status) {
+            true -> "выполнено"
+            false -> "отменено"
+            else -> "неизвестно"
+        }
+
     override fun toString(): String {
         return "Record(id=$id, task=$task, status=$status, time=$time)"
     }

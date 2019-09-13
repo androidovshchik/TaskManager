@@ -16,7 +16,6 @@ import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.extensions.isOreoPlus
-import defpackage.taskmanager.services.TasksManager
 import net.danlew.android.joda.ResourceZoneInfoProvider
 import org.jetbrains.anko.notificationManager
 import org.joda.time.DateTimeZone
@@ -33,8 +32,6 @@ class MainApplication : Application(), KodeinAware {
     override val kodein by Kodein.lazy {
 
         bind<DbManager>() with singleton { DbManager(applicationContext) }
-
-        bind<TasksManager>() with singleton { TasksManager() }
     }
 
     override val kodeinTrigger = KodeinTrigger()

@@ -51,6 +51,15 @@ class TasksAdapter : BaseAdapter<Task>() {
 
                 }
             }
+            ibComplete.onClick {
+                listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_complete)
+            }
+            ibDefer.onClick {
+                listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_defer)
+            }
+            ibCancel.onClick {
+                listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_cancel)
+            }
             ibHistory.onClick {
                 listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_history)
             }
@@ -60,6 +69,7 @@ class TasksAdapter : BaseAdapter<Task>() {
             cbEnable.setCheckedProgrammatically(item.status)
             tvId.text = item.id.toString()
             tvTitle.text = item.title
+            tvInfo.text = item.title
         }
     }
 }
