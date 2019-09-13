@@ -73,10 +73,8 @@ inline fun <reified T : BroadcastReceiver> Context.pendingReceiverFor(
 ): PendingIntent =
     PendingIntent.getBroadcast(applicationContext, 0, intentFor<T>(*params), PendingIntent.FLAG_UPDATE_CURRENT)
 
-inline fun <reified T : BroadcastReceiver> Context.pendingReceiverFor(
-    action: String
-): PendingIntent =
-    PendingIntent.getBroadcast(applicationContext, 0, Intent(action), PendingIntent.FLAG_UPDATE_CURRENT)
+fun Context.pendingReceiverFor(intent: Intent): PendingIntent =
+    PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
 inline fun <reified T : BroadcastReceiver> Context.createAlarm(interval: Int) {
     cancelAlarm<T>()
