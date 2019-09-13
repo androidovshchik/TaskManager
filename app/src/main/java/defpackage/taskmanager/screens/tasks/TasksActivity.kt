@@ -79,6 +79,8 @@ class TasksActivity : BaseActivity() {
 
     fun onLoadDbFile() {
         if (areGranted(*DANGER_PERMISSIONS)) {
+            tasksFragment.clearData()
+            onKillTasks()
             dbManager.importDb(preferences, etDbPath.text.toString().trim())
         }
     }

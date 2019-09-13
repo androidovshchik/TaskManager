@@ -43,7 +43,7 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                     }
                 }.lparams()
                 imageButton {
-                    setImageXmlDrawable(R.drawable.ic_file_export)
+                    setImageXmlDrawable(R.drawable.ic_save_black_24dp)
                     onClick {
                         owner.onSaveDbFile()
                     }

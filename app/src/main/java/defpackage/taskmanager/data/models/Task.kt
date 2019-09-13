@@ -88,6 +88,12 @@ open class Task {
     @ColumnInfo(name = "Статус")
     var status = false
 
+    @ColumnInfo(name = "_GUESS_TIME")
+    var guessTime: Long? = null
+
+    @ColumnInfo(name = "_DELAY_TIME")
+    var delayTime: Long? = null
+
     @ColumnInfo(name = "_DEFER_TIME")
     var deferTime: Long? = null
 
@@ -132,7 +138,7 @@ open class Task {
     }
 
     override fun toString(): String {
-        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status, deferTime=$deferTime)"
+        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status, guessTime=$guessTime, delayTime=$delayTime, deferTime=$deferTime)"
     }
 
     companion object {

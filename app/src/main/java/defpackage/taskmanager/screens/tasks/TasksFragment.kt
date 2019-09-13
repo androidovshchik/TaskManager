@@ -64,4 +64,12 @@ class TasksFragment : BaseFragment() {
             }
         }
     }
+
+    fun clearData() {
+        fragmentJob.cancelChildren()
+        adapter.apply {
+            items.clear()
+            notifyDataSetChanged()
+        }
+    }
 }
