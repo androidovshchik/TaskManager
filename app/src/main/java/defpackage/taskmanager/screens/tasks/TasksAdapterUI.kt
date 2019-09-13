@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.setImageXmlDrawable
+import defpackage.taskmanager.widgets.programCheckBox
 import org.jetbrains.anko.*
 
 class TasksAdapterUI : AnkoComponent<ViewGroup> {
@@ -21,12 +22,12 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
             linearLayout {
                 lparams(matchParent)
                 gravity = Gravity.CENTER_VERTICAL
-                checkBox {
+                programCheckBox {
                     id = R.id.tasks_item_box
                 }.lparams()
                 textView {
                     id = R.id.tasks_item_id
-                    textSize = 15f
+                    textSize = 16f
                     textColor = Color.BLACK
                 }.lparams()
                 textView {
@@ -35,6 +36,7 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                     textColor = Color.BLACK
                 }.lparams(0) {
                     weight = 1f
+                    marginStart = dip(8)
                 }
                 imageButton {
                     id = R.id.tasks_item_edit

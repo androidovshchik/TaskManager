@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.elvishew.xlog.XLog
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.screens.BaseFragment
@@ -55,10 +54,14 @@ class TasksFragment : BaseFragment() {
     fun onRefreshData() {
         fragmentJob.cancelChildren()
         launch {
-            withContext(Dispatchers.IO) {
-                XLog.d(dbManager.getAllTasks())
+            adapter.apply {
+                items.clear()
+                items.addAll(withContext(Dispatchers.IO) {
+                    dbManager.getAllTasks()
+                })
+                notifyDataSetChanged()
+                swipeRefresh.isRefreshing = false
             }
-            adapter.notifyDataSetChanged()
         }
     }
 }

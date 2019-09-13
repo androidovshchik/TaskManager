@@ -6,13 +6,13 @@ package defpackage.taskmanager.screens.tasks
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.screens.BaseAdapter
 import defpackage.taskmanager.screens.BaseViewHolder
+import defpackage.taskmanager.widgets.ProgramCheckBox
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.sdk19.listeners.onClick
 
@@ -24,7 +24,7 @@ class TasksAdapter : BaseAdapter<Task>() {
 
     inner class ViewHolder(itemView: View) : BaseViewHolder<Task>(itemView) {
 
-        val cbEnable: CheckBox = itemView.findViewById(R.id.tasks_item_box)
+        val cbEnable: ProgramCheckBox = itemView.findViewById(R.id.tasks_item_box)
 
         val tvId: TextView = itemView.findViewById(R.id.tasks_item_id)
 
@@ -51,6 +51,7 @@ class TasksAdapter : BaseAdapter<Task>() {
         }
 
         override fun onBindItem(position: Int, item: Task) {
+            cbEnable.setCheckedProgrammatically(item.status)
             tvId.text = item.id.toString()
             tvTitle.text = item.title
         }
