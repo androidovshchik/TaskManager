@@ -59,13 +59,10 @@ class TasksActivity : BaseActivity() {
     }
 
     private fun bindTasksService() {
-        tvStatus.text = if (TasksService.launch(preferences)) {
+        if (TasksService.launch(preferences)) {
             if (tasksService == null) {
                 bindService(intentFor<TasksService>(), tasksConnection, Context.BIND_AUTO_CREATE)
             }
-            "Статус: работает"
-        } else {
-            "Статус: не работает"
         }
     }
 
@@ -107,7 +104,6 @@ class TasksActivity : BaseActivity() {
             unbindService(tasksConnection)
             tasksService = null
         }
-        tvStatus.text = "Статус: не работает"
     }
 
     override fun onStop() {
@@ -135,10 +131,12 @@ class TasksActivity : BaseActivity() {
 
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             tasksService = (binder as TasksService.Binder).service
+            tvStatus.text = "Статус: работает"
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
             tasksService = null
+            tvStatus.text = "Статус: не работает"
         }
     }
 

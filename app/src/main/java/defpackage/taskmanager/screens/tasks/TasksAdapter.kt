@@ -49,7 +49,10 @@ class TasksAdapter : BaseAdapter<Task>() {
         init {
             cbEnable.onCheckedChange { _, isChecked ->
                 if (!cbEnable.programmatically) {
-                    listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_box)
+                    items[adapterPosition].also {
+                        it.status = isChecked
+                        listener?.invoke(adapterPosition, it, R.id.tasks_item_box)
+                    }
                 }
             }
             ibComplete.onClick {
@@ -71,7 +74,7 @@ class TasksAdapter : BaseAdapter<Task>() {
             cbEnable.setCheckedProgrammatically(item.status)
             tvId.text = item.id.toString()
             tvTitle.text = item.title
-            tvInfo.text = "Время: ${item.title}"
+            tvInfo.text = "Время: ${item.getPossibleTime()}"
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.room.PrimaryKey
 import defpackage.taskmanager.EXTRA_STATUS
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
+import defpackage.taskmanager.SIMPLE_DATETIME
 import defpackage.taskmanager.extensions.isNougatPlus
 import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.pendingReceiverFor
@@ -108,6 +109,10 @@ open class Task {
 
     val isValid: Boolean
         get() = tTime != null || tDay != null || tDate != null || tTask != null
+
+    fun getPossibleTime() = guessTime?.let {
+        SIMPLE_DATETIME.format(it)
+    } ?: "неизвестно"
 
     @Suppress("DEPRECATION")
     fun buildNotification(context: Context): Notification = context.run {

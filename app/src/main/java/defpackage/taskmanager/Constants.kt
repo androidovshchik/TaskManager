@@ -7,6 +7,8 @@ package defpackage.taskmanager
 import android.Manifest
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 
 val DANGER_PERMISSIONS = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -27,6 +29,12 @@ val PATTERN_DATE: DateTimeFormatter = DateTimeFormat.forPattern(FORMAT_DATE)
 val PATTERN_TIME: DateTimeFormatter = DateTimeFormat.forPattern(FORMAT_TIME)
 
 val PATTERN_DATETIME: DateTimeFormatter = DateTimeFormat.forPattern(FORMAT_DATETIME)
+
+val SIMPLE_DATE: SimpleDateFormat = SimpleDateFormat(FORMAT_DATE, Locale.US)
+
+val SIMPLE_TIME: SimpleDateFormat = SimpleDateFormat(FORMAT_TIME, Locale.US)
+
+val SIMPLE_DATETIME: SimpleDateFormat = SimpleDateFormat(FORMAT_DATETIME, Locale.US)
 
 /**
  * Extras
