@@ -9,7 +9,9 @@ package defpackage.taskmanager.screens
 import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import com.elvishew.xlog.XLog
+import defpackage.taskmanager.data.local.Preferences
 import kotlinx.coroutines.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -18,6 +20,8 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
 
+    var preferences: Preferences? = null
+
     val fragmentJob = SupervisorJob()
 
     protected val appContext: Context?
@@ -25,6 +29,13 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
 
     protected val args: Bundle
         get() = arguments ?: Bundle()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        appContext?.let {
+            preferences = Preferences(it)
+        }
+    }
 
     override fun onDestroyView() {
         fragmentJob.cancelChildren()

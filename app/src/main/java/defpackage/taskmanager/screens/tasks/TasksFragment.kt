@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import defpackage.taskmanager.EXTRA_RESULT
+import defpackage.taskmanager.EXTRA_STATUS
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.local.DbManager
@@ -19,6 +19,7 @@ import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.receivers.ActionReceiver
 import defpackage.taskmanager.screens.BaseFragment
 import defpackage.taskmanager.screens.history.HistoryActivity
+import defpackage.taskmanager.services.TasksService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -46,11 +47,16 @@ class TasksFragment : BaseFragment() {
         adapter.setAdapterListener { _, item, param ->
             appContext?.let {
                 when (param) {
+                    R.id.tasks_item_box -> {
+                        preferences?.run {
+                            TasksService.launch(this, EXTRA_TASK to item.id)
+                        }
+                    }
                     R.id.tasks_item_complete -> {
                         it.sendBroadcast(
                             it.intentFor<ActionReceiver>(
                                 EXTRA_TASK to item.id,
-                                EXTRA_RESULT to Record.STATUS_COMPLETED
+                                EXTRA_STATUS to Record.STATUS_COMPLETED
                             )
                         )
                     }
@@ -58,7 +64,7 @@ class TasksFragment : BaseFragment() {
                         it.sendBroadcast(
                             it.intentFor<ActionReceiver>(
                                 EXTRA_TASK to item.id,
-                                EXTRA_RESULT to Record.STATUS_DEFERRED
+                                EXTRA_STATUS to Record.STATUS_DEFERRED
                             )
                         )
                     }
@@ -66,12 +72,14 @@ class TasksFragment : BaseFragment() {
                         it.sendBroadcast(
                             it.intentFor<ActionReceiver>(
                                 EXTRA_TASK to item.id,
-                                EXTRA_RESULT to Record.STATUS_CANCELLED
+                                EXTRA_STATUS to Record.STATUS_CANCELLED
                             )
                         )
                     }
                     R.id.tasks_item_history -> {
                         HistoryActivity.launch(it, item.id, item.title)
+                    }
+                    else -> {
                     }
                 }
             }

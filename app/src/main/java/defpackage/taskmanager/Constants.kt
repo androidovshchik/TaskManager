@@ -32,11 +32,12 @@ val PATTERN_DATETIME: DateTimeFormatter = DateTimeFormat.forPattern(FORMAT_DATET
  * Extras
  */
 
+// dummy extra
+const val EXTRA_NONE = "extra_none"
+
 const val EXTRA_TASK = "extra_task"
 
-const val EXTRA_RESULT = "extra_result"
-
-const val EXTRA_RECEIVER = "extra_receiver"
+const val EXTRA_STATUS = "extra_status"
 
 const val EXTRA_ID = "extra_id"
 

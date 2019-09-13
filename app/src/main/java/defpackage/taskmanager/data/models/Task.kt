@@ -12,7 +12,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import defpackage.taskmanager.EXTRA_RESULT
+import defpackage.taskmanager.EXTRA_STATUS
 import defpackage.taskmanager.EXTRA_TASK
 import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.isNougatPlus
@@ -124,19 +124,19 @@ open class Task {
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to Record.STATUS_COMPLETED
+                    EXTRA_STATUS to Record.STATUS_COMPLETED
                 )
             )
             .addAction(
                 R.drawable.ic_update_white_24dp, "Отложить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to Record.STATUS_DEFERRED
+                    EXTRA_STATUS to Record.STATUS_DEFERRED
                 )
             )
             .addAction(
                 R.drawable.ic_close_white_24dp, "Отменить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_RESULT to Record.STATUS_CANCELLED
+                    EXTRA_STATUS to Record.STATUS_CANCELLED
                 )
             )
             .also {
