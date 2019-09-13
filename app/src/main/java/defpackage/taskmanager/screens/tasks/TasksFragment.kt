@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import defpackage.taskmanager.R
@@ -36,7 +35,6 @@ class TasksFragment : BaseFragment() {
         TasksFragmentUI().createView(AnkoContext.create(activity, this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        dbManager.io.observeForever(dbObserver)
         adapter.setAdapterListener { _, item, param ->
             when (param) {
                 R.id.tasks_item_history -> {
@@ -69,14 +67,5 @@ class TasksFragment : BaseFragment() {
         adapter.items.add(Task())
         adapter.items.add(Task())
         rvTasks.adapter = adapter
-    }
-
-    override fun onDestroyView() {
-        dbManager.io.removeObserver(dbObserver)
-        super.onDestroyView()
-    }
-
-    private val dbObserver = Observer<Boolean> {
-
     }
 }

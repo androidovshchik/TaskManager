@@ -12,5 +12,5 @@ import defpackage.taskmanager.data.models.Record
 interface RecordDao {
 
     @Query("SELECT * FROM History WHERE `Задача` = :id")
-    fun getRecordsByTask(id: Long): List<Record>
+    fun getRecordsByTaskInternal(id: Long): List<Record>
 }

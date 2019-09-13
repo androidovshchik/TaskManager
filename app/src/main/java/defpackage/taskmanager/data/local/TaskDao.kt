@@ -12,5 +12,5 @@ import defpackage.taskmanager.data.models.TaskCount
 interface TaskDao {
 
     @Query("SELECT Tasks.*, COUNT(History.ID) as Count FROM Tasks LEFT JOIN History ON Tasks.ID = History.`Задача`")
-    fun getAllTasks(): List<TaskCount>
+    fun getAllTasksInternal(): List<TaskCount>
 }

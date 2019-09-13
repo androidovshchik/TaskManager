@@ -10,7 +10,6 @@ import android.content.Context
 import android.text.TextUtils
 import androidx.annotation.UiThread
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.PATTERN_DATETIME
@@ -20,6 +19,8 @@ import defpackage.taskmanager.extensions.scanFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.toast
 import org.joda.time.LocalDateTime
@@ -29,14 +30,11 @@ import java.io.FileOutputStream
 
 class DbManager(context: Context) : TaskDao, RecordDao {
 
-    /**
-     * Indicates I/O operations during import/export
-     */
-    val io = MutableLiveData(false)
-
     private var db: AppDatabase? = null
 
     private val dbFile = context.getDatabasePath(DB_NAME)
+
+    private val io = Mutex()
 
     init {
         openDb(context)
@@ -67,60 +65,48 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             preferences.context.toast("Невалидный файл для импорта БД")
             return
         }
-        if (io.value == true) {
-            XLog.w("Импорт БД во время I/O операций")
-            preferences.context.toast("Подождите...")
-            return
-        }
-        io.value = true
         GlobalScope.launch(Dispatchers.Main) {
-            closeDb()
-            if (exportInternal(preferences)) {
-                val imported = withContext(Dispatchers.IO) {
-                    copyFile(File(newPath), dbFile)
-                }
-                XLog.d("Импорт сделан $imported по пути $newPath")
-                if (imported) {
-                    preferences.apply {
-                        if (openDb(context)) {
-                            pathToDb = newPath
-                            context.toast("БД успешно импортирована")
+            io.withLock {
+                closeDb()
+                if (exportDbInternal(preferences)) {
+                    val imported = withContext(Dispatchers.IO) {
+                        copyFile(File(newPath), dbFile)
+                    }
+                    XLog.d("Импорт сделан $imported по пути $newPath")
+                    if (imported) {
+                        preferences.apply {
+                            if (openDb(context)) {
+                                pathToDb = newPath
+                                context.toast("БД успешно импортирована")
+                            }
                         }
+                    } else {
+                        preferences.context.toast("Не удалось импортировать БД")
                     }
                 } else {
-                    preferences.context.toast("Не удалось импортировать БД")
+                    preferences.context.toast("Не удалось экспортировать БД")
                 }
-            } else {
-                preferences.context.toast("Не удалось экспортировать БД")
+                true
             }
-            io.value = false
         }
     }
 
     @UiThread
     fun exportDb(preferences: Preferences) {
-        if (io.value == true) {
-            XLog.w("Экспорт БД во время I/O операций")
-            preferences.context.toast("Подождите...")
-            return
-        }
-        io.value = true
         GlobalScope.launch(Dispatchers.Main) {
-            preferences.context.apply {
-                if (exportInternal(preferences)) {
-                    toast("БД успешно экспортирована")
-                } else {
-                    toast("Не удалось экспортировать БД")
+            io.withLock {
+                if (exportDbInternal(preferences)) {
+                    preferences.context.toast("БД успешно экспортирована")
                 }
             }
-            io.value = false
         }
     }
 
     @UiThread
-    private suspend fun exportInternal(preferences: Preferences): Boolean {
+    private suspend fun exportDbInternal(preferences: Preferences): Boolean {
         val oldPath = preferences.pathToDb
         if (!doesExist || TextUtils.isEmpty(oldPath)) {
+            preferences.context.toast("Невозможно экспортировать БД")
             return false
         }
         val oldFile = File(oldPath)
@@ -137,28 +123,34 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             copyFile(dbFile, File(exportPath))
         }
         XLog.d("Экспорт сделан $exported по пути $exportPath")
-        if (exported) {
-            preferences.context.scanFile(exportPath)
+        preferences.context.run {
+            if (exported) {
+                scanFile(exportPath)
+            } else {
+                toast("Не удалось экспортировать БД")
+            }
         }
         return exported
     }
 
-    override fun getAllTasks(): List<TaskCount> {
-        if (io.value == false) {
-            return db?.taskDao()?.getAllTasks().orEmpty()
-        } else {
-            XLog.w("Работа с БД во время I/O операций")
+    suspend fun getAllTasks(): List<TaskCount> {
+        return io.withLock {
+            getAllTasksInternal()
         }
-        return arrayListOf()
     }
 
-    override fun getRecordsByTask(id: Long): List<Record> {
-        if (io.value == false) {
-            return db?.recordDao()?.getRecordsByTask(id).orEmpty()
-        } else {
-            XLog.w("Работа с БД во время I/O операций")
+    override fun getAllTasksInternal(): List<TaskCount> {
+        return db?.taskDao()?.getAllTasksInternal().orEmpty()
+    }
+
+    suspend fun getRecordsByTask(id: Long): List<Record> {
+        return io.withLock {
+            getRecordsByTaskInternal(id)
         }
-        return arrayListOf()
+    }
+
+    override fun getRecordsByTaskInternal(id: Long): List<Record> {
+        return db?.recordDao()?.getRecordsByTaskInternal(id).orEmpty()
     }
 
     @WorkerThread
