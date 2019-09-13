@@ -19,6 +19,7 @@ import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.extensions.areGranted
 import defpackage.taskmanager.extensions.getRealPath
 import defpackage.taskmanager.extensions.requestPermissions
+import defpackage.taskmanager.extensions.setTextSelection
 import defpackage.taskmanager.screens.BaseActivity
 import defpackage.taskmanager.services.TasksService
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,7 @@ class TasksActivity : BaseActivity() {
         fragmentManager.beginTransaction()
             .add(TasksActivityUI.TASKS_LAYOUT_ID, tasksFragment)
             .commit()
-        etDbPath.setText(preferences.pathToDb ?: "")
+        etDbPath.setTextSelection(preferences.pathToDb ?: "")
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
         }
@@ -129,7 +130,7 @@ class TasksActivity : BaseActivity() {
                 val path = withContext(Dispatchers.IO) {
                     getRealPath(uri) ?: uri.path ?: ""
                 }
-                etDbPath.setText(path)
+                etDbPath.setTextSelection(path)
             }
         }
     }

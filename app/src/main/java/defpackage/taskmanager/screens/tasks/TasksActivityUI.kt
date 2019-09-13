@@ -7,6 +7,7 @@ package defpackage.taskmanager.screens.tasks
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.setImageXmlDrawable
@@ -24,7 +25,8 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 setPadding(dip(8), 0, dip(8), dip(8))
                 gravity = Gravity.CENTER_VERTICAL
                 owner.etDbPath = editText {
-                    maxLines = 1
+                    singleLine = true
+                    imeOptions = EditorInfo.IME_ACTION_DONE
                 }.lparams(0) {
                     weight = 1f
                 }
