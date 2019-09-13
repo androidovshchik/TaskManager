@@ -20,9 +20,9 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
 
-    var preferences: Preferences? = null
+    protected var preferences: Preferences? = null
 
-    val fragmentJob = SupervisorJob()
+    protected val fragmentJob = SupervisorJob()
 
     protected val appContext: Context?
         get() = activity?.applicationContext

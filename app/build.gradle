@@ -54,6 +54,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation "androidx.room:room-runtime:${Versions.room}"
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
     kapt "androidx.room:room-compiler:${Versions.room}"
     implementation "org.kodein.di:kodein-di-generic-jvm:${Versions.kodein}"
     implementation "org.kodein.di:kodein-di-framework-android-core:${Versions.kodein}"

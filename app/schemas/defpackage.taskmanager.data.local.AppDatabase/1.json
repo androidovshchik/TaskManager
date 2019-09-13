@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "358943028dad1267ed95233edc6271c5",
+    "identityHash": "a12335a3fc169ca54ec72ed2c137bc23",
     "entities": [
       {
         "tableName": "Tasks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Название` TEXT NOT NULL, `Т-Время` TEXT, `Т-День` INTEGER, `Т-Дата` TEXT, `Т-Задача` INTEGER, `Т-Повторы` INTEGER, `Т-Задержка` INTEGER, `Сигнал` INTEGER NOT NULL, `Интервал повторения` INTEGER NOT NULL, `Интервал откладывания` INTEGER NOT NULL, `Статус` INTEGER NOT NULL, `_DEFER_TIME` INTEGER, FOREIGN KEY(`Т-День`) REFERENCES `Week`(`ID`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`Т-Задача`) REFERENCES `Tasks`(`ID`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`Сигнал`) REFERENCES `Signals`(`ID`) ON UPDATE CASCADE ON DELETE SET DEFAULT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Название` TEXT NOT NULL, `Т-Время` TEXT, `Т-День` INTEGER, `Т-Дата` TEXT, `Т-Задача` INTEGER, `Т-Повторы` INTEGER, `Т-Задержка` INTEGER, `Сигнал` INTEGER NOT NULL, `Интервал повторения` INTEGER NOT NULL, `Интервал откладывания` INTEGER NOT NULL, `Статус` INTEGER NOT NULL, `_GUESS_TIME` INTEGER, `_DELAY_TIME` INTEGER, `_DEFER_TIME` INTEGER, FOREIGN KEY(`Т-День`) REFERENCES `Week`(`ID`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`Т-Задача`) REFERENCES `Tasks`(`ID`) ON UPDATE CASCADE ON DELETE SET NULL , FOREIGN KEY(`Сигнал`) REFERENCES `Signals`(`ID`) ON UPDATE CASCADE ON DELETE SET DEFAULT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -79,6 +79,18 @@
             "columnName": "Статус",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "guessTime",
+            "columnName": "_GUESS_TIME",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "delayTime",
+            "columnName": "_DELAY_TIME",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "deferTime",
@@ -270,7 +282,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '358943028dad1267ed95233edc6271c5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a12335a3fc169ca54ec72ed2c137bc23')"
     ]
   }
 }

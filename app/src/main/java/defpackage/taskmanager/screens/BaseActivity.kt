@@ -19,9 +19,9 @@ open class BaseActivity : Activity(), KodeinAware, CoroutineScope {
 
     override val kodein by kodein()
 
-    lateinit var preferences: Preferences
+    protected lateinit var preferences: Preferences
 
-    val activityJob = SupervisorJob()
+    protected val activityJob = SupervisorJob()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
