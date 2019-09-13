@@ -100,7 +100,6 @@ class TasksActivity : BaseActivity() {
         preferences.enableTasksService = false
         unbindTasksService()
         TasksService.kill(applicationContext)
-        tvStatus.text = "Статус: не работает"
     }
 
     private fun unbindTasksService() {
@@ -108,6 +107,7 @@ class TasksActivity : BaseActivity() {
             unbindService(tasksConnection)
             tasksService = null
         }
+        tvStatus.text = "Статус: не работает"
     }
 
     override fun onStop() {

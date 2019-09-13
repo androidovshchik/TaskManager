@@ -88,14 +88,26 @@ open class Task {
     @ColumnInfo(name = "Статус")
     var status = false
 
+    /**
+     * Defines possible time of launch without delay
+     */
     @ColumnInfo(name = "_GUESS_TIME")
     var guessTime: Long? = null
 
+    /**
+     * Defines exact time before launch with delay [tDelay]
+     */
     @ColumnInfo(name = "_DELAY_TIME")
     var delayTime: Long? = null
 
+    /**
+     * Defines exact time before launch with delay [iDelay]
+     */
     @ColumnInfo(name = "_DEFER_TIME")
     var deferTime: Long? = null
+
+    val isValid: Boolean
+        get() = tTime != null || tDay != null || tDate != null || tTask != null
 
     @Suppress("DEPRECATION")
     fun buildNotification(context: Context): Notification = context.run {

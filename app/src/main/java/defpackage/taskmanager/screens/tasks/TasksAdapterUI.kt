@@ -40,10 +40,12 @@ class TasksAdapterUI : AnkoComponent<ViewGroup> {
                 }
                 imageButton {
                     id = R.id.tasks_item_edit
+                    isEnabled = false
                     setImageXmlDrawable(R.drawable.ic_edit_black_24dp)
                 }.lparams()
                 imageButton {
                     id = R.id.tasks_item_delete
+                    isEnabled = false
                     setImageXmlDrawable(R.drawable.ic_delete_black_24dp)
                 }.lparams()
             }
