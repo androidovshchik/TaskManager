@@ -27,6 +27,8 @@ import org.joda.time.LocalDateTime
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.math.BigInteger
+import java.security.MessageDigest
 
 class DbManager(context: Context) : TaskDao, RecordDao {
 
@@ -35,6 +37,8 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     private val dbFile = context.getDatabasePath(DB_NAME)
 
     private val io = Mutex()
+
+    private var md5: String? = null
 
     init {
         openDb(context)
@@ -47,6 +51,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     private fun openDb(context: Context): Boolean {
         try {
             if (doesExist) {
+                md5 = getMD5Hash(dbFile)
                 db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
                     .build()
                 return true
@@ -100,8 +105,8 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
                 when (exportDbInternal(preferences, true)) {
-                    true -> preferences.context.toast("БД успешно экспортирована")
-                    null -> preferences.context.toast("Невозможно экспортировать БД")
+                    true -> preferences.context.toast("БД успешно сохранена")
+                    null -> preferences.context.toast("Невозможно сохранить БД")
                     else -> {
                     }
                 }
@@ -135,10 +140,10 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         }
         XLog.d("Экспорт сделан $exported по пути $exportPath")
         preferences.context.apply {
-            if (exported) {
-                scanFile(exportPath)
-            } else {
-                toast("Не удалось экспортировать БД")
+            when {
+                exported -> scanFile(exportPath)
+                overwrite -> toast("Не удалось сохранить БД")
+                else -> toast("Не удалось экспортировать БД")
             }
         }
         return exported
@@ -184,6 +189,18 @@ class DbManager(context: Context) : TaskDao, RecordDao {
             XLog.e(e.localizedMessage, e)
             dist.delete()
             false
+        }
+    }
+
+    @Throws(Exception::class)
+    private fun getMD5Hash(file: File): String {
+        MessageDigest.getInstance("MD5").let {
+            FileInputStream(file).use { input ->
+                return BigInteger(1, it.digest(input.readBytes()))
+                    .toString(16)
+                    .padStart(32, '0')
+                    .replace(' ', '0')
+            }
         }
     }
 
