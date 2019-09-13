@@ -45,15 +45,19 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     val doesExist: Boolean
         get() = dbFile.exists()
 
-    val isOpened: Boolean
-        get() = db?.isOpen == true
-
-    private fun openDb(context: Context) {
-        if (doesExist) {
-            db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
-                .build()
-            XLog.d(isOpened)
+    @UiThread
+    private fun openDb(context: Context): Boolean {
+        try {
+            if (doesExist) {
+                db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
+                    .build()
+                return true
+            }
+        } catch (e: Exception) {
+            XLog.e(e.localizedMessage, e)
+            context.toast("Не удалось инициализировать БД")
         }
+        return false
     }
 
     @UiThread
@@ -78,9 +82,10 @@ class DbManager(context: Context) : TaskDao, RecordDao {
                 XLog.d("Импорт сделан $imported по пути $newPath")
                 if (imported) {
                     preferences.apply {
-                        openDb(context)
-                        pathToDb = newPath
-                        context.toast("БД успешно импортирована")
+                        if (openDb(context)) {
+                            pathToDb = newPath
+                            context.toast("БД успешно импортирована")
+                        }
                     }
                 } else {
                     preferences.context.toast("Не удалось импортировать БД")
@@ -112,6 +117,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         }
     }
 
+    @UiThread
     private suspend fun exportInternal(preferences: Preferences): Boolean {
         val oldPath = preferences.pathToDb
         if (!doesExist || TextUtils.isEmpty(oldPath)) {
@@ -138,23 +144,19 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     override fun getAllTasks(): List<TaskCount> {
-        //if (isOpened) {
-            if (io.value == false) {
-                return db?.taskDao()?.getAllTasks().orEmpty()
-            } else {
-                XLog.w("Работа с БД во время I/O операций")
-            }
-        //}
+        if (io.value == false) {
+            return db?.taskDao()?.getAllTasks().orEmpty()
+        } else {
+            XLog.w("Работа с БД во время I/O операций")
+        }
         return arrayListOf()
     }
 
     override fun getRecordsByTask(id: Long): List<Record> {
-        if (isOpened) {
-            if (io.value == false) {
-                return db?.recordDao()?.getRecordsByTask(id).orEmpty()
-            } else {
-                XLog.w("Работа с БД во время I/O операций")
-            }
+        if (io.value == false) {
+            return db?.recordDao()?.getRecordsByTask(id).orEmpty()
+        } else {
+            XLog.w("Работа с БД во время I/O операций")
         }
         return arrayListOf()
     }
@@ -180,6 +182,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         }
     }
 
+    @UiThread
     fun closeDb() {
         db?.apply {
             close()

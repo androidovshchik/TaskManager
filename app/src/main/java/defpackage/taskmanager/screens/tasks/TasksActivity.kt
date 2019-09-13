@@ -53,7 +53,6 @@ class TasksActivity : BaseActivity() {
         }
         launch {
             withContext(Dispatchers.IO) {
-                XLog.d(dbManager.isOpened)
                 XLog.d(dbManager.getAllTasks())
             }
         }
