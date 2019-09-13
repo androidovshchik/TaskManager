@@ -70,7 +70,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
                 closeDb()
-                if (exportDbInternal(preferences)) {
+                if (exportDbInternal(preferences) != false) {
                     if (importDbInternal(preferences, newPath)) {
                         preferences.context.toast("БД успешно импортирована")
                     }
@@ -101,19 +101,21 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     fun exportDb(preferences: Preferences) {
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
-                if (exportDbInternal(preferences)) {
-                    preferences.context.toast("БД успешно экспортирована")
+                when (exportDbInternal(preferences)) {
+                    true -> preferences.context.toast("БД успешно экспортирована")
+                    null -> preferences.context.toast("Невозможно экспортировать БД")
+                    else -> {
+                    }
                 }
             }
         }
     }
 
     @UiThread
-    private suspend fun exportDbInternal(preferences: Preferences): Boolean {
+    private suspend fun exportDbInternal(preferences: Preferences): Boolean? {
         val oldPath = preferences.pathToDb
         if (!doesExist || TextUtils.isEmpty(oldPath)) {
-            preferences.context.toast("Невозможно экспортировать БД")
-            return false
+            return null
         }
         val oldFile = File(oldPath)
         val oldName = oldFile.nameWithoutExtension
