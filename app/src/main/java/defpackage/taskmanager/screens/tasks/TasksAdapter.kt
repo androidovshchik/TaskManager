@@ -14,6 +14,7 @@ import defpackage.taskmanager.screens.BaseAdapter
 import defpackage.taskmanager.screens.BaseViewHolder
 import defpackage.taskmanager.widgets.ProgramCheckBox
 import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.sdk19.listeners.onCheckedChange
 import org.jetbrains.anko.sdk19.listeners.onClick
 
 class TasksAdapter : BaseAdapter<Task>() {
@@ -45,6 +46,11 @@ class TasksAdapter : BaseAdapter<Task>() {
         val ibDelete: ImageButton = itemView.findViewById(R.id.tasks_item_delete)
 
         init {
+            cbEnable.onCheckedChange { _, isChecked ->
+                if (!cbEnable.programmatically) {
+
+                }
+            }
             ibHistory.onClick {
                 listener?.invoke(adapterPosition, items[adapterPosition], R.id.tasks_item_history)
             }

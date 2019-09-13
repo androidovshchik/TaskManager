@@ -70,7 +70,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
                 closeDb()
-                if (exportDbInternal(preferences) != false) {
+                if (exportDbInternal(preferences, false) != false) {
                     if (importDbInternal(preferences, newPath)) {
                         preferences.context.toast("БД успешно импортирована")
                     }
@@ -99,7 +99,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     fun exportDb(preferences: Preferences) {
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
-                when (exportDbInternal(preferences)) {
+                when (exportDbInternal(preferences, true)) {
                     true -> preferences.context.toast("БД успешно экспортирована")
                     null -> preferences.context.toast("Невозможно экспортировать БД")
                     else -> {
@@ -110,22 +110,26 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     @UiThread
-    private suspend fun exportDbInternal(preferences: Preferences): Boolean? {
+    private suspend fun exportDbInternal(preferences: Preferences, overwrite: Boolean): Boolean? {
         val oldPath = preferences.pathToDb
         if (!doesExist || TextUtils.isEmpty(oldPath)) {
             return null
         }
-        val oldFile = File(oldPath)
-        val oldName = oldFile.nameWithoutExtension
-            .split("_")[0]
-        val now = LocalDateTime.now()
-        val datetime = now.toString(PATTERN_DATETIME)
-            .replace(" ", ".")
-            .replace(":", ".")
-        val hash = now.millisOfSecond().get()
-            .toString()
-            .padStart(3, '0')
-        val exportPath = "${oldFile.parent ?: ""}/${oldName}_${datetime}.${hash}.${oldFile.extension}"
+        val exportPath = if (overwrite) {
+            oldPath.toString()
+        } else {
+            val oldFile = File(oldPath)
+            val oldName = oldFile.nameWithoutExtension
+                .split("_")[0]
+            val now = LocalDateTime.now()
+            val datetime = now.toString(PATTERN_DATETIME)
+                .replace(" ", ".")
+                .replace(":", ".")
+            val hash = now.millisOfSecond().get()
+                .toString()
+                .padStart(3, '0')
+            "${oldFile.parent ?: ""}/${oldName}_${datetime}.${hash}.${oldFile.extension}"
+        }
         val exported = withContext(Dispatchers.IO) {
             copyFile(dbFile, File(exportPath))
         }

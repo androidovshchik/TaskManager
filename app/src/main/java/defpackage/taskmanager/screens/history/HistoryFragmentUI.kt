@@ -21,6 +21,9 @@ class HistoryFragmentUI : AnkoComponent<HistoryFragment> {
     override fun createView(ui: AnkoContext<HistoryFragment>): View = with(ui) {
         owner.swipeRefresh = swipeRefreshLayout {
             layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
+            setOnRefreshListener {
+                owner.onRefreshData()
+            }
             owner.rvHistory = recyclerView {
                 layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
                 layoutManager = LinearLayoutManager(context)
