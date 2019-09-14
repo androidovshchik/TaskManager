@@ -7,15 +7,13 @@ package defpackage.taskmanager.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import defpackage.taskmanager.data.models.Record
-import defpackage.taskmanager.data.models.Signal
-import defpackage.taskmanager.data.models.Task
-import defpackage.taskmanager.data.models.Week
+import defpackage.taskmanager.data.models.*
 
 @Database(
     entities = [
         Task::class,
         Record::class,
+        Event::class,
         Week::class,
         Signal::class
     ],
@@ -27,4 +25,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
 
     abstract fun recordDao(): RecordDao
+
+    abstract fun eventDao(): EventDao
 }

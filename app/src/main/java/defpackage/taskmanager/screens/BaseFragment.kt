@@ -37,6 +37,8 @@ open class BaseFragment : Fragment(), KodeinAware, CoroutineScope {
         }
     }
 
+    open fun clearData() {}
+
     override fun onDestroyView() {
         fragmentJob.cancelChildren()
         super.onDestroyView()
