@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.EditText
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import defpackage.taskmanager.DANGER_PERMISSIONS
 import defpackage.taskmanager.EXTRA_ID
 import defpackage.taskmanager.data.local.DbManager
@@ -28,26 +29,27 @@ import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.setContentView
 import org.kodein.di.generic.instance
 
+@Suppress("DEPRECATION")
 class TasksActivity : BaseActivity() {
 
     val dbManager: DbManager by instance()
 
     lateinit var etDbPath: EditText
 
+    lateinit var vpLists: ViewPager
+
     lateinit var tvStatus: TextView
 
     private var tasksService: TasksService? = null
 
-    private val tasksFragment = TasksFragment()
+    private lateinit var pagerAdapter: TasksPagerAdapter
 
-    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TasksActivityUI().setContentView(this)
-        fragmentManager.beginTransaction()
-            .add(TasksActivityUI.TASKS_LAYOUT_ID, tasksFragment)
-            .commit()
         etDbPath.setTextSelection(preferences.pathToDb ?: "")
+        pagerAdapter = TasksPagerAdapter(fragmentManager)
+        vpLists.adapter = pagerAdapter
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
         }
@@ -76,7 +78,10 @@ class TasksActivity : BaseActivity() {
 
     fun onLoadDbFile() {
         if (areGranted(*DANGER_PERMISSIONS)) {
-            tasksFragment.clearData()
+            for (i in 0 until pagerAdapter.count) {
+                pagerAdapter.getItem(i)
+                    .clearData()
+            }
             onKillTasks()
             dbManager.importDb(preferences, etDbPath.text.toString().trim())
         }

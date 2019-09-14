@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import defpackage.taskmanager.R
 import defpackage.taskmanager.extensions.setImageXmlDrawable
+import defpackage.taskmanager.extensions.viewPager
 import org.jetbrains.anko.*
 import org.jetbrains.anko.sdk19.listeners.onClick
 
@@ -52,8 +53,8 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
             view {
                 background = ContextCompat.getDrawable(context, R.drawable.divider)
             }.lparams(matchParent, dip(1))
-            frameLayout {
-                id = TASKS_LAYOUT_ID
+            owner.vpLists = viewPager {
+                offscreenPageLimit = 1
             }.lparams(matchParent, 0) {
                 weight = 1f
             }
@@ -84,10 +85,5 @@ class TasksActivityUI : AnkoComponent<TasksActivity> {
                 }.lparams()
             }
         }
-    }
-
-    companion object {
-
-        val TASKS_LAYOUT_ID = View.generateViewId()
     }
 }

@@ -50,6 +50,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-sdk19:${Versions.anko}"
     implementation "org.jetbrains.anko:anko-sdk19-listeners:${Versions.anko}"
     implementation "org.jetbrains.anko:anko-recyclerview-v7:${Versions.anko}"
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
