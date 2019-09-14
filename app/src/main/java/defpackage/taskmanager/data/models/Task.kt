@@ -12,10 +12,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import defpackage.taskmanager.EXTRA_STATUS
-import defpackage.taskmanager.EXTRA_TASK
-import defpackage.taskmanager.R
-import defpackage.taskmanager.SIMPLE_DATETIME
+import defpackage.taskmanager.*
 import defpackage.taskmanager.extensions.isNougatPlus
 import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.pendingReceiverFor
@@ -57,7 +54,7 @@ open class Task {
     var id = 0L
 
     @ColumnInfo(name = "Название")
-    var title = ""
+    lateinit var title: String
 
     @ColumnInfo(name = "Т-Время")
     var tTime: LocalTime? = null
@@ -78,7 +75,7 @@ open class Task {
     var tDelay: Long? = null
 
     @ColumnInfo(name = "Сигнал", index = true)
-    var behavior = Behavior.SOUNDLESS
+    lateinit var behavior: Behavior
 
     @ColumnInfo(name = "Интервал повторения")
     var iRepeat = DEFAULT_REPEAT
@@ -89,30 +86,8 @@ open class Task {
     @ColumnInfo(name = "Статус")
     var status = false
 
-    /**
-     * Defines possible time of launch without delay
-     */
-    @ColumnInfo(name = "_GUESS_TIME")
-    var guessTime: Long? = null
-
-    /**
-     * Defines exact time before launch with delay [tDelay]
-     */
-    @ColumnInfo(name = "_DELAY_TIME")
-    var delayTime: Long? = null
-
-    /**
-     * Defines exact time before launch with delay [iDelay]
-     */
-    @ColumnInfo(name = "_DEFER_TIME")
-    var deferTime: Long? = null
-
     val isValid: Boolean
         get() = tTime != null || tDay != null || tDate != null || tTask != null
-
-    fun getPossibleTime() = guessTime?.let {
-        SIMPLE_DATETIME.format(it)
-    } ?: "неизвестно"
 
     @Suppress("DEPRECATION")
     fun buildNotification(context: Context): Notification = context.run {
@@ -129,19 +104,19 @@ open class Task {
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_STATUS to Record.STATUS_COMPLETED
+                    EXTRA_STATUS to STATUS_COMPLETED
                 )
             )
             .addAction(
                 R.drawable.ic_update_white_24dp, "Отложить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_STATUS to Record.STATUS_DEFERRED
+                    EXTRA_STATUS to STATUS_DEFERRED
                 )
             )
             .addAction(
                 R.drawable.ic_close_white_24dp, "Отменить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_STATUS to Record.STATUS_CANCELLED
+                    EXTRA_STATUS to STATUS_CANCELLED
                 )
             )
             .also {
@@ -155,7 +130,7 @@ open class Task {
     }
 
     override fun toString(): String {
-        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status, guessTime=$guessTime, delayTime=$delayTime, deferTime=$deferTime)"
+        return "Task(id=$id, title='$title', tTime=$tTime, tDay=$tDay, tDate=$tDate, tTask=$tTask, tRepeat=$tRepeat, tDelay=$tDelay, behavior=$behavior, iRepeat=$iRepeat, iDelay=$iDelay, status=$status)"
     }
 
     companion object {

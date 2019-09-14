@@ -31,8 +31,12 @@ class Event {
     var task = 0L
 
     @ColumnInfo(name = "Статус")
-    var status: Int? = null
+    var status: Boolean? = null
 
     @ColumnInfo(name = "Время")
     var time: Int? = null
+
+    override fun toString(): String {
+        return "Event(id=$id, task=$task, status=$status, time=$time)"
+    }
 }

@@ -46,15 +46,4 @@ class Record {
     override fun toString(): String {
         return "Record(id=$id, task=$task, status=$status, time=$time)"
     }
-
-    companion object {
-
-        const val STATUS_NONE = 0
-
-        const val STATUS_COMPLETED = 10
-
-        const val STATUS_DEFERRED = 20
-
-        const val STATUS_CANCELLED = 30
-    }
 }

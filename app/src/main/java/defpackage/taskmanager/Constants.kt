@@ -15,6 +15,18 @@ val DANGER_PERMISSIONS = arrayOf(
 )
 
 /**
+ * Statuses describe actions
+ */
+
+const val STATUS_NONE = 0
+
+const val STATUS_COMPLETED = 10
+
+const val STATUS_DEFERRED = 20
+
+const val STATUS_CANCELLED = 30
+
+/**
  * Date&Time
  */
 
