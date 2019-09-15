@@ -13,8 +13,10 @@ import androidx.annotation.WorkerThread
 import androidx.room.Room
 import com.elvishew.xlog.XLog
 import defpackage.taskmanager.PATTERN_DATETIME
-import defpackage.taskmanager.data.models.Record
-import defpackage.taskmanager.data.models.TaskCount
+import defpackage.taskmanager.data.models.Event
+import defpackage.taskmanager.data.models.EventTask
+import defpackage.taskmanager.data.models.Task
+import defpackage.taskmanager.data.models.TaskEvents
 import defpackage.taskmanager.extensions.scanFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,13 +32,13 @@ import java.io.FileOutputStream
 import java.math.BigInteger
 import java.security.MessageDigest
 
-class DbManager(context: Context) : TaskDao, RecordDao {
+class DbManager(context: Context) : TaskDao, EventDao {
 
     private var db: AppDatabase? = null
 
     private val dbFile = context.getDatabasePath(DB_NAME)
 
-    private val io = Mutex()
+    val io = Mutex()
 
     private var md5: String? = null
 
@@ -150,30 +152,54 @@ class DbManager(context: Context) : TaskDao, RecordDao {
     }
 
     @WorkerThread
-    suspend fun getAllTasks(): List<TaskCount> {
+    suspend inline fun <T> safeExecute(action: DbManager.() -> T): T {
         return io.withLock {
-            getAllTasksInternal()
+            action(this)
         }
     }
 
-    override fun getAllTasksInternal(): List<TaskCount> {
-        return db?.taskDao()?.getAllTasksInternal().orEmpty()
+    override fun insert(vararg items: Task) {
+        db?.taskDao()?.insert(*items)
     }
 
-    @WorkerThread
-    suspend fun getRecordsByTask(id: Long): List<Record> {
-        return io.withLock {
-            getRecordsByTaskInternal(id)
-        }
+    override fun insert(vararg items: Event) {
+        db?.eventDao()?.insert(*items)
     }
 
-    override fun getRecordsByTaskInternal(id: Long): List<Record> {
-        return db?.recordDao()?.getRecordsByTaskInternal(id).orEmpty()
+    override fun update(vararg items: Task) {
+        db?.taskDao()?.insert(*items)
+    }
+
+    override fun update(vararg items: Event) {
+        db?.eventDao()?.update(*items)
+    }
+
+    override fun delete(vararg items: Task) {
+        db?.taskDao()?.delete(*items)
+    }
+
+    override fun getAllTasks(offset: Int): List<Task> {
+        return db?.taskDao()?.getAllTasks(offset).orEmpty()
+    }
+
+    override fun getActiveTasks(): List<TaskEvents> {
+        return db?.taskDao()?.getActiveTasks().orEmpty()
+    }
+
+    override fun getActualEvents(offset: Int): List<EventTask> {
+        return db?.eventDao()?.getActualEvents(offset).orEmpty()
+    }
+
+    override fun getEventsByTask(id: Long, offset: Int): List<Event> {
+        return db?.eventDao()?.getEventsByTask(id, offset).orEmpty()
     }
 
     @WorkerThread
     private fun copyFile(src: File, dist: File): Boolean {
         return try {
+            /*if (!src.exists()) {
+                return false
+            }*/
             dist.parentFile.apply {
                 if (!exists()) {
                     mkdir()
@@ -194,13 +220,11 @@ class DbManager(context: Context) : TaskDao, RecordDao {
 
     @Throws(Exception::class)
     private fun getMD5Hash(file: File): String {
-        MessageDigest.getInstance("MD5").let {
-            FileInputStream(file).use { input ->
-                return BigInteger(1, it.digest(input.readBytes()))
-                    .toString(16)
-                    .padStart(32, '0')
-                    .replace(' ', '0')
-            }
+        FileInputStream(file).use { input ->
+            return BigInteger(1, MD5.digest(input.readBytes()))
+                .toString(16)
+                .padStart(32, '0')
+                .replace(' ', '0')
         }
     }
 
@@ -217,5 +241,7 @@ class DbManager(context: Context) : TaskDao, RecordDao {
         private const val DB_NAME = "app.db"
 
         private val SQLITE_REGEX = ".+\\.(db|sdb|sqlite|db3|s3db|sqlite3|sl3)$".toRegex()
+
+        private val MD5 = MessageDigest.getInstance("MD5")
     }
 }
