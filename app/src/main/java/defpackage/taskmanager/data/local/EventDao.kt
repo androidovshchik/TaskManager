@@ -23,12 +23,12 @@ interface EventDao {
      * For tasks screen and widgets
      */
     @Transaction
-    @Query("SELECT History.*, Tasks.`Название` AS _TITLE FROM History LEFT JOIN Tasks ON History.`Задача` = Tasks.ID ORDER BY History._FIRST_TIME DESC LIMIT 200 OFFSET :offset")
-    fun getAllEventsInternal(offset: Long): List<EventTask>
+    @Query("SELECT History.*, Tasks.`Название` AS _TITLE FROM History LEFT JOIN Tasks ON History.`Задача` = Tasks.ID ORDER BY History._EVENT_TIME DESC LIMIT 200 OFFSET :offset")
+    fun getAllEvents(offset: Long): List<EventTask>
 
     /**
      * For history screen
      */
-    @Query("SELECT * FROM History WHERE `Задача` = :id ORDER BY _FIRST_TIME ASC LIMIT 200 OFFSET :offset")
-    fun getEventsByTaskInternal(id: Long, offset: Long): List<Event>
+    @Query("SELECT * FROM History WHERE `Задача` = :id ORDER BY _EVENT_TIME ASC LIMIT 200 OFFSET :offset")
+    fun getEventsByTask(id: Long, offset: Long): List<Event>
 }

@@ -34,8 +34,7 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
         override fun getViewAt(position: Int): RemoteViews {
             val item = items[position]
             return RemoteViews(packageName, R.layout.item_task).apply {
-                //setViewVisibility()
-                setTextViewText(R.id.tasks_item_info, item.event.time)
+                setTextViewText(R.id.tasks_item_info, item.event.time.orEmpty())
                 setTextViewText(R.id.tasks_item_title, item.title)
                 setOnClickPendingIntent(
                     R.id.tasks_item_complete, pendingReceiverFor<ActionReceiver>(
@@ -43,12 +42,14 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
                         EXTRA_ACTION to ACTION_COMPLETED
                     )
                 )
+                setViewVisibility(R.id.tasks_item_defer, 0)
                 setOnClickPendingIntent(
                     R.id.tasks_item_defer, pendingReceiverFor<ActionReceiver>(
                         EXTRA_TASK to item.event.task,
                         EXTRA_ACTION to ACTION_DEFERRED
                     )
                 )
+                setViewVisibility(R.id.tasks_item_cancel, 0)
                 setOnClickPendingIntent(
                     R.id.tasks_item_cancel, pendingReceiverFor<ActionReceiver>(
                         EXTRA_TASK to item.event.task,
@@ -62,7 +63,7 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
             runBlocking {
                 items.clear()
                 items.addAll(dbManager.safeExecute {
-                    getAllEventsInternal(0)
+                    getAllEvents(0)
                 })
             }
         }

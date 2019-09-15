@@ -27,12 +27,12 @@ interface TaskDao {
      * For tasks screen
      */
     @Query("SELECT * FROM Tasks LIMIT 200 OFFSET :offset")
-    fun getAllTasksInternal(offset: Long): List<Task>
+    fun getAllTasks(offset: Long): List<Task>
 
     /**
      * For tasks service
      */
     @Transaction
     @Query("SELECT * FROM Tasks WHERE `Статус` = 1")
-    fun getActiveTasksInternal(): List<TaskEvents>
+    fun getActiveTasks(): List<TaskEvents>
 }

@@ -104,19 +104,19 @@ open class Task {
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_STATUS to STATUS_COMPLETED
+                    EXTRA_ACTION to ACTION_COMPLETED
                 )
             )
             .addAction(
                 R.drawable.ic_update_white_24dp, "Отложить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_STATUS to STATUS_DEFERRED
+                    EXTRA_ACTION to ACTION_DEFERRED
                 )
             )
             .addAction(
                 R.drawable.ic_close_white_24dp, "Отменить", pendingReceiverFor<ActionReceiver>(
                     EXTRA_TASK to id,
-                    EXTRA_STATUS to STATUS_CANCELLED
+                    EXTRA_ACTION to ACTION_CANCELLED
                 )
             )
             .also {
