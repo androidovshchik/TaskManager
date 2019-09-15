@@ -8,14 +8,14 @@ package defpackage.taskmanager.screens.tasks
 
 import android.app.FragmentManager
 import android.view.ViewGroup
+import androidx.collection.SimpleArrayMap
 import androidx.legacy.app.FragmentStatePagerAdapter
 import defpackage.taskmanager.screens.BaseFragment
 import defpackage.taskmanager.screens.events.EventsFragment
-import java.util.*
 
 class TasksPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
 
-    private val fragments = WeakHashMap<Int, BaseFragment>()
+    private val fragments = SimpleArrayMap<Int, BaseFragment>()
 
     override fun getItem(position: Int): BaseFragment {
         var fragment: BaseFragment? = null
@@ -24,7 +24,7 @@ class TasksPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(ma
                 0 -> TasksFragment()
                 else -> EventsFragment()
             }
-            fragments[position] = fragment
+            fragments.put(position, fragment)
         }
         return fragments.getOrDefault(position, fragment)
     }
