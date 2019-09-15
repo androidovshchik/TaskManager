@@ -96,26 +96,26 @@ open class Task {
             .setContentTitle(title)
             .setContentIntent(
                 pendingActivityFor<TaskActivity>(
-                    EXTRA_TASK to id
+                    EXTRA_ID to id
                 )
             )
             .setOngoing(true)
             .setSound(null)
             .addAction(
                 R.drawable.ic_done_white_24dp, "Выполнить", pendingReceiverFor<ActionReceiver>(
-                    EXTRA_TASK to id,
+                    EXTRA_ID to id,
                     EXTRA_ACTION to ACTION_COMPLETED
                 )
             )
             .addAction(
                 R.drawable.ic_update_white_24dp, "Отложить", pendingReceiverFor<ActionReceiver>(
-                    EXTRA_TASK to id,
+                    EXTRA_ID to id,
                     EXTRA_ACTION to ACTION_DEFERRED
                 )
             )
             .addAction(
                 R.drawable.ic_close_white_24dp, "Отменить", pendingReceiverFor<ActionReceiver>(
-                    EXTRA_TASK to id,
+                    EXTRA_ID to id,
                     EXTRA_ACTION to ACTION_CANCELLED
                 )
             )

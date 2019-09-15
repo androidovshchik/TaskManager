@@ -8,9 +8,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import defpackage.taskmanager.extensions.currentTimeSeconds
 
 @Entity(
-    tableName = "Events",
+    tableName = "History",
     foreignKeys = [
         ForeignKey(
             entity = Task::class,
@@ -34,9 +35,36 @@ class Event {
     var status: Boolean? = null
 
     @ColumnInfo(name = "Время")
-    var time: Int? = null
+    var time: String? = null
+
+    /**
+     * Initial time of event which may be compared
+     */
+    @ColumnInfo(name = "_EVENT_TIME")
+    var eventTime: Long? = null
+
+    /**
+     * Delayed time of event
+     */
+    @ColumnInfo(name = "_DEFER_TIME")
+    var deferTime: Long? = null
+
+    val nextTime: Long?
+        get() {
+
+        }
+
+    val willBeInFuture: Boolean
+        get() = eventTime == null || currentTimeSeconds() < eventTime!!
+
+    val description: String
+        get() = when (status) {
+            true -> "выполнено"
+            false -> "отменено"
+            else -> "неизвестно"
+        }
 
     override fun toString(): String {
-        return "Event(id=$id, task=$task, status=$status, time=$time)"
+        return "Event(id=$id, task=$task, status=$status, time=$time, eventTime=$eventTime, deferTime=$deferTime)"
     }
 }
