@@ -11,8 +11,10 @@ import android.widget.RemoteViewsService
 import defpackage.taskmanager.*
 import defpackage.taskmanager.data.local.DbManager
 import defpackage.taskmanager.data.models.EventTask
+import defpackage.taskmanager.extensions.pendingActivityFor
 import defpackage.taskmanager.extensions.pendingReceiverFor
 import defpackage.taskmanager.receivers.ActionReceiver
+import defpackage.taskmanager.screens.tasks.TasksActivity
 import kotlinx.coroutines.runBlocking
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
@@ -38,6 +40,11 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
             return RemoteViews(packageName, R.layout.item_task).apply {
                 setTextViewText(R.id.tasks_item_info, SIMPLE_DATETIME.format(item.event.nextTime))
                 setTextViewText(R.id.tasks_item_title, item.title)
+                setOnClickPendingIntent(
+                    R.id.task_widget_container, pendingActivityFor<TasksActivity>(
+                        EXTRA_TASK to item.event.task
+                    )
+                )
                 setOnClickPendingIntent(
                     R.id.tasks_item_complete, pendingReceiverFor<ActionReceiver>(
                         EXTRA_TASK to item.event.task,

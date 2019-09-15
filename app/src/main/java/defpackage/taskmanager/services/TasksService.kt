@@ -67,28 +67,8 @@ class TasksService : BaseService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        /*job?.let {
-            it.cancel()
-            job = null
-        }
-        executeJob()*/
         return START_STICKY
     }
-
-    /*fun executeJob() {
-        job = launch {
-            try {
-                acquireWakeLock()
-                intent.let {
-                    if (it.hasExtra(EXTRA_TASK) && it.hasExtra(EXTRA_RESULT)) {
-
-                    }
-                }
-            } finally {
-                releaseWakeLock()
-            }
-        }
-    }*/
 
     private fun releaseWakeLock() {
         wakeLock?.let {
