@@ -4,13 +4,28 @@
 
 package defpackage.taskmanager.data.local
 
-import androidx.room.Dao
-import androidx.room.Query
+import androidx.room.*
+import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.data.models.TaskCount
 
 @Dao
 interface TaskDao {
 
-    @Query("SELECT Tasks.*, COUNT(History.ID) as Count FROM Tasks LEFT JOIN History ON Tasks.ID = History.`Задача`")
+    @Transaction
+    @Insert
+    fun insert(vararg items: Task)
+
+    @Transaction
+    @Update
+    fun update(vararg items: Task)
+
+    @Transaction
+    @Delete
+    fun delete(vararg items: Task)
+
+    @Query("SELECT * FROM Tasks")
     fun getAllTasksInternal(): List<TaskCount>
+
+    @Query("SELECT * FROM Tasks WHERE `Статус` = 1")
+    fun getActiveTasksInternal(): List<TaskCount>
 }
