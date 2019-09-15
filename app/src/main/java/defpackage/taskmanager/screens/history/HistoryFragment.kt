@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.AnkoContext
 import org.kodein.di.generic.instance
+import java.util.concurrent.atomic.AtomicBoolean
 
 class HistoryFragment : BaseFragment() {
 
@@ -30,6 +31,8 @@ class HistoryFragment : BaseFragment() {
     lateinit var rvHistory: RecyclerView
 
     private val adapter = HistoryAdapter()
+
+    private val hasEmptyQuery = AtomicBoolean(false)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         HistoryFragmentUI().createView(AnkoContext.create(activity, this))
@@ -47,11 +50,13 @@ class HistoryFragment : BaseFragment() {
         }
         launch {
             adapter.apply {
-                items.addAll(withContext(Dispatchers.IO) {
+                val list = withContext(Dispatchers.IO) {
                     dbManager.safeExecute {
                         getEventsByTask(args.getLong(EXTRA_ID), offset)
                     }
-                })
+                }
+                hasEmptyQuery.set(list.isEmpty())
+                items.addAll(list)
                 notifyDataSetChanged()
             }
             swipeRefresh.isRefreshing = false
@@ -66,7 +71,9 @@ class HistoryFragment : BaseFragment() {
     private val endlessListener = object : EndlessScrollListener() {
 
         override fun onScrolledToBottom() {
-            loadData(adapter.items.size)
+            if (!hasEmptyQuery.get()) {
+                loadData(adapter.items.size)
+            }
         }
     }
 

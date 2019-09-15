@@ -25,11 +25,11 @@ interface EventDao {
      */
     @Transaction
     @Query("SELECT History.*, Tasks.`Название` AS _TITLE FROM History LEFT JOIN Tasks ON History.`Задача` = Tasks.ID WHERE History.`Статус` IS NULL ORDER BY History._EVENT_TIME DESC LIMIT $QUERY_LIMIT OFFSET :offset")
-    fun getActualEvents(offset: Long): List<EventTask>
+    fun getActualEvents(offset: Int): List<EventTask>
 
     /**
      * For history screen
      */
     @Query("SELECT * FROM History WHERE `Задача` = :id ORDER BY _EVENT_TIME ASC LIMIT $QUERY_LIMIT OFFSET :offset")
-    fun getEventsByTask(id: Long, offset: Long): List<Event>
+    fun getEventsByTask(id: Long, offset: Int): List<Event>
 }

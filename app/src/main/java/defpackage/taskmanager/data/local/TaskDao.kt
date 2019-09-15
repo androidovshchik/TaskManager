@@ -28,7 +28,7 @@ interface TaskDao {
      * For tasks screen
      */
     @Query("SELECT * FROM Tasks LIMIT $QUERY_LIMIT OFFSET :offset")
-    fun getAllTasks(offset: Long): List<Task>
+    fun getAllTasks(offset: Int): List<Task>
 
     /**
      * For tasks service

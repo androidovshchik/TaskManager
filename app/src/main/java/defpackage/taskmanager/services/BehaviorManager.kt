@@ -7,7 +7,6 @@
 package defpackage.taskmanager.services
 
 import android.content.Context
-import android.media.AudioManager
 import android.os.VibrationEffect
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -18,7 +17,6 @@ import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import defpackage.taskmanager.R
 import defpackage.taskmanager.data.models.Behavior
 import defpackage.taskmanager.extensions.isOreoPlus
-import org.jetbrains.anko.audioManager
 import org.jetbrains.anko.vibrator
 
 class BehaviorManager(context: Context) {
@@ -49,32 +47,20 @@ class BehaviorManager(context: Context) {
         when (behavior) {
             Behavior.SOUNDLESS -> {
             }
-            Behavior.VIBRATION -> vibrateOneTime(context)
+            Behavior.VIBRATION -> vibrate(context)
             Behavior.SOUND -> playSound(R.raw.sound)
             Behavior.SOUND_VIBRATION -> {
                 playSound(R.raw.sound)
-                vibrateOneTime(context)
+                vibrate(context)
             }
             Behavior.DEFAULT -> {
-                when (audioManager.ringerMode) {
-                    AudioManager.RINGER_MODE_SILENT -> {
-                        //(1 == Settings.System.getInt(context.getContentResolver(), "vibrate_when_ringing", 0))
-                        return
-                    }
-                    AudioManager.RINGER_MODE_VIBRATE -> {
-                        vibrateOneTime(context)
-                    }
-                    AudioManager.RINGER_MODE_NORMAL -> {
-
-                    }
-                }
-                context.audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION)
+                // todo
             }
         }
     }
 
     @Suppress("DEPRECATION")
-    private fun vibrateOneTime(context: Context) = context.run {
+    private fun vibrate(context: Context) = context.run {
         if (isOreoPlus()) {
             vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
