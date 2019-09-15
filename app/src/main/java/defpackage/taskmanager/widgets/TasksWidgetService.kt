@@ -5,6 +5,7 @@
 package defpackage.taskmanager.widgets
 
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import defpackage.taskmanager.*
@@ -33,8 +34,9 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
 
         override fun getViewAt(position: Int): RemoteViews {
             val item = items[position]
+            val visibility = if (item.event.willBeInFuture) View.GONE else View.VISIBLE
             return RemoteViews(packageName, R.layout.item_task).apply {
-                setTextViewText(R.id.tasks_item_info, item.event.time.orEmpty())
+                setTextViewText(R.id.tasks_item_info, SIMPLE_DATETIME.format(item.event.nextTime))
                 setTextViewText(R.id.tasks_item_title, item.title)
                 setOnClickPendingIntent(
                     R.id.tasks_item_complete, pendingReceiverFor<ActionReceiver>(
@@ -42,14 +44,14 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
                         EXTRA_ACTION to ACTION_COMPLETED
                     )
                 )
-                setViewVisibility(R.id.tasks_item_defer, 0)
+                setViewVisibility(R.id.tasks_item_defer, visibility)
                 setOnClickPendingIntent(
                     R.id.tasks_item_defer, pendingReceiverFor<ActionReceiver>(
                         EXTRA_TASK to item.event.task,
                         EXTRA_ACTION to ACTION_DEFERRED
                     )
                 )
-                setViewVisibility(R.id.tasks_item_cancel, 0)
+                setViewVisibility(R.id.tasks_item_cancel, visibility)
                 setOnClickPendingIntent(
                     R.id.tasks_item_cancel, pendingReceiverFor<ActionReceiver>(
                         EXTRA_TASK to item.event.task,
@@ -63,7 +65,7 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
             runBlocking {
                 items.clear()
                 items.addAll(dbManager.safeExecute {
-                    getAllEvents(0)
+                    getActualEvents(0)
                 })
             }
         }
@@ -78,6 +80,8 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
 
         override fun hasStableIds() = true
 
-        override fun onDestroy() {}
+        override fun onDestroy() {
+            items.clear()
+        }
     }
 }

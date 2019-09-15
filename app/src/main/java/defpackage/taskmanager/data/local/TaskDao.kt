@@ -5,6 +5,7 @@
 package defpackage.taskmanager.data.local
 
 import androidx.room.*
+import defpackage.taskmanager.QUERY_LIMIT
 import defpackage.taskmanager.data.models.Task
 import defpackage.taskmanager.data.models.TaskEvents
 
@@ -26,7 +27,7 @@ interface TaskDao {
     /**
      * For tasks screen
      */
-    @Query("SELECT * FROM Tasks LIMIT 200 OFFSET :offset")
+    @Query("SELECT * FROM Tasks LIMIT $QUERY_LIMIT OFFSET :offset")
     fun getAllTasks(offset: Long): List<Task>
 
     /**

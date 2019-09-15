@@ -14,6 +14,16 @@ val DANGER_PERMISSIONS = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
 
+const val QUERY_LIMIT = 200
+
+const val ACTION_UNKNOWN = 0
+
+const val ACTION_COMPLETED = 10
+
+const val ACTION_DEFERRED = 20
+
+const val ACTION_CANCELLED = 30
+
 /**
  * Date&Time
  */
@@ -50,15 +60,3 @@ const val EXTRA_ACTION = "extra_action"
 const val EXTRA_ID = "extra_id"
 
 const val EXTRA_TITLE = "extra_title"
-
-/**
- * Statuses describe actions
- */
-
-const val ACTION_UNKNOWN = 0
-
-const val ACTION_COMPLETED = 10
-
-const val ACTION_DEFERRED = 20
-
-const val ACTION_CANCELLED = 30
