@@ -15,18 +15,6 @@ val DANGER_PERMISSIONS = arrayOf(
 )
 
 /**
- * Statuses describe actions
- */
-
-const val STATUS_NONE = 0
-
-const val STATUS_COMPLETED = 10
-
-const val STATUS_DEFERRED = 20
-
-const val STATUS_CANCELLED = 30
-
-/**
  * Date&Time
  */
 
@@ -57,8 +45,20 @@ const val EXTRA_NONE = "extra_none"
 
 const val EXTRA_TASK = "extra_task"
 
-const val EXTRA_STATUS = "extra_status"
+const val EXTRA_ACTION = "extra_action"
 
 const val EXTRA_ID = "extra_id"
 
 const val EXTRA_TITLE = "extra_title"
+
+/**
+ * Statuses describe actions
+ */
+
+const val ACTION_UNKNOWN = 0
+
+const val ACTION_COMPLETED = 10
+
+const val ACTION_DEFERRED = 20
+
+const val ACTION_CANCELLED = 30
