@@ -49,9 +49,17 @@ class Event {
     @ColumnInfo(name = "_DEFER_TIME")
     var deferTime: Long? = null
 
-    val nextTime: Long?
-        get() {
+    /**
+     * Time of the last notification was showing
+     */
+    @ColumnInfo(name = "_ALERT_TIME")
+    var alertTime: Long? = null
 
+    val nextTime: Long?
+        get() = when {
+            deferTime != null -> deferTime
+            eventTime != null -> eventTime
+            else -> null
         }
 
     val willBeInFuture: Boolean

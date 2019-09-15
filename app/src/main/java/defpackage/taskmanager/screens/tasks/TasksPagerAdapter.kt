@@ -21,8 +21,8 @@ class TasksPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(ma
         var fragment: BaseFragment? = null
         if (!fragments.containsKey(position)) {
             fragment = when (position) {
-                0 -> TasksFragment()
-                else -> EventsFragment()
+                0 -> EventsFragment()
+                else -> TasksFragment()
             }
             fragments.put(position, fragment)
         }
