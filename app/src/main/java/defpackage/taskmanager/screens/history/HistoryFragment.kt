@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import defpackage.taskmanager.EXTRA_ID
 import defpackage.taskmanager.data.local.DbManager
-import defpackage.taskmanager.data.models.Record
 import defpackage.taskmanager.screens.BaseFragment
+import defpackage.taskmanager.widgets.EndlessScrollListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
@@ -35,41 +35,38 @@ class HistoryFragment : BaseFragment() {
         HistoryFragmentUI().createView(AnkoContext.create(activity, this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
-        adapter.items.add(Record())
+        rvHistory.addOnScrollListener(endlessListener)
         rvHistory.adapter = adapter
-        onRefreshData()
+        loadData(0)
     }
 
-    fun onRefreshData() {
+    fun loadData(offset: Int) {
         fragmentJob.cancelChildren()
+        if (offset <= 0) {
+            adapter.items.clear()
+        }
         launch {
             adapter.apply {
-                items.clear()
                 items.addAll(withContext(Dispatchers.IO) {
-                    dbManager.getRecordsByTask(args.getLong(EXTRA_ID))
+                    dbManager.safeExecute {
+                        getEventsByTask(args.getLong(EXTRA_ID), offset)
+                    }
                 })
                 notifyDataSetChanged()
-                swipeRefresh.isRefreshing = false
             }
+            swipeRefresh.isRefreshing = false
+        }
+    }
+
+    override fun onDestroyView() {
+        rvHistory.removeOnScrollListener(endlessListener)
+        super.onDestroyView()
+    }
+
+    private val endlessListener = object : EndlessScrollListener() {
+
+        override fun onScrolledToBottom() {
+            loadData(adapter.items.size)
         }
     }
 

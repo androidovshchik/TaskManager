@@ -22,7 +22,7 @@ class HistoryFragmentUI : AnkoComponent<HistoryFragment> {
         owner.swipeRefresh = swipeRefreshLayout {
             layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
             setOnRefreshListener {
-                owner.onRefreshData()
+                owner.loadData(0)
             }
             owner.rvHistory = recyclerView {
                 layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
