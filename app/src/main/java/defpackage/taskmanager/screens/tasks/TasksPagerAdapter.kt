@@ -15,7 +15,7 @@ import defpackage.taskmanager.screens.events.EventsFragment
 
 class TasksPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
 
-    private val fragments = SimpleArrayMap<Int, BaseFragment>()
+    val fragments = SimpleArrayMap<Int, BaseFragment>()
 
     override fun getItem(position: Int): BaseFragment {
         var fragment: BaseFragment? = null

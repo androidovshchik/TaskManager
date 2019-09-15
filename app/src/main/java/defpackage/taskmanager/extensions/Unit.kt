@@ -17,6 +17,8 @@ internal fun isMediaDocument(uri: Uri) = "com.android.providers.media.documents"
 
 internal fun isGooglePhotosUri(uri: Uri) = "com.google.android.apps.photos.content" == uri.authority
 
+fun currentTimeSeconds() = System.currentTimeMillis() / 1000
+
 fun isKitkat() = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
 
 fun isKitkatWatch() = Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT_WATCH
