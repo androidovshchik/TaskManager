@@ -28,19 +28,18 @@ import org.jetbrains.anko.toast
 import org.joda.time.LocalDateTime
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.math.BigInteger
 import java.security.MessageDigest
 
 class DbManager(context: Context) : TaskDao, EventDao {
 
+    val io = Mutex()
+
     private var db: AppDatabase? = null
 
     private val dbFile = context.getDatabasePath(DB_NAME)
-
-    val io = Mutex()
-
-    private var md5: String? = null
 
     init {
         openDb(context)
@@ -53,7 +52,6 @@ class DbManager(context: Context) : TaskDao, EventDao {
     private fun openDb(context: Context): Boolean {
         try {
             if (doesExist) {
-                md5 = getMD5Hash(dbFile)
                 db = Room.databaseBuilder(context, AppDatabase::class.java, DB_NAME)
                     .build()
                 return true
@@ -77,6 +75,14 @@ class DbManager(context: Context) : TaskDao, EventDao {
         GlobalScope.launch(Dispatchers.Main) {
             io.withLock {
                 closeDb()
+                /*if (!src.exists()) {
+                    return false
+                }*/
+                withContext(Dispatchers.IO) {
+                    val md5Src = getMD5(File(newPath))
+                    val md5Dist = getMD5(dbFile)
+                    copyFile(File(newPath), dbFile)
+                }
                 if (exportDbInternal(preferences, false) != false) {
                     if (importDbInternal(preferences, newPath)) {
                         preferences.context.toast("БД успешно импортирована")
@@ -197,9 +203,6 @@ class DbManager(context: Context) : TaskDao, EventDao {
     @WorkerThread
     private fun copyFile(src: File, dist: File): Boolean {
         return try {
-            /*if (!src.exists()) {
-                return false
-            }*/
             dist.parentFile.apply {
                 if (!exists()) {
                     mkdir()
@@ -211,6 +214,9 @@ class DbManager(context: Context) : TaskDao, EventDao {
                 }
             }
             true
+        } catch (e: FileNotFoundException) {
+            XLog.e(e.localizedMessage, e)
+            false
         } catch (e: Exception) {
             XLog.e(e.localizedMessage, e)
             dist.delete()
@@ -218,13 +224,18 @@ class DbManager(context: Context) : TaskDao, EventDao {
         }
     }
 
-    @Throws(Exception::class)
-    private fun getMD5Hash(file: File): String {
-        FileInputStream(file).use { input ->
-            return BigInteger(1, MD5.digest(input.readBytes()))
-                .toString(16)
-                .padStart(32, '0')
-                .replace(' ', '0')
+    @WorkerThread
+    private fun getMD5(file: File): String? {
+        return try {
+            FileInputStream(file).use { input ->
+                return BigInteger(1, MD5.digest(input.readBytes()))
+                    .toString(16)
+                    .padStart(32, '0')
+                    .replace(' ', '0')
+            }
+        } catch (e: Exception) {
+            XLog.e(e.localizedMessage, e)
+            null
         }
     }
 
