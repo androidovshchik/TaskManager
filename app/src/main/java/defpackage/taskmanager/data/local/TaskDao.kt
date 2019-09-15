@@ -6,7 +6,7 @@ package defpackage.taskmanager.data.local
 
 import androidx.room.*
 import defpackage.taskmanager.data.models.Task
-import defpackage.taskmanager.data.models.TaskCount
+import defpackage.taskmanager.data.models.TaskEvents
 
 @Dao
 interface TaskDao {
@@ -23,9 +23,16 @@ interface TaskDao {
     @Delete
     fun delete(vararg items: Task)
 
-    @Query("SELECT * FROM Tasks")
-    fun getAllTasksInternal(): List<TaskCount>
+    /**
+     * For tasks screen
+     */
+    @Query("SELECT * FROM Tasks LIMIT 200 OFFSET :offset")
+    fun getAllTasksInternal(offset: Long): List<Task>
 
+    /**
+     * For tasks service
+     */
+    @Transaction
     @Query("SELECT * FROM Tasks WHERE `Статус` = 1")
-    fun getActiveTasksInternal(): List<TaskCount>
+    fun getActiveTasksInternal(): List<TaskEvents>
 }
