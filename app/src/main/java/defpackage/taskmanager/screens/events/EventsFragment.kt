@@ -46,7 +46,7 @@ class EventsFragment : BaseFragment() {
                     R.id.tasks_item_complete -> {
                         it.sendBroadcast(
                             it.intentFor<ActionReceiver>(
-                                EXTRA_TASK to item.id,
+                                EXTRA_TASK to item.event.task,
                                 EXTRA_ACTION to ACTION_COMPLETED
                             )
                         )
@@ -54,7 +54,7 @@ class EventsFragment : BaseFragment() {
                     R.id.tasks_item_defer -> {
                         it.sendBroadcast(
                             it.intentFor<ActionReceiver>(
-                                EXTRA_TASK to item.id,
+                                EXTRA_TASK to item.event.task,
                                 EXTRA_ACTION to ACTION_DEFERRED
                             )
                         )
@@ -62,20 +62,23 @@ class EventsFragment : BaseFragment() {
                     R.id.tasks_item_cancel -> {
                         it.sendBroadcast(
                             it.intentFor<ActionReceiver>(
-                                EXTRA_TASK to item.id,
+                                EXTRA_TASK to item.event.task,
                                 EXTRA_ACTION to ACTION_CANCELLED
                             )
                         )
                     }
                     R.id.tasks_item_history -> {
-                        HistoryActivity.launch(it, item.id, item.title)
+                        HistoryActivity.launch(it, item.event.task, item.title)
                     }
                     else -> {
                     }
                 }
             }
         }
-        rvEvents.adapter = adapter
+        rvEvents.apply {
+            addOnScrollListener(endlessListener)
+            adapter = adapter
+        }
         loadData(0)
     }
 
@@ -96,20 +99,6 @@ class EventsFragment : BaseFragment() {
                 notifyDataSetChanged()
             }
             swipeRefresh.isRefreshing = false
-        }
-    }
-
-    fun onRefreshData() {
-        fragmentJob.cancelChildren()
-        launch {
-            adapter.apply {
-                items.clear()
-                items.addAll(withContext(Dispatchers.IO) {
-                    dbManager.getAllTasks()
-                })
-                notifyDataSetChanged()
-                swipeRefresh.isRefreshing = false
-            }
         }
     }
 

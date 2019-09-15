@@ -37,8 +37,10 @@ class HistoryFragment : BaseFragment() {
         HistoryFragmentUI().createView(AnkoContext.create(activity, this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        rvHistory.addOnScrollListener(endlessListener)
-        rvHistory.adapter = adapter
+        rvHistory.apply {
+            addOnScrollListener(endlessListener)
+            adapter = adapter
+        }
         loadData(0)
     }
 
