@@ -42,26 +42,26 @@ class TasksWidgetService : RemoteViewsService(), KodeinAware {
                 setTextViewText(R.id.tasks_item_title, item.title)
                 setOnClickPendingIntent(
                     R.id.task_widget_container, pendingActivityFor<TasksActivity>(
-                        EXTRA_TASK to item.event.task
+                        EXTRA_ID to item.event.task
                     )
                 )
                 setOnClickPendingIntent(
                     R.id.tasks_item_complete, pendingReceiverFor<ActionReceiver>(
-                        EXTRA_TASK to item.event.task,
+                        EXTRA_ID to item.event.task,
                         EXTRA_ACTION to ACTION_COMPLETED
                     )
                 )
                 setViewVisibility(R.id.tasks_item_defer, visibility)
                 setOnClickPendingIntent(
                     R.id.tasks_item_defer, pendingReceiverFor<ActionReceiver>(
-                        EXTRA_TASK to item.event.task,
+                        EXTRA_ID to item.event.task,
                         EXTRA_ACTION to ACTION_DEFERRED
                     )
                 )
                 setViewVisibility(R.id.tasks_item_cancel, visibility)
                 setOnClickPendingIntent(
                     R.id.tasks_item_cancel, pendingReceiverFor<ActionReceiver>(
-                        EXTRA_TASK to item.event.task,
+                        EXTRA_ID to item.event.task,
                         EXTRA_ACTION to ACTION_CANCELLED
                     )
                 )

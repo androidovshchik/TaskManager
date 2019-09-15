@@ -53,10 +53,8 @@ val SIMPLE_DATETIME: SimpleDateFormat = SimpleDateFormat(FORMAT_DATETIME, Locale
 // dummy extra
 const val EXTRA_NONE = "extra_none"
 
-const val EXTRA_TASK = "extra_task"
-
-const val EXTRA_ACTION = "extra_action"
-
 const val EXTRA_ID = "extra_id"
 
 const val EXTRA_TITLE = "extra_title"
+
+const val EXTRA_ACTION = "extra_action"

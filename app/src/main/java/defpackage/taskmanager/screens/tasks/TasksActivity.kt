@@ -21,6 +21,7 @@ import defpackage.taskmanager.extensions.getRealPath
 import defpackage.taskmanager.extensions.requestPermissions
 import defpackage.taskmanager.extensions.setTextSelection
 import defpackage.taskmanager.screens.BaseActivity
+import defpackage.taskmanager.screens.events.EventsFragment
 import defpackage.taskmanager.services.TasksService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,8 +48,12 @@ class TasksActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         TasksActivityUI().setContentView(this)
-        etDbPath.setTextSelection(preferences.pathToDb ?: "")
-        pagerAdapter = TasksPagerAdapter(fragmentManager)
+        etDbPath.setTextSelection(preferences.pathToDb)
+        pagerAdapter = TasksPagerAdapter(fragmentManager).apply {
+            val id = intent.getLongExtra(EXTRA_ID, 0L)
+            fragments.put(0, EventsFragment.newInstance(id))
+            fragments.put(1, TasksFragment.newInstance(id))
+        }
         vpLists.adapter = pagerAdapter
         if (!areGranted(*DANGER_PERMISSIONS)) {
             requestPermissions(REQUEST_PERMISSIONS, *DANGER_PERMISSIONS)
@@ -125,7 +130,7 @@ class TasksActivity : BaseActivity() {
             val uri = data?.data ?: return
             launch {
                 val path = withContext(Dispatchers.IO) {
-                    getRealPath(uri) ?: uri.path ?: ""
+                    getRealPath(uri) ?: uri.path
                 }
                 etDbPath.setTextSelection(path)
             }
@@ -150,13 +155,5 @@ class TasksActivity : BaseActivity() {
         private const val REQUEST_PERMISSIONS = 100
 
         private const val REQUEST_CHOOSE_FILE = 200
-
-        fun launch(context: Context, id: Long) = context.run {
-            startActivity(
-                intentFor<TasksActivity>(
-                    EXTRA_ID to id
-                )
-            )
-        }
     }
 }

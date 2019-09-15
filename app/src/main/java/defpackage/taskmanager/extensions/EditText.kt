@@ -9,7 +9,7 @@ package defpackage.taskmanager.extensions
 import android.widget.EditText
 
 fun EditText.setTextSelection(text: CharSequence?) {
-    text?.let {
+    text.toString().let {
         setText(it)
         setSelection(it.length)
     }
